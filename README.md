@@ -1,13 +1,13 @@
 # 📊 Data-Driven Storytelling Project | 2026
-> An interactive exploration of [Inserisci qui il Tema del Progetto, es: Global Energy Transitions]
+> An interactive exploration of [..]
 
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
 ---
 
 ## 👥 The Team
-- **Wassim Fatnassi**: Data Engineering, D3.js Implementation, & Deployment.
-- **Nahid Davoudi**: Data Analysis, UX/UI Design, & Narrative Structure.
+- **Wassim Fatnassi**
+- **Nahid Davoudi**
 
 ---
 
