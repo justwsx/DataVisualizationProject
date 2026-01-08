@@ -2,10 +2,6 @@
 
 **Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
-## 👥 The Team
-- **Wassim Fatnassi**: Data Engineering & D3.js Development
-- **Nahid Davoudi**: Data Analysis & UX/UI Design
-
 ---
 
 ## 📊 Methodology (Mandatory Section)
