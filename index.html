@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Energy Dashboard - Enhanced</title>
+    
+    <script src="https://unpkg.com/d3@7"></script>
+    <script src="https://unpkg.com/globe.gl@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1 id="mainHeading">Global Energy Consumption & GDP Analytics</h1>
+        <p class="subtitle">Interactive Dashboard with 10 Visualizations</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Chart 1: Globe -->
+        <section class="chart-section" id="globe-section">
+            <h2>1. Global Energy Intensity (3D Globe)</h2>
+            <div class="controls">
+                <label>Select Year: <select id="yearDropdown"></select></label>
+                <label>
+                    <input type="checkbox" id="autoRotate" checked> Auto Rotate
+                </label>
+            </div>
+            <div id="globeViz"></div>
+        </section>
+
+        <!-- Chart 2: Bubble -->
+        <section class="chart-section" id="bubble-section">
+            <h2>2. GDP vs. Energy Consumption (Bubble Chart)</h2>
+            <p>Radius = Population | Hover for details</p>
+            <div class="controls">
+                <label>Year: <select id="yearFilter"></select></label>
+                <button id="btnPlay">Play Animation</button>
+            </div>
+            <div id="bc-chart-container"></div>
+            <div id="bubble-tooltip" class="tooltip"></div>
+        </section>
+
+        <!-- Chart 3: Stacked Area -->
+        <section class="chart-section" id="sac-section">
+            <h2>3. Energy Mix Evolution (Stacked Area)</h2>
+            <div class="controls">
+                <label>Country: <select id="countrySelectSAC"></select></label>
+            </div>
+            <div id="sac-chart-container"></div>
+            <div id="sac-tooltip" class="tooltip"></div>
+        </section>
+
+        <!-- Chart 4: Donut -->
+        <section class="chart-section" id="donut-section">
+            <h2>4. Energy Sources Share (Donut)</h2>
+            <div class="controls">
+                <label>Country: <select id="countrySelectDonut"></select></label>
+                <label>Year: <select id="yearSelectDonut"></select></label>
+            </div>
+            <div class="canvas-container">
+                <canvas id="donutCanvas"></canvas>
+            </div>
+            <div id="donut-info" style="text-align:center; color:#aaa; margin-top:10px;"></div>
+        </section>
+
+        <!-- Chart 5: Pareto -->
+        <section class="chart-section" id="pareto-section">
+            <h2>5. Pareto Analysis (Top Consumers)</h2>
+            <div class="controls">
+                <label>Metric: 
+                    <select id="consumptionSelect">
+                        <option value="primary_energy_consumption">Primary Energy</option>
+                        <option value="co2">CO2 Emissions</option>
+                        <option value="gdp">GDP</option>
+                    </select>
+                </label>
+                <label>Year: <select id="yearSelectPareto"></select></label>
+            </div>
+            <div id="pareto-chart-container"></div>
+            <div id="pareto-tooltip" class="tooltip"></div>
+        </section>
+
+        <!-- Chart 6: Heatmap -->
+        <section class="chart-section" id="heatmap-section">
+            <h2>6. Energy Intensity Heatmap (Top 20 Countries)</h2>
+            <div class="controls">
+                <label>Year Range: 
+                    <select id="heatmapYear">
+                        <option value="2015-2020">2015-2020</option>
+                        <option value="2010-2015">2010-2015</option>
+                        <option value="2000-2010">2000-2010</option>
+                    </select>
+                </label>
+            </div>
+            <div id="heatmap-container"></div>
+            <div id="heatmap-tooltip" class="tooltip"></div>
+        </section>
+
+        <!-- Chart 7: Radar -->
+        <section class="chart-section" id="radar-section">
+            <h2>7. Energy Profile Comparison (Radar)</h2>
+            <div class="controls">
+                <label>Country 1: <select id="radarCountry1"></select></label>
+                <label>Country 2: <select id="radarCountry2"></select></label>
+                <label>Year: <select id="radarYear"></select></label>
+            </div>
+            <div class="canvas-container">
+                <canvas id="radarCanvas"></canvas>
+            </div>
+        </section>
+
+        <!-- Chart 8: Treemap -->
+        <section class="chart-section" id="treemap-section">
+            <h2>8. Global Energy Distribution (Treemap)</h2>
+            <div class="controls">
+                <label>Year: <select id="treemapYear"></select></label>
+                <label>Group By: 
+                    <select id="treemapGroup">
+                        <option value="continent">Continent</option>
+                        <option value="region">Region</option>
+                    </select>
+                </label>
+            </div>
+            <div id="treemap-container"></div>
+        </section>
+
+        <!-- Chart 9: Line Race -->
+        <section class="chart-section" id="linerace-section">
+            <h2>9. Top 10 Energy Consumers Over Time</h2>
+            <div class="controls">
+                <button id="btnLineRacePlay">Play Animation</button>
+                <button id="btnLineRaceReset">Reset</button>
+            </div>
+            <div id="linerace-container"></div>
+        </section>
+
+        <!-- Chart 10: Sankey -->
+        <section class="chart-section" id="sankey-section">
+            <h2>10. Energy Flow: Sources to Regions (Sankey)</h2>
+            <div class="controls">
+                <label>Year: <select id="sankeyYear"></select></label>
+            </div>
+            <div id="sankey-container"></div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
