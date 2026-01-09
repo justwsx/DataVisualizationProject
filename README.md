@@ -2,6 +2,28 @@
 
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
+---
+#### Deployment Instructions
+
+1. **Clone this repository**
+   ```bash
+   git clone https://github.com/justwsx/DataVisualizationProject.git
+   cd DataVisualizationProject
+   ```
+
+2. **Open the project**
+
+   Simply open `index.html` in your browser, or use a local development server such as:
+   ```bash
+   npx serve
+   ```
+
+3. **Publish via GitHub Pages**
+
+   1. Commit your changes
+   2. Push to the main branch
+   3. In GitHub repo settings, enable Pages → select branch main → / (root)
+
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
 #### 🛠️ How to Run Locally
