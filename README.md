@@ -2,7 +2,17 @@
 
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
+---
+
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
+
+---
+
+**Clone this repository**
+   ```bash
+   git clone https://github.com/justwsx/DataVisualizationProject.git
+   cd DataVisualizationProject
+   ```
 
 #### 🛠️ How to Run Locally
 
@@ -13,12 +23,7 @@ Since this project uses **D3.js** to fetch data files, you can't just open `inde
 2. Run this command:
    ```bash
    python -m http.server 8000
-
----
-
-#### 👥 The Team
-- **Wassim Fatnassi** (S4684857)
-- **Nahid Davoudi** (5812831)
+3. Go to the browser and write: http://localhost:8000, and press Enter.
 
 ---
 
@@ -71,3 +76,9 @@ DataVisualizationProject/
 ├── css/            <-- Custom styles and Typography scale
 ├── assets/         <-- Static images, icons, and branding
 └── index.html      <-- Main storytelling entry point
+```
+---
+
+#### 👥 The Team
+- **Wassim Fatnassi** (S4684857)
+- **Nahid Davoudi** (S5812831)
