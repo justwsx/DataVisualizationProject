@@ -1,58 +1,66 @@
-# 📊 Data-Driven Storytelling Project | 2026
-> An interactive exploration of [..]
+# 🌍 THE GREEN SHIFT: Energy Transition and Climate Policy in Europe (2010-2024)
+
+> [cite_start]**An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.** [cite: 7]
 
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
 ---
 
 ## 👥 The Team
-- **Wassim Fatnassi**
-- **Nahid Davoudi**
+- [cite_start]**Wassim Fatnassi** (S4684857) [cite: 4]
+- [cite_start]**Nahid Davoudi** (5812831) [cite: 4]
 
 ---
 
 ## 🧠 Methodology & Transparency
-*This section fulfills the requirement for methodological transparency and reproducibility.*
+*This section provides a detailed overview of our data pipeline, fulfilling the requirement for methodological transparency and reproducibility.*
 
 ### 1. Data Sources
-Our story is built upon the following datasets:
-* **[Nome Fonte, es: World Bank Open Data]**: [Link] - Provides annual metrics on [Metric X] from 1990 to 2024.
-* **[Nome Fonte, es: Our World in Data]**: [Link] - Used to cross-reference [Metric Y] and fill gaps in geographical coverage.
+Our narrative is built upon a high-quality academic dataset:
+* [cite_start]**Dataset Name**: World Energy Consumption Dataset. [cite: 10]
+* [cite_start]**Source**: Maintained by researchers at **Oxford University (Our World in Data)** and hosted on Kaggle. [cite: 10, 12]
+* [cite_start]**Raw Format**: CSV file containing 23,195 rows and 130 columns. [cite: 13]
+* [cite_start]**Scope**: Global data, which we specifically filtered for all EU Member States. [cite: 14]
+* [cite_start]**Time Span**: Historical data from 1900-2024, with our analysis specifically focused on the **2010-2024** window. [cite: 15]
 
-### 2. Data Cleaning & Imputation (Preprocessing)
-The raw data underwent a rigorous cleaning process using **Python (Pandas)**. You can find the full pipeline in `/preprocessing`.
-* **Missing Values**: Records with more than 20% missing values were excluded. For minor gaps, we used *linear interpolation* to maintain trend continuity.
-* **Data Transformation**: Raw values were normalized to [es: percentages/per capita] to allow fair comparison between countries of different sizes.
-* **Assumption**: We assumed that data reporting standards remained consistent across the observed timeframe.
+### 2. Data Cleaning & Preprocessing
+The raw data was processed using **Python (Pandas)** to ensure a clean narrative flow:
+* [cite_start]**Geographic Filtering**: We isolated EU countries to connect the data directly to European climate policy affairs. [cite: 8, 14]
+* **Missing Values**: Records with significant gaps were excluded; for minor gaps, we applied linear interpolation to ensure visual trend continuity.
+* **Data Transformation**: Raw values were normalized (e.g., percentages or per capita) to allow fair comparisons between countries of different economic sizes.
+* **Assumptions**: We assume that data reporting standards remained consistent across the EU member states during the observed timeframe.
 
 ### 3. Processing & Visual Encoding
-We translated raw metrics into visual elements using **D3.js**:
-1.  **Pipeline**: Raw Data (.csv) → Python Cleaning → Optimized JSON → D3.js Selection & Join.
-2.  **Encodings**: 
-    * **X-Axis**: Time (Temporal progression).
-    * **Y-Axis**: [Metric Name, es: CO2 Emissions].
-    * **Color Scale**: Categorical encoding for [es: Geographic Regions].
-    * **Size**: Quantitative encoding for [es: GDP/Population].
+[cite_start]We translated raw metrics into interactive elements using **D3.js** to address our core research objectives: [cite: 17]
+* [cite_start]**Visualizing the Transition**: Mapping the growth of solar, wind, and hydro relative to traditional fossil fuels. [cite: 18]
+* [cite_start]**Comparative Insights**: Identifying regional leaders and laggards in the energy shift. [cite: 19]
+* [cite_start]**Environmental Impact**: Illustrating the correlation between energy consumption patterns and carbon intensity. [cite: 20]
 
 ### 4. Limitations & Uncertainty
-* **Data Lag**: The most recent data points (2025) are preliminary and subject to revision.
-* **Geographic Bias**: Data is more granular for OECD countries; some developing nations have interpolated values.
-* **Visual Complexity**: To ensure legibility, we filtered out categories representing less than 1% of the total volume.
+* [cite_start]**Data Lag**: The most recent data points (2024) are preliminary and subject to potential revision. [cite: 15]
+* **Visual Complexity**: To ensure legibility and performance, we aggregated energy categories representing less than 1% of total volume.
+* **Geographic Bias**: Data granularity may vary slightly between older and newer EU member states.
 
 ---
 
 ## 🎨 Design & Typography
-Following the **Typography Triangle** requirements:
-* **Font Choice**: We used a *Sans-Serif* font for data labels to maximize legibility and a *Serif* font for the narrative sections to improve reading flow.
-* **Hierarchy**: Clear distinction between H1 (Context), H2 (Section Insights), and Body (Detailed Analysis).
-* **Accessibility**: All charts include ARIA labels and high-contrast color palettes (tested for color blindness).
+Adhering to the **Typography Triangle** principles:
+* **Typography**: We used a *Sans-Serif* font for data labels (maximum legibility) and a *Serif* font for narrative sections (improved reading flow).
+* **Hierarchy**: Clear distinction between H1 (Context/Framing), H2 (Section Insights), and Body (Detailed Analysis).
+* **Accessibility**: High-contrast color palettes (tested for color blindness) and clear ARIA labels for all charts and UI elements.
+* **Structure**: A clear layout featuring a Header, a Scarf/Hero section (framing the key message), and a Footer.
 
 ---
 
 ## 📂 Project Structure
 ```text
 DataVisualizationProject/
-├── data/               <-- Final optimized datasets (CSV/JSON)
+├── data/           <-- Optimized datasets used by D3 (CSV/JSON)
+├── preprocessing/  <-- Python scripts & Jupyter Notebooks for data cleaning
+├── js/             <-- D3.js visualization logic and interaction handlers
+├── css/            <-- Custom styles and Typography scale
+├── assets/         <-- Static images, icons, and branding
+└── index.html      <-- Main storytelling entry point├── data/               <-- Final optimized datasets (CSV/JSON)
 ├── preprocessing/      <-- Jupyter Notebooks & Python cleaning scripts
 ├── js/                 <-- D3.js logic and interaction handlers
 ├── css/                <-- Custom styles and Typography scale
