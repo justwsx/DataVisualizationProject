@@ -87,9 +87,9 @@ DataVisualizationProject/
 ├── css/            <-- Custom styles and Typography scale
 ├── assets/         <-- Static images, icons, and branding
 └── index.html      <-- Main storytelling entry point
-
+```
 ---
 
 #### 👥 The Team
 - **Wassim Fatnassi** (S4684857)
-- **Nahid Davoudi** (5812831)
+- **Nahid Davoudi** (S5812831)
