@@ -20,7 +20,7 @@ Since this project uses **D3.js** to fetch data files, you can't just open `inde
 2. Run this command:
    ```bash
    python -m http.server 8000```
-3. Go to the browser and digit: ```http://localhost:8000 
+3. Go to the browser and digit: http://localhost:8000 
 
 ---
 
