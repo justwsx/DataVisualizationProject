@@ -1,10 +1,10 @@
-## 🌍 The Green Shift: Energy Transition and Climate Policy in Europe (2010-2024)
+### 🌍 The Green Shift: Energy Transition and Climate Policy in Europe (2010-2024)
 
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
-### 🛠️ How to Run Locally
+#### 🛠️ How to Run Locally
 
 Since this project uses **D3.js** to fetch data files, you can't just open `index.html` in your browser—it would block the data for security reasons (CORS). You’ll need a local server.
 
