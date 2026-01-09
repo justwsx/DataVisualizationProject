@@ -3,7 +3,6 @@
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
 ---
-#### Deployment Instructions
 
 **Clone this repository**
    ```bash
