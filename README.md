@@ -4,6 +4,10 @@
 
 ---
 
+**🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
+
+---
+
 **Clone this repository**
    ```bash
    git clone https://github.com/justwsx/DataVisualizationProject.git
@@ -20,10 +24,6 @@ Since this project uses **D3.js** to fetch data files, you can't just open `inde
    ```bash
    python -m http.server 8000```
 3. Go to the browser and digit: http://localhost:8000 
-
----
-
-**🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
 ---
 
