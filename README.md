@@ -38,12 +38,6 @@ Since this project uses **D3.js** to fetch data files, you can't just open `inde
 
 ---
 
-#### 👥 The Team
-- **Wassim Fatnassi** (S4684857)
-- **Nahid Davoudi** (5812831)
-
----
-
 ### 🧠 Methodology & Transparency
 *This section provides a detailed overview of our data pipeline, fulfilling the requirement for methodological transparency and reproducibility.*
 
@@ -93,3 +87,9 @@ DataVisualizationProject/
 ├── css/            <-- Custom styles and Typography scale
 ├── assets/         <-- Static images, icons, and branding
 └── index.html      <-- Main storytelling entry point
+
+---
+
+#### 👥 The Team
+- **Wassim Fatnassi** (S4684857)
+- **Nahid Davoudi** (5812831)
