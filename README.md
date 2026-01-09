@@ -4,6 +4,16 @@
 
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
+### 🛠️ How to Run Locally
+
+Since this project uses **D3.js** to fetch data files, you can't just open `index.html` in your browser—it would block the data for security reasons (CORS). You’ll need a local server.
+
+#### Python (Fastest)
+1. Open your terminal in the project folder.
+2. Run this command:
+   ```bash
+   python -m http.server 8000
+
 ---
 
 ### 👥 The Team
