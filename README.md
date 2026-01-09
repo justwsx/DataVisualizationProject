@@ -16,7 +16,7 @@ Since this project uses **D3.js** to fetch data files, you can't just open `inde
 
 ---
 
-### 👥 The Team
+#### 👥 The Team
 - **Wassim Fatnassi** (S4684857)
 - **Nahid Davoudi** (5812831)
 
