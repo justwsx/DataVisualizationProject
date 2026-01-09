@@ -78,6 +78,18 @@ header {
     letter-spacing: 0.5px;
 }
 
+/* --- NUOVO STILE PER LE DESCRIZIONI --- */
+.chart-desc {
+    font-size: 1rem;
+    color: #d1d1d1;       /* Grigio chiaro per contrasto su sfondo scuro */
+    text-align: center;
+    max-width: 800px;     /* Per non rendere le righe troppo lunghe da leggere */
+    margin-top: -10px;    /* Avvicina il testo alla linea del titolo */
+    margin-bottom: 25px;  /* Spazio prima dei controlli */
+    line-height: 1.6;     /* Migliora la leggibilità */
+    font-weight: 400;
+}
+
 .controls {
     margin-bottom: 25px;
     display: flex;
@@ -215,4 +227,6 @@ input[type="checkbox"] {
     .controls { gap: 10px; }
     .chart-section { padding: 20px; }
     .chart-section h2 { font-size: 1.3rem; }
+    /* Adattamento per le descrizioni su mobile */
+    .chart-desc { font-size: 0.9rem; }
 }
