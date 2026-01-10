@@ -322,7 +322,6 @@ function initStackedAreaChart() {
     update("United States");
 }
 
-
 function initDonutChart() {
     const countriesWithData = [...new Set(dataset
         .filter(d => d.primary_energy_consumption > 0)

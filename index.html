@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Energy Dashboard - Enhanced</title>
+    <title>Global Energy Dashboard - Analytics 2026</title>
     
     <script src="https://unpkg.com/d3@7"></script>
-    
-    <script src="https://unpkg.com/d3-sankey@0.12"></script>
-
-    <script src="https://unpkg.com/three"></script>
-    
-    <script src="https://unpkg.com/globe.gl@2"></script>
-    
+    <script src="https://unpkg.com/globe.gl"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
@@ -25,32 +19,20 @@
     </header>
 
     <div class="container">
-        
         <section class="chart-section" id="globe-section">
             <h2>1. Global Energy Intensity (3D Globe)</h2>
-            <p class="chart-desc">
-                Explore the geospatial distribution of energy intensity across the planet. 
-                Brighter colors highlight regions with higher energy consumption relative to their GDP, 
-                visually emphasizing the efficiency gap between developing and developed economies.
-            </p>
+            <p class="chart-desc">Distribuzione geospaziale del consumo relativo al GDP.</p>
             <div class="controls">
-                <label>Select Year: <select id="yearDropdown"></select></label>
-                <label>
-                    <input type="checkbox" id="autoRotate" checked> Auto Rotate
-                </label>
+                <label>Anno: <select id="yearDropdown"></select></label>
+                <label><input type="checkbox" id="autoRotate" checked> Rotazione automatica</label>
             </div>
             <div id="globeViz"></div>
         </section>
 
         <section class="chart-section" id="bubble-section">
             <h2>2. GDP vs. Energy Consumption (Bubble Chart)</h2>
-            <p class="chart-desc">
-                Analyze the correlation between economic output (GDP) and energy consumption. 
-                The bubble size represents population, allowing you to identify outliers—such as 
-                highly efficient economies or energy-intensive developing nations—at a glance.
-            </p>
             <div class="controls">
-                <label>Year: <select id="yearFilter"></select></label>
+                <label>Anno: <select id="yearFilter"></select></label>
                 <button id="btnPlay">Play Animation</button>
             </div>
             <div id="bc-chart-container"></div>
@@ -59,13 +41,8 @@
 
         <section class="chart-section" id="sac-section">
             <h2>3. Energy Mix Evolution (Stacked Area)</h2>
-            <p class="chart-desc">
-                Track the historical transition of a specific country's energy portfolio. 
-                Observe how the share of renewables, nuclear energy, and fossil fuels has shifted over 
-                decades in response to policy changes, technological advancements, and economic needs.
-            </p>
             <div class="controls">
-                <label>Country: <select id="countrySelectSAC"></select></label>
+                <label>Nazione: <select id="countrySelectSAC"></select></label>
             </div>
             <div id="sac-chart-container"></div>
             <div id="sac-tooltip" class="tooltip"></div>
@@ -73,37 +50,27 @@
 
         <section class="chart-section" id="donut-section">
             <h2>4. Energy Sources Share (Donut)</h2>
-            <p class="chart-desc">
-                Get a snapshot of the current energy matrix breakdown. 
-                This visualization separates total consumption into specific sources (Solar, Wind, Oil, Coal), 
-                revealing the immediate dependency on carbon-intensive fuels versus clean energy alternatives.
-            </p>
             <div class="controls">
-                <label>Country: <select id="countrySelectDonut"></select></label>
-                <label>Year: <select id="yearSelectDonut"></select></label>
+                <label>Nazione: <select id="countrySelectDonut"></select></label>
+                <label>Anno: <select id="yearSelectDonut"></select></label>
             </div>
-            <div class="canvas-container">
+            <div class="canvas-container" style="height: 300px; position: relative;">
                 <canvas id="donutCanvas"></canvas>
             </div>
-            <div id="donut-info" style="text-align:center; color:#aaa; margin-top:10px;"></div>
+            <div id="donut-info"></div>
         </section>
 
         <section class="chart-section" id="pareto-section">
             <h2>5. Pareto Analysis (Top Consumers)</h2>
-            <p class="chart-desc">
-                Applying the 80/20 rule to global energy data. 
-                This chart highlights the few key countries responsible for the vast majority of global consumption 
-                or CO2 emissions, helping to focus decarbonization efforts where they will have the highest impact.
-            </p>
             <div class="controls">
-                <label>Metric: 
+                <label>Metrica: 
                     <select id="consumptionSelect">
                         <option value="primary_energy_consumption">Primary Energy</option>
                         <option value="co2">CO2 Emissions</option>
                         <option value="gdp">GDP</option>
                     </select>
                 </label>
-                <label>Year: <select id="yearSelectPareto"></select></label>
+                <label>Anno: <select id="yearSelectPareto"></select></label>
             </div>
             <div id="pareto-chart-container"></div>
             <div id="pareto-tooltip" class="tooltip"></div>
@@ -111,13 +78,8 @@
 
         <section class="chart-section" id="heatmap-section">
             <h2>6. Energy Intensity Heatmap (Top 20 Countries)</h2>
-            <p class="chart-desc">
-                Visualize the temporal evolution of energy intensity among the world's top consumers. 
-                Darker shades represent higher intensity, making it easy to spot trends of improvement (lightening colors) 
-                or stagnation across different time periods.
-            </p>
             <div class="controls">
-                <label>Year Range: 
+                <label>Range temporale: 
                     <select id="heatmapYear">
                         <option value="2015-2020">2015-2020</option>
                         <option value="2010-2015">2010-2015</option>
@@ -131,34 +93,24 @@
 
         <section class="chart-section" id="radar-section">
             <h2>7. Energy Profile Comparison (Radar)</h2>
-            <p class="chart-desc">
-                Directly compare the multidimensional energy profiles of two nations. 
-                This view contrasts metrics like renewable share, fossil fuel dependency, and per capita consumption, 
-                benchmarking performance against international peers.
-            </p>
             <div class="controls">
-                <label>Country 1: <select id="radarCountry1"></select></label>
-                <label>Country 2: <select id="radarCountry2"></select></label>
-                <label>Year: <select id="radarYear"></select></label>
+                <label>Nazione 1: <select id="radarCountry1"></select></label>
+                <label>Nazione 2: <select id="radarCountry2"></select></label>
+                <label>Anno: <select id="radarYear"></select></label>
             </div>
-            <div class="canvas-container">
+            <div class="canvas-container" style="height: 400px; position: relative;">
                 <canvas id="radarCanvas"></canvas>
             </div>
         </section>
 
         <section class="chart-section" id="treemap-section">
             <h2>8. Global Energy Distribution (Treemap)</h2>
-            <p class="chart-desc">
-                Understand the hierarchical structure of global energy use. 
-                The area size represents total consumption, grouped by continent or region, offering 
-                an immediate view of regional dominance and geopolitical energy disparities.
-            </p>
             <div class="controls">
-                <label>Year: <select id="treemapYear"></select></label>
-                <label>Group By: 
+                <label>Anno: <select id="treemapYear"></select></label>
+                <label>Raggruppa per: 
                     <select id="treemapGroup">
-                        <option value="continent">Continent</option>
-                        <option value="region">Region</option>
+                        <option value="continent">Continente</option>
+                        <option value="region">Regione</option>
                     </select>
                 </label>
             </div>
@@ -167,11 +119,6 @@
 
         <section class="chart-section" id="linerace-section">
             <h2>9. Top 10 Energy Consumers Over Time</h2>
-            <p class="chart-desc">
-                Watch the rise and fall of global energy giants. 
-                This animated race chart visualizes the rapid industrialization of emerging economies 
-                and the steady demand of established powers throughout the 20th and 21st centuries.
-            </p>
             <div class="controls">
                 <button id="btnLineRacePlay">Play Animation</button>
                 <button id="btnLineRaceReset">Reset</button>
@@ -181,19 +128,25 @@
 
         <section class="chart-section" id="sankey-section">
             <h2>10. Energy Flow: Sources to Regions (Sankey)</h2>
-            <p class="chart-desc">
-                Trace the complex flow of energy from primary sources (left) to end-use regions (right). 
-                This flow diagram illustrates the magnitude of energy transfer and helps visualize 
-                global supply chain dynamics and regional dependencies.
-            </p>
             <div class="controls">
-                <label>Year: <select id="sankeyYear"></select></label>
+                <label>Anno: <select id="sankeyYear"></select></label>
             </div>
             <div id="sankey-container"></div>
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <script src="globe.js"></script>
+    <script src="bubbleChart.js"></script>
+    <script src="stackedArea.js"></script>
+    <script src="donutChart.js"></script>
+    <script src="paretoChart.js"></script>
+    <script src="heatmap.js"></script>
+    <script src="radarChart.js"></script>
+    <script src="treemap.js"></script>
+    <script src="lineRace.js"></script>
+    <script src="sankey.js"></script>
+
+    <script src="main.js"></script>
 
 </body>
 </html>
