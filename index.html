@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Energy Dashboard - Analytics 2026</title>
+    <title>The Pulse of Our Planet - Global Energy Story</title>
     
     <script src="https://unpkg.com/d3@7"></script>
     <script src="https://unpkg.com/globe.gl"></script>
@@ -14,45 +14,57 @@
 <body>
 
     <header>
-        <h1 id="mainHeading">Global Energy Consumption & GDP Analytics</h1>
-        <p class="subtitle">Interactive Dashboard with 10 Visualizations</p>
+        <h1 id="mainHeading">The Pulse of Our Planet</h1>
+        <p class="subtitle">A conversational journey through Global Energy, Wealth, and Sustainability</p>
     </header>
 
     <div class="container">
+        
         <section class="chart-section" id="globe-section">
-            <h2>1. Global Energy Intensity (3D Globe)</h2>
-            <p class="chart-desc">Distribuzione geospaziale del consumo relativo al GDP.</p>
+            <h2>Our Radiant Earth</h2>
+            <p class="chart-desc">
+                Take a look at how energy intensity paints the map. By spinning this globe, you can see where countries are using energy efficiently and where the industrial footprint is heaviest. Brighter zones highlight regions that consume a lot of energy relative to their economic output, showing us the path we still need to walk toward global efficiency.
+            </p>
             <div class="controls">
-                <label>Anno: <select id="yearDropdown"></select></label>
-                <label><input type="checkbox" id="autoRotate" checked> Rotazione automatica</label>
+                <label>Pick a Year: <select id="yearDropdown"></select></label>
+                <label><input type="checkbox" id="autoRotate" checked> Keep it spinning</label>
             </div>
             <div id="globeViz"></div>
         </section>
 
         <section class="chart-section" id="bubble-section">
-            <h2>2. GDP vs. Energy Consumption (Bubble Chart)</h2>
+            <h2>Wealth vs. Power</h2>
+            <p class="chart-desc">
+                Does more money always mean more energy? This chart tracks the relationship between a nation’s GDP and its appetite for energy. Watch the bubbles—representing different populations—dance across the screen as economies grow. It’s a fascinating way to spot the "efficiency giants" who manage high wealth with lower energy needs.
+            </p>
             <div class="controls">
-                <label>Anno: <select id="yearFilter"></select></label>
-                <button id="btnPlay">Play Animation</button>
+                <label>Select Year: <select id="yearFilter"></select></label>
+                <button id="btnPlay">Watch the Evolution</button>
             </div>
             <div id="bc-chart-container"></div>
             <div id="bubble-tooltip" class="tooltip"></div>
         </section>
 
         <section class="chart-section" id="sac-section">
-            <h2>3. Energy Mix Evolution (Stacked Area)</h2>
+            <h2>The Transition Biography</h2>
+            <p class="chart-desc">
+                Every country has a unique energy "recipe." Here, you can dive into the history of a specific nation and see how its reliance on coal, oil, or gas has shifted toward renewables or nuclear power over the decades. It’s the visual record of a nation’s commitment to a greener future.
+            </p>
             <div class="controls">
-                <label>Nazione: <select id="countrySelectSAC"></select></label>
+                <label>Choose a Nation: <select id="countrySelectSAC"></select></label>
             </div>
             <div id="sac-chart-container"></div>
             <div id="sac-tooltip" class="tooltip"></div>
         </section>
 
         <section class="chart-section" id="donut-section">
-            <h2>4. Energy Sources Share (Donut)</h2>
+            <h2>A Slice of the Pie</h2>
+            <p class="chart-desc">
+                What fuels a nation today? This snapshot gives you an instant breakdown of the current energy portfolio. It's the quickest way to see if a country is still anchored to fossil fuels or if renewables are starting to take the lion's share of the pie.
+            </p>
             <div class="controls">
-                <label>Nazione: <select id="countrySelectDonut"></select></label>
-                <label>Anno: <select id="yearSelectDonut"></select></label>
+                <label>Nation: <select id="countrySelectDonut"></select></label>
+                <label>Year: <select id="yearSelectDonut"></select></label>
             </div>
             <div class="canvas-container" style="height: 300px; position: relative;">
                 <canvas id="donutCanvas"></canvas>
@@ -61,29 +73,35 @@
         </section>
 
         <section class="chart-section" id="pareto-section">
-            <h2>5. Pareto Analysis (Top Consumers)</h2>
+            <h2>The Heavy Hitters</h2>
+            <p class="chart-desc">
+                Not all consumers are created equal. This analysis ranks the top contributors to global energy use or CO2 emissions. It clearly shows how a handful of nations hold the key to global climate goals—focusing on these "heavy hitters" is where real change starts.
+            </p>
             <div class="controls">
-                <label>Metrica: 
+                <label>Choose a Metric: 
                     <select id="consumptionSelect">
-                        <option value="primary_energy_consumption">Primary Energy</option>
+                        <option value="primary_energy_consumption">Energy Consumption</option>
                         <option value="co2">CO2 Emissions</option>
-                        <option value="gdp">GDP</option>
+                        <option value="gdp">GDP Wealth</option>
                     </select>
                 </label>
-                <label>Anno: <select id="yearSelectPareto"></select></label>
+                <label>Year: <select id="yearSelectPareto"></select></label>
             </div>
             <div id="pareto-chart-container"></div>
             <div id="pareto-tooltip" class="tooltip"></div>
         </section>
 
         <section class="chart-section" id="heatmap-section">
-            <h2>6. Energy Intensity Heatmap (Top 20 Countries)</h2>
+            <h2>Efficiency Health Check</h2>
+            <p class="chart-desc">
+                This heatmap is a temporal view of the top 20 economies. Each cell shows energy intensity—essentially how much "fuel" it takes to generate wealth. Lighter colors are good news, signaling that a country is getting smarter and more efficient year after year.
+            </p>
             <div class="controls">
-                <label>Range temporale: 
+                <label>Select Era: 
                     <select id="heatmapYear">
-                        <option value="2015-2020">2015-2020</option>
-                        <option value="2010-2015">2010-2015</option>
-                        <option value="2000-2010">2000-2010</option>
+                        <option value="2015-2020">Recent Years (2015-2020)</option>
+                        <option value="2010-2015">The Middle Era (2010-2015)</option>
+                        <option value="2000-2010">Decade Start (2000-2010)</option>
                     </select>
                 </label>
             </div>
@@ -92,11 +110,14 @@
         </section>
 
         <section class="chart-section" id="radar-section">
-            <h2>7. Energy Profile Comparison (Radar)</h2>
+            <h2>Face-Off: Energy Profiles</h2>
+            <p class="chart-desc">
+                Ever wondered how two countries stack up? This radar chart overlaps their "Energy DNA." You can compare their renewable strengths, nuclear capacity, and fossil fuel dependency side-by-side to see who leads in which category.
+            </p>
             <div class="controls">
-                <label>Nazione 1: <select id="radarCountry1"></select></label>
-                <label>Nazione 2: <select id="radarCountry2"></select></label>
-                <label>Anno: <select id="radarYear"></select></label>
+                <label>First Nation: <select id="radarCountry1"></select></label>
+                <label>Second Nation: <select id="radarCountry2"></select></label>
+                <label>Year: <select id="radarYear"></select></label>
             </div>
             <div class="canvas-container" style="height: 400px; position: relative;">
                 <canvas id="radarCanvas"></canvas>
@@ -104,13 +125,16 @@
         </section>
 
         <section class="chart-section" id="treemap-section">
-            <h2>8. Global Energy Distribution (Treemap)</h2>
+            <h2>The Global Landscape</h2>
+            <p class="chart-desc">
+                Think of this as a map of importance. The size of each box represents total energy consumption, grouped by region. It’s an immediate way to see the regional dominance of Asia, Europe, or North America in the global energy hierarchy.
+            </p>
             <div class="controls">
-                <label>Anno: <select id="treemapYear"></select></label>
-                <label>Raggruppa per: 
+                <label>Year: <select id="treemapYear"></select></label>
+                <label>Group By: 
                     <select id="treemapGroup">
-                        <option value="continent">Continente</option>
-                        <option value="region">Regione</option>
+                        <option value="continent">Continent</option>
+                        <option value="region">Specific Region</option>
                     </select>
                 </label>
             </div>
@@ -118,18 +142,24 @@
         </section>
 
         <section class="chart-section" id="linerace-section">
-            <h2>9. Top 10 Energy Consumers Over Time</h2>
+            <h2>The Historic Surge</h2>
+            <p class="chart-desc">
+                Sit back and watch the rise of global giants. This animated race shows how top consumers have climbed the ranks over the years. Notice the rapid industrialization of emerging markets and the steady demand of established powers.
+            </p>
             <div class="controls">
-                <button id="btnLineRacePlay">Play Animation</button>
-                <button id="btnLineRaceReset">Reset</button>
+                <button id="btnLineRacePlay">Start the Race</button>
+                <button id="btnLineRaceReset">Back to Start</button>
             </div>
             <div id="linerace-container"></div>
         </section>
 
         <section class="chart-section" id="sankey-section">
-            <h2>10. Energy Flow: Sources to Regions (Sankey)</h2>
+            <h2>From Source to Shore</h2>
+            <p class="chart-desc">
+                Energy doesn't just appear; it flows. This diagram traces the journey of power from its primary sources (like Coal or Renewables) to the continents that consume them. The width of the lines tells the story of our global dependency and trade.
+            </p>
             <div class="controls">
-                <label>Anno: <select id="sankeyYear"></select></label>
+                <label>Select Year: <select id="sankeyYear"></select></label>
             </div>
             <div id="sankey-container"></div>
         </section>
