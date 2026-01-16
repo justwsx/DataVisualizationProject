@@ -10,11 +10,58 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        /* Stile per i blocchi narrativi iniziali (fuori dalla griglia) */
+        .intro-header {
+            margin: 0 2rem 2rem 2rem;
+            max-width: 800px;
+        }
+        .intro-header h1 {
+            font-size: 2.5rem;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .intro-header p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        /* Stile per i blocchi narrativi INTERNI alla griglia */
+        .narrative-break {
+            grid-column: 1 / -1; /* Occupa tutta la larghezza */
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea; /* Accento visivo */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .narrative-break h3 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .narrative-break p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+        
+        .narrative-break strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
     <div class="dashboard">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <span class="material-icons-outlined logo-icon">bolt</span>
@@ -89,9 +136,7 @@
                 <span class="data-source">Data Source: Our World in Data</span>
             </div>
         </aside>
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar -->
             <div class="top-bar">
                 <div class="search-box">
                     <span class="material-icons-outlined">search</span>
@@ -139,7 +184,13 @@
                 </div>
             </div>
 
-            <!-- KPI Cards -->
+            <div class="intro-header">
+                <h1>The Pulse of Our Planet</h1>
+                <p>Alright, let's take a walk through this dashboard. You asked me to look at the data and the layout, and what we have here is essentially the heartbeat of modern civilization. It’s not just a collection of charts; it’s a narrative about how we survive, how we grow, and—crucially—how we are trying to change.</p>
+                <br>
+                <p>The <strong>KPI cards</strong> below immediately set the scene. They tell a story of "expansion with a conscience." You see that <strong>Total Energy Use</strong> is up (+2.4%), yet <strong>Fossil Fuel Consumption</strong> is slightly down (-0.8%). This suggests we might be reaching peak fossil fuel usage.</p>
+            </div>
+
             <div class="kpi-section">
                 <div class="kpi-card">
                     <div class="kpi-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -186,10 +237,14 @@
                 </div>
             </div>
 
-            <!-- Charts Grid -->
             <div class="charts-section">
                 <div class="charts-grid">
-                    <!-- Chart 1: Global Consumption Over Time -->
+
+                    <div class="narrative-break">
+                        <h3>The Engine Room</h3>
+                        <p>Now, let’s drift down to the charts. This is the engine room of the dashboard. It starts with <strong>Global Energy Consumption</strong> and <strong>Energy Mix</strong>. If you toggle the view to "Area," you get this massive mountain range of data. It shows us that while we are excited about wind and solar, the "base load" of our civilization is still heavy. The Energy Mix breaks this down ruthlessly—you can see the massive blocks of Coal and Oil, but you also see that thin, vibrant sliver of Renewables getting wider every single year.</p>
+                    </div>
+
                     <div class="chart-card large">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -206,7 +261,6 @@
                         </div>
                     </div>
 
-                    <!-- Chart 2: Energy Mix -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -219,7 +273,11 @@
                         </div>
                     </div>
 
-                    <!-- Chart 3: Renewable Trends -->
+                    <div class="narrative-break">
+                        <h3>Optimism & Efficiency</h3>
+                        <p>This is where the optimism lives. In the <strong>Renewable Energy Growth</strong> and <strong>Low Carbon Tech</strong> sections, the curve is exponential. We aren't just adding solar panels linearly; we are multiplying them. This ties directly into the <strong>Carbon Intensity</strong> chart, which answers the question: "How much CO2 do we emit for every dollar of wealth we create?" The line is trending down, meaning we are finally decoupling growth from pollution.</p>
+                    </div>
+
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -232,7 +290,6 @@
                         </div>
                     </div>
 
-                    <!-- Chart 4: Energy vs GDP -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -245,7 +302,6 @@
                         </div>
                     </div>
 
-                    <!-- Chart 5: CO2 vs Energy -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -258,8 +314,7 @@
                         </div>
                     </div>
 
-                    <!-- Chart 6: Global Energy Share -->
-                    <div class="chart-card">
+                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
                                 <h2>Global Energy Share</h2>
@@ -271,7 +326,11 @@
                         </div>
                     </div>
 
-                    <!-- Chart 7: Regional Evolution -->
+                    <div class="narrative-break">
+                        <h3>The Geopolitical Shift</h3>
+                        <p>The geopolitical story is told here. It says <strong>"Asia dominates growth,"</strong> and the charts prove it. In <strong>Regional Evolution</strong>, you see the US and Europe plateauing, while China and India are rocketing upwards. The center of gravity for the global energy market has shifted East, and it’s not going back. This is reflected clearly in the <strong>Top Consumers</strong> chart.</p>
+                    </div>
+
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -284,7 +343,6 @@
                         </div>
                     </div>
 
-                    <!-- Chart 8: Low Carbon Growth -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -297,7 +355,6 @@
                         </div>
                     </div>
 
-                    <!-- Chart 9: Top Consumers -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -310,7 +367,11 @@
                         </div>
                     </div>
 
-                    <!-- Chart 10: Global Map -->
+                    <div class="narrative-break">
+                        <h3>The Big Picture</h3>
+                        <p>Finally, the <strong>Global Energy Map</strong> ties it all together spatially. It allows you to see the inequality and the density of usage at a glance—the dark clusters of the industrialized north versus the lights coming on across the developing world. It’s a race against time, but the data shows we are finally running in the right direction.</p>
+                    </div>
+
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -325,10 +386,9 @@
                 </div>
             </div>
 
-            <!-- Insights Section -->
             <div class="insights-section">
                 <div class="insight-card">
-                    <h3>Key Insights</h3>
+                    <h3>Key Insights Summary</h3>
                     <div class="insight-content">
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
@@ -371,14 +431,12 @@
                 </div>
             </div>
 
-            <!-- Footer -->
             <footer class="main-footer">
                 <p>Data from Our World in Data | Energy Insights Dashboard | Built with Plotly.js and D3.js</p>
             </footer>
         </main>
     </div>
 
-    <!-- Scripts -->
     <script src="js/chart1_consumption.js"></script>
     <script src="js/chart7_evolution.js"></script>
     <script src="js/chart9_top_consumers.js"></script>
