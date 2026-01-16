@@ -93,7 +93,7 @@ body {
 
 .nav-right { 
     display: flex; 
-    gap: 30px; /* Aumentato lo spazio tra gli elementi */
+    gap: 30px; /* Space between elements increased */
     align-items: flex-end; 
     flex-wrap: wrap;
 }
