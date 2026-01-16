@@ -130,6 +130,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -1px;
+    text-align: center;
 }
 
 .section-title {
