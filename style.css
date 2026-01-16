@@ -169,7 +169,7 @@ body {
 
 /* The big intro at the top */
 .intro-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.8rem;
     width: 100%; /* Ensures text flows to the far right */
     /* Removed max-width to use full available space */
 }
@@ -177,15 +177,15 @@ body {
 .intro-header h1 {
     font-size: 2.5rem;
     color: var(--text-primary);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-weight: 800;
     line-height: 1.2;
-    text-align: center;
+    text-align: center
 }
 
 .intro-header p {
     font-size: 1.1rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--text-secondary);
 }
 
