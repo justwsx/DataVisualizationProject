@@ -7,14 +7,88 @@
     <title>Energy Insights Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        .narrative-intro {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #6366f1;
+        }
+
+        .narrative-intro h1 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .narrative-intro p {
+            color: #475569;
+            line-height: 1.7;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .section-divider h2 {
+            font-size: 1.8rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            line-height: 1.6;
+        }
+
+        .chart-description {
+            padding: 0 20px 20px 20px;
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            border-bottom: 1px solid #f1f5f9;
+            background: #fff;
+        }
+        
+        /* Layout adjustments for storytelling */
+        .charts-grid-single {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .charts-grid-dual {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .charts-grid-dual { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 
 <body>
     <div class="dashboard">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <span class="material-icons-outlined logo-icon">bolt</span>
@@ -23,64 +97,26 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <span class="nav-section-title">Overview</span>
-                    <a href="#" class="nav-item active"
-                        onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+                    <span class="nav-section-title">Navigation</span>
+                    <a href="#" class="nav-item active" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
                         <span class="material-icons-outlined">dashboard</span>
-                        <span>Dashboard</span>
+                        <span>Overview</span>
                     </a>
-                    <a href="#chart-map" class="nav-item">
-                        <span class="material-icons-outlined">public</span>
-                        <span>Global Map</span>
-                    </a>
-                </div>
-
-                <div class="nav-section">
-                    <span class="nav-section-title">Charts</span>
-
-                    <a href="#chart-consumption" class="nav-item">
+                    <a href="#section-demand" class="nav-item">
                         <span class="material-icons-outlined">timeline</span>
-                        <span>Consumption Trend</span>
+                        <span>Global Demand</span>
                     </a>
-
-                    <a href="#chart-mix" class="nav-item">
-                        <span class="material-icons-outlined">stacked_bar_chart</span>
-                        <span>Energy Mix</span>
-                    </a>
-
-                    <a href="#chart-renewables" class="nav-item">
+                    <a href="#section-transition" class="nav-item">
                         <span class="material-icons-outlined">eco</span>
-                        <span>Renewables Growth</span>
+                        <span>The Transition</span>
                     </a>
-
-                    <a href="#chart-gdp-energy" class="nav-item">
+                    <a href="#section-economy" class="nav-item">
                         <span class="material-icons-outlined">monetization_on</span>
-                        <span>GDP vs Energy</span>
+                        <span>Economy & CO2</span>
                     </a>
-
-                    <a href="#chart-co2-energy" class="nav-item">
-                        <span class="material-icons-outlined">cloud</span>
-                        <span>Carbon Intensity</span>
-                    </a>
-
-                    <a href="#chart-share" class="nav-item">
-                        <span class="material-icons-outlined">pie_chart</span>
-                        <span>Global Share</span>
-                    </a>
-
-                    <a href="#chart-evolution" class="nav-item">
-                        <span class="material-icons-outlined">area_chart</span>
-                        <span>Regional Evolution</span>
-                    </a>
-
-                    <a href="#chart-low-carbon" class="nav-item">
-                        <span class="material-icons-outlined">electric_bolt</span>
-                        <span>Low Carbon Tech</span>
-                    </a>
-
-                    <a href="#chart-top-consumers" class="nav-item">
-                        <span class="material-icons-outlined">leaderboard</span>
-                        <span>Top Consumers</span>
+                    <a href="#section-geopolitics" class="nav-item">
+                        <span class="material-icons-outlined">public</span>
+                        <span>Geopolitics</span>
                     </a>
                 </div>
             </nav>
@@ -89,13 +125,12 @@
                 <span class="data-source">Data Source: Our World in Data</span>
             </div>
         </aside>
-        <!-- Main Content -->
+
         <main class="main-content">
-            <!-- Top Bar -->
             <div class="top-bar">
                 <div class="search-box">
                     <span class="material-icons-outlined">search</span>
-                    <input type="text" placeholder="Search countries, regions..." id="searchInput">
+                    <input type="text" placeholder="Search countries..." id="searchInput">
                 </div>
 
                 <div class="top-controls">
@@ -106,9 +141,9 @@
                             <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
                         </div>
                     </div>
-
+                    
                     <div class="filter-group">
-                        <label>Country</label>
+                        <label>Country Focus</label>
                         <select id="countrySelect" class="filter-select">
                             <option value="World">World</option>
                             <option value="United States">United States</option>
@@ -123,15 +158,6 @@
                         </select>
                     </div>
 
-                    <div class="filter-group">
-                        <label>Metric</label>
-                        <select id="metricSelect" class="filter-select">
-                            <option value="per-capita">Per Capita (kWh)</option>
-                            <option value="total">Total (TWh)</option>
-                            <option value="intensity">Intensity</option>
-                        </select>
-                    </div>
-
                     <button class="play-btn" id="playBtn">
                         <span class="material-icons-outlined">play_arrow</span>
                         <span>Play</span>
@@ -139,7 +165,17 @@
                 </div>
             </div>
 
-            <!-- KPI Cards -->
+            <div class="narrative-intro">
+                <h1>The Pulse of Global Energy</h1>
+                <p>
+                    Energy is the lifeblood of modern civilization. From the industrial revolution to the digital age, our progress has been fueled by our ability to harness power. 
+                    However, we stand at a critical crossroads. The data presented in this dashboard tells the story of a world in transition: a world still heavily reliant on fossil fuels, yet racing towards a cleaner, renewable future.
+                </p>
+                <p>
+                    Explore the trends below to understand how consumption is evolving, which nations are leading the charge in decarbonization, and the intricate relationship between economic growth and environmental impact.
+                </p>
+            </div>
+
             <div class="kpi-section">
                 <div class="kpi-card">
                     <div class="kpi-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -186,199 +222,238 @@
                 </div>
             </div>
 
-            <!-- Charts Grid -->
-            <div class="charts-section">
-                <div class="charts-grid">
-                    <!-- Chart 1: Global Consumption Over Time -->
-                    <div class="chart-card large">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Global Energy Consumption</h2>
-                                <p>Primary energy consumption per person over time</p>
-                            </div>
-                            <div class="chart-actions">
-                                <button class="chart-btn active" data-view="lines">Lines</button>
-                                <button class="chart-btn" data-view="area">Area</button>
-                            </div>
+            <div id="section-demand" class="section-divider">
+                <h2><span class="material-icons-outlined">history</span> 1. The Insatiable Demand</h2>
+            </div>
+            <p class="section-description">
+                Since 1990, global energy consumption has skyrocketed, driven by population growth and the industrialization of developing economies. While efficiency has improved, the sheer scale of demand continues to set new records.
+            </p>
+
+            <div class="charts-grid-single">
+                <div class="chart-card large">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Global Primary Energy Consumption</h2>
                         </div>
-                        <div class="chart-body">
-                            <div id="chart-consumption"></div>
+                        <div class="chart-actions">
+                            <button class="chart-btn active" data-view="lines">Lines</button>
+                            <button class="chart-btn" data-view="area">Area</button>
                         </div>
                     </div>
-
-                    <!-- Chart 2: Energy Mix -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Energy Mix by Source</h2>
-                                <p>Consumption breakdown: Coal, Gas, Oil, Renewables</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-mix"></div>
-                        </div>
+                    <div class="chart-description">
+                        This chart visualizes the trajectory of energy use over time. Notice the relentless upward trend, punctuated only by major global events like financial crises or pandemics. It illustrates the fundamental challenge: how do we satisfy this growing hunger without compromising our planet?
                     </div>
-
-                    <!-- Chart 3: Renewable Trends -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Renewable Energy Growth</h2>
-                                <p>Renewables consumption trends over time</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-renewables"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 4: Energy vs GDP -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Energy vs GDP</h2>
-                                <p>Relationship between prosperity and energy use</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-gdp-energy"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 5: CO2 vs Energy -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Carbon Intensity</h2>
-                                <p>CO2 emissions vs energy consumption relationship</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-co2-energy"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 6: Global Energy Share -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Global Energy Share</h2>
-                                <p>Distribution of energy consumption by source</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-share"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 7: Regional Evolution -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Regional Energy Evolution</h2>
-                                <p>Energy consumption trends by major countries</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-evolution"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 8: Low Carbon Growth -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Low Carbon Energy Adoption</h2>
-                                <p>Growth of clean energy sources globally</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-low-carbon"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 9: Top Consumers -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Top Energy Consumers</h2>
-                                <p>Countries by total primary energy consumption</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-top-consumers"></div>
-                        </div>
-                    </div>
-
-                    <!-- Chart 10: Global Map -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <div class="chart-title">
-                                <h2>Global Energy Map</h2>
-                                <p>Energy consumption by country worldwide</p>
-                            </div>
-                        </div>
-                        <div class="chart-body">
-                            <div id="chart-map"></div>
-                        </div>
+                    <div class="chart-body">
+                        <div id="chart-consumption"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Insights Section -->
+            <div class="charts-grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Energy Mix Composition</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        What powers our world? Despite the headlines about green energy, this breakdown reveals the stubborn dominance of fossil fuels (Coal, Oil, Gas). However, observe the "Renewables" slice—it is the fastest-growing component, slowly eating into the share of traditional sources.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-mix"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Share of Consumption</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        A different perspective on the mix: this pie chart shows the proportional distribution for the selected year. It provides an immediate snapshot of our dependency on specific fuel types at any given moment in history.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-share"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-transition" class="section-divider">
+                <h2><span class="material-icons-outlined">autorenew</span> 2. The Green Transition</h2>
+            </div>
+            <p class="section-description">
+                The shift towards low-carbon technologies is no longer a niche experiment; it is a global industrial imperative. This section tracks the exponential adoption of renewable energy sources and low-carbon technologies.
+            </p>
+
+            <div class="charts-grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Renewable Energy Trajectory</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        Wind, solar, and hydro are reshaping the grid. This chart tracks their consumption over time. The "hockey stick" curve seen in recent years highlights the accelerating adoption curve as technology costs plummet and capacity expands.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-renewables"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Low Carbon Technology Adoption</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        Beyond just renewables, this view includes nuclear and other low-carbon sources. It represents our total arsenal in the fight against climate change. A rising trend here is the clearest indicator of successful decarbonization policies.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-low-carbon"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-economy" class="section-divider">
+                <h2><span class="material-icons-outlined">analytics</span> 3. Economy & Efficiency</h2>
+            </div>
+            <p class="section-description">
+                Historically, economic growth (GDP) and energy use were locked in a 1:1 relationship. Today, we look for "decoupling"—the ability to grow wealth without burning more carbon.
+            </p>
+
+            <div class="charts-grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Prosperity vs. Power</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        Does a richer country burn more energy? Generally, yes. But look for outliers: nations that manage to achieve high GDP per capita while maintaining moderate energy consumption are the pioneers of energy efficiency.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-gdp-energy"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Carbon Intensity</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        This is the measure of how "dirty" our energy is. It calculates CO2 emissions per unit of energy consumed. A downward trend here is critical—it means we are getting the same amount of power with a lower environmental cost.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-co2-energy"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-geopolitics" class="section-divider">
+                <h2><span class="material-icons-outlined">public</span> 4. Geopolitical Landscape</h2>
+            </div>
+            <p class="section-description">
+                Energy is unevenly distributed. The center of gravity for global consumption has shifted dramatically from the West to the East over the last three decades.
+            </p>
+
+            <div class="charts-grid-single">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Global Consumption Map</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        This geospatial view highlights the disparities in energy access and usage. Darker regions consume more per capita. Watch how the map evolves over time to see the rapid industrialization of Asia and the stabilization of Europe and North America.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-map"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Regional Evolution</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        This area chart stacks the consumption of major global regions. It clearly illustrates the "rise of the East," with China and India accounting for the vast majority of demand growth in the 21st century.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-evolution"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Top Energy Consumers</h2>
+                        </div>
+                    </div>
+                    <div class="chart-description">
+                        Who are the giants of energy? This leaderboard ranks countries by total primary consumption. While population plays a role, industrial output and lifestyle standards are the key drivers determining who sits at the top.
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-top-consumers"></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="insights-section">
                 <div class="insight-card">
-                    <h3>Key Insights</h3>
+                    <h3>Summary of Key Findings</h3>
                     <div class="insight-content">
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
-                            <p><strong>Renewable adoption accelerating:</strong> Clean energy sources have grown
-                                significantly over the last decade globally.</p>
+                            <p><strong>Accelerating Renewables:</strong> Clean energy sources have moved from experimental to essential, showing exponential growth in the last decade.</p>
                         </div>
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #4facfe;">public</span>
-                            <p><strong>Asia dominates growth:</strong> China and India account for major portions of the
-                                world's energy consumption growth since 2000.</p>
+                            <p><strong>The Asian Century:</strong> China and India have become the primary engines of global energy demand growth, reshaping the geopolitical map.</p>
                         </div>
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
-                            <p><strong>Energy transition underway:</strong> Fossil fuel consumption share is declining
-                                while renewables continue to grow.</p>
+                            <p><strong>The Decoupling Challenge:</strong> While efficiency is improving (lower intensity), total fossil fuel consumption remains stubbornly high due to overall demand growth.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="stats-card">
-                    <h3>Dashboard Stats</h3>
+                    <h3>Dataset Overview</h3>
                     <div class="stats-grid">
                         <div class="stat-item">
                             <span class="stat-value">150+</span>
-                            <span class="stat-label">Countries</span>
+                            <span class="stat-label">Countries Analyzed</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">32</span>
-                            <span class="stat-label">Years of Data</span>
+                            <span class="stat-label">Years of History</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">10</span>
-                            <span class="stat-label">Interactive Charts</span>
+                            <span class="stat-label">Visualizations</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value">5</span>
-                            <span class="stat-label">Energy Sources</span>
+                            <span class="stat-label">Energy Categories</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer -->
             <footer class="main-footer">
-                <p>Data from Our World in Data | Energy Insights Dashboard | Built with Plotly.js and D3.js</p>
+                <p>Data from Our World in Data | Energy Insights Dashboard | Designed for Data Visualization Project</p>
             </footer>
         </main>
     </div>
 
-    <!-- Scripts -->
     <script src="js/chart1_consumption.js"></script>
     <script src="js/chart7_evolution.js"></script>
     <script src="js/chart9_top_consumers.js"></script>
