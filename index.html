@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Insights Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="material-icons-outlined logo-icon">bolt</span>
+                <h1>Energy Insights</h1>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Overview</span>
+                    <a href="#" class="nav-item active"
+                        onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+                        <span class="material-icons-outlined">dashboard</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#chart-map" class="nav-item">
+                        <span class="material-icons-outlined">public</span>
+                        <span>Global Map</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Charts</span>
+
+                    <a href="#chart-consumption" class="nav-item">
+                        <span class="material-icons-outlined">timeline</span>
+                        <span>Consumption Trend</span>
+                    </a>
+
+                    <a href="#chart-mix" class="nav-item">
+                        <span class="material-icons-outlined">stacked_bar_chart</span>
+                        <span>Energy Mix</span>
+                    </a>
+
+                    <a href="#chart-renewables" class="nav-item">
+                        <span class="material-icons-outlined">eco</span>
+                        <span>Renewables Growth</span>
+                    </a>
+
+                    <a href="#chart-gdp-energy" class="nav-item">
+                        <span class="material-icons-outlined">monetization_on</span>
+                        <span>GDP vs Energy</span>
+                    </a>
+
+                    <a href="#chart-co2-energy" class="nav-item">
+                        <span class="material-icons-outlined">cloud</span>
+                        <span>Carbon Intensity</span>
+                    </a>
+
+                    <a href="#chart-share" class="nav-item">
+                        <span class="material-icons-outlined">pie_chart</span>
+                        <span>Global Share</span>
+                    </a>
+
+                    <a href="#chart-evolution" class="nav-item">
+                        <span class="material-icons-outlined">area_chart</span>
+                        <span>Regional Evolution</span>
+                    </a>
+
+                    <a href="#chart-low-carbon" class="nav-item">
+                        <span class="material-icons-outlined">electric_bolt</span>
+                        <span>Low Carbon Tech</span>
+                    </a>
+
+                    <a href="#chart-top-consumers" class="nav-item">
+                        <span class="material-icons-outlined">leaderboard</span>
+                        <span>Top Consumers</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="data-source">Data Source: Our World in Data</span>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-box">
+                    <span class="material-icons-outlined">search</span>
+                    <input type="text" placeholder="Search countries, regions..." id="searchInput">
+                </div>
+
+                <div class="top-controls">
+                    <div class="filter-group">
+                        <label>Year</label>
+                        <div class="year-control">
+                            <span id="currentYearDisplay">2020</span>
+                            <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Country</label>
+                        <select id="countrySelect" class="filter-select">
+                            <option value="World">World</option>
+                            <option value="United States">United States</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Russia">Russia</option>
+                            <option value="Brazil">Brazil</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Metric</label>
+                        <select id="metricSelect" class="filter-select">
+                            <option value="per-capita">Per Capita (kWh)</option>
+                            <option value="total">Total (TWh)</option>
+                            <option value="intensity">Intensity</option>
+                        </select>
+                    </div>
+
+                    <button class="play-btn" id="playBtn">
+                        <span class="material-icons-outlined">play_arrow</span>
+                        <span>Play</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-section">
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <span class="material-icons-outlined">flash_on</span>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-value" id="kpiTotalEnergy">--</span>
+                        <span class="kpi-label">Total Energy Use</span>
+                        <span class="kpi-change positive">+2.4% vs last year</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <span class="material-icons-outlined">local_gas_station</span>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-value" id="kpiFossil">--</span>
+                        <span class="kpi-label">Fossil Fuel Consumption</span>
+                        <span class="kpi-change negative">-0.8% vs last year</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <span class="material-icons-outlined">eco</span>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-value" id="kpiRenewables">--</span>
+                        <span class="kpi-label">Renewables Consumption</span>
+                        <span class="kpi-change positive">+8.5% vs last year</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <span class="material-icons-outlined">trending_up</span>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-value" id="kpiGDP">--</span>
+                        <span class="kpi-label">GDP per Capita ($)</span>
+                        <span class="kpi-change positive">+3.1% vs last year</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-section">
+                <div class="charts-grid">
+                    <!-- Chart 1: Global Consumption Over Time -->
+                    <div class="chart-card large">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Global Energy Consumption</h2>
+                                <p>Primary energy consumption per person over time</p>
+                            </div>
+                            <div class="chart-actions">
+                                <button class="chart-btn active" data-view="lines">Lines</button>
+                                <button class="chart-btn" data-view="area">Area</button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-consumption"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Energy Mix -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Energy Mix by Source</h2>
+                                <p>Consumption breakdown: Coal, Gas, Oil, Renewables</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-mix"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Renewable Trends -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Renewable Energy Growth</h2>
+                                <p>Renewables consumption trends over time</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-renewables"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Energy vs GDP -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Energy vs GDP</h2>
+                                <p>Relationship between prosperity and energy use</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-gdp-energy"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 5: CO2 vs Energy -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Carbon Intensity</h2>
+                                <p>CO2 emissions vs energy consumption relationship</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-co2-energy"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 6: Global Energy Share -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Global Energy Share</h2>
+                                <p>Distribution of energy consumption by source</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-share"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 7: Regional Evolution -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Regional Energy Evolution</h2>
+                                <p>Energy consumption trends by major countries</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-evolution"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 8: Low Carbon Growth -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Low Carbon Energy Adoption</h2>
+                                <p>Growth of clean energy sources globally</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-low-carbon"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 9: Top Consumers -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Top Energy Consumers</h2>
+                                <p>Countries by total primary energy consumption</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-top-consumers"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 10: Global Map -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <h2>Global Energy Map</h2>
+                                <p>Energy consumption by country worldwide</p>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="chart-map"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <div class="insight-card">
+                    <h3>Key Insights</h3>
+                    <div class="insight-content">
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
+                            <p><strong>Renewable adoption accelerating:</strong> Clean energy sources have grown
+                                significantly over the last decade globally.</p>
+                        </div>
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #4facfe;">public</span>
+                            <p><strong>Asia dominates growth:</strong> China and India account for major portions of the
+                                world's energy consumption growth since 2000.</p>
+                        </div>
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
+                            <p><strong>Energy transition underway:</strong> Fossil fuel consumption share is declining
+                                while renewables continue to grow.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3>Dashboard Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-value">150+</span>
+                            <span class="stat-label">Countries</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">32</span>
+                            <span class="stat-label">Years of Data</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">10</span>
+                            <span class="stat-label">Interactive Charts</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">5</span>
+                            <span class="stat-label">Energy Sources</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="main-footer">
+                <p>Data from Our World in Data | Energy Insights Dashboard | Built with Plotly.js and D3.js</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/chart1_consumption.js"></script>
+    <script src="js/chart7_evolution.js"></script>
+    <script src="js/chart9_top_consumers.js"></script>
+    <script src="js/chart6_share.js"></script>
+    <script src="js/chart2_mix.js"></script>
+    <script src="js/chart3_renewables.js"></script>
+    <script src="js/chart8_low_carbon.js"></script>
+    <script src="js/chart4_gdp_energy.js"></script>
+    <script src="js/chart5_co2_energy.js"></script>
+    <script src="js/chart10_map.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
