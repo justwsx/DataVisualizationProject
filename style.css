@@ -117,7 +117,6 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 }
 .play-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4); }
 
-/* --- 6. NARRATIVE & TYPOGRAPHY (The Massive Descriptions) --- */
 .narrative-container {
     width: 100%; /* Full width */
     margin-bottom: 3rem;
@@ -130,7 +129,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -1px;
-    text-align: center;
+    text-align: center; 
 }
 
 .section-title {
@@ -149,6 +148,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     width: 100%; /* Ensures it goes to the far right */
+    max-width: 100%; /* Override any previous limits */
 }
 
 .text-content strong {
