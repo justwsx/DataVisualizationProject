@@ -123,7 +123,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 }
 
 .main-title {
-    font-size: 2rem; /* Massive title */
+    font-size: 3rem; /* Massive title */
     font-weight: 800;
     color: var(--text-primary);
     margin-bottom: 1.5rem;
