@@ -2,7 +2,7 @@
    ENERGY INSIGHTS DASHBOARD - MAIN STYLES
    ========================================= */
 
-/* --- 1. CSS VARIABLES --- */
+/* --- 1. CSS VARIABLES ---Colors */
 :root {
     /* Brand Colors */
     --primary: #6366f1;       
@@ -239,4 +239,5 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
     .nav-right { justify-content: space-between; }
     .kpi-section { grid-template-columns: 1fr; }
     .main-title { font-size: 2.5rem; }
+
 }
