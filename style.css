@@ -83,40 +83,82 @@ body {
 
 /* --- 5. TOP NAVIGATION BAR --- */
 .top-nav {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    padding-bottom: 30px; margin-bottom: 40px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end;
+    padding-bottom: 30px; 
+    margin-bottom: 40px;
     border-bottom: 1px solid var(--border-color);
 }
 
-.nav-right { display: flex; gap: 24px; align-items: flex-end; flex-wrap: wrap;}
-.control-item { display: flex; flex-direction: column; gap: 6px; }
-.control-item label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; }
+.nav-right { 
+    display: flex; 
+    gap: 30px; /* Aumentato lo spazio tra gli elementi */
+    align-items: flex-end; 
+    flex-wrap: wrap;
+}
+
+.control-item { display: flex; flex-direction: column; gap: 8px; }
+.control-item label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; }
 
 .search-box {
-    background: var(--bg-card); padding: 10px 16px; border-radius: 50px;
+    background: var(--bg-card); padding: 12px 20px; border-radius: 50px;
     box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 12px; width: 300px;
 }
-.search-box input { border: none; outline: none; width: 100%; font-size: 0.9rem; color: var(--text-primary); }
+.search-box input { border: none; outline: none; width: 100%; font-size: 0.95rem; color: var(--text-primary); }
+
+/* --- MODIFICHE PER DILATARE GLI ELEMENTI QUI SOTTO --- */
 
 .year-control-compact {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--bg-card); padding: 6px 12px; border-radius: 50px;
+    display: flex; align-items: center; gap: 15px;
+    background: var(--bg-card); padding: 8px 16px; border-radius: 50px;
     box-shadow: var(--shadow-sm);
 }
-#currentYearDisplay { background: var(--gradient-primary); color: white; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
-input[type="range"] { -webkit-appearance: none; width: 140px; height: 4px; background: #e2e8f0; border-radius: 2px; cursor: pointer; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--primary); border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+
+#currentYearDisplay { 
+    background: var(--gradient-primary); color: white; padding: 6px 14px; 
+    border-radius: 20px; font-weight: 700; font-size: 0.9rem; 
+}
+
+/* 1. SLIDER MOLTO PIÙ LARGO */
+input[type="range"] { 
+    -webkit-appearance: none; 
+    width: 300px; /* <--- MODIFICATO: Era 140px, ora è molto più largo */
+    height: 6px; 
+    background: #e2e8f0; 
+    border-radius: 3px; 
+    cursor: pointer; 
+}
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; cursor: pointer; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
-.filter-select { padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); cursor: pointer; outline: none; font-size: 0.9rem; min-width: 140px; }
+/* 2. SELECT (REGION) PIÙ LARGA */
+.filter-select { 
+    padding: 10px 16px; 
+    border: 1px solid var(--border-color); 
+    border-radius: 10px; 
+    background: var(--bg-card); 
+    cursor: pointer; outline: none; 
+    font-size: 0.95rem; 
+    min-width: 250px; /* <--- MODIFICATO: Era 140px, ora occupa più spazio */
+    color: var(--text-primary);
+}
 
+/* 3. PULSANTE PIÙ GRANDE */
 .play-btn {
-    padding: 10px 20px; background: var(--gradient-primary); color: white; border: none;
-    border-radius: 50px; font-weight: 600; cursor: pointer; display: flex; gap: 8px; align-items: center;
-    transition: transform var(--transition); box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    padding: 12px 30px; /* Più "aria" interna */
+    background: var(--gradient-primary); 
+    color: white; border: none;
+    border-radius: 50px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+    transition: transform var(--transition); 
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    min-width: 160px; /* <--- AGGIUNTO: Larghezza minima garantita */
+    font-size: 1rem;
 }
 .play-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4); }
-
 .narrative-container {
     width: 100%; /* Full width */
     margin-bottom: 3rem;
