@@ -89,6 +89,46 @@ body {
 
 .sidebar-nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
 
+/* --- SIDEBAR TOGGLE LOGIC --- */
+
+/* Stato Nascosto */
+.dashboard.sidebar-collapsed .sidebar {
+    transform: translateX(-100%); /* Sposta la sidebar fuori dallo schermo */
+}
+
+.dashboard.sidebar-collapsed .main-content {
+    margin-left: 0; /* Il contenuto occupa tutto lo spazio a sinistra */
+    width: 100%;
+}
+
+/* Stile per il pulsante menu */
+.icon-btn {
+    background: var(--bg-card);
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    color: var(--primary);
+    transition: var(--transition);
+    margin-right: 15px;
+}
+
+.icon-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Animazione fluida per sidebar e contenuto */
+.sidebar, .main-content {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .nav-item {
     display: flex; 
     align-items: center; 
