@@ -14,6 +14,7 @@
 
 <body>
     <div class="dashboard">
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <span class="material-icons-outlined logo-icon">bolt</span>
@@ -88,139 +89,107 @@
                 <span class="data-source">Data Source: Our World in Data</span>
             </div>
         </aside>
+        <!-- Main Content -->
         <main class="main-content">
-            <div class="top-nav">
-                <div class="nav-left">
-                    <div class="search-box">
-                        <span class="material-icons-outlined">search</span>
-                        <input type="text" placeholder="Search data..." id="searchInput">
-                    </div>
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="search-box">
+                    <span class="material-icons-outlined">search</span>
+                    <input type="text" placeholder="Search countries, regions..." id="searchInput">
                 </div>
-                
-                <div class="nav-right">
-                    <div class="control-item">
-                        <label>Time Travel</label>
-                        <div class="year-control-compact">
+
+                <div class="top-controls">
+                    <div class="filter-group">
+                        <label>Year</label>
+                        <div class="year-control">
                             <span id="currentYearDisplay">2020</span>
                             <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
                         </div>
                     </div>
-                    
-                    <div class="control-item">
-                        <label>Focus Area</label>
+
+                    <div class="filter-group">
+                        <label>Country</label>
                         <select id="countrySelect" class="filter-select">
-                            <option value="World">World Analysis</option>
+                            <option value="World">World</option>
                             <option value="United States">United States</option>
                             <option value="China">China</option>
                             <option value="India">India</option>
                             <option value="Japan">Japan</option>
                             <option value="Germany">Germany</option>
+                            <option value="Russia">Russia</option>
+                            <option value="Brazil">Brazil</option>
                             <option value="United Kingdom">United Kingdom</option>
+                            <option value="France">France</option>
                         </select>
                     </div>
 
-                    <div class="control-item">
+                    <div class="filter-group">
                         <label>Metric</label>
                         <select id="metricSelect" class="filter-select">
-                            <option value="per-capita">Per Capita</option>
-                            <option value="total">Total TWh</option>
+                            <option value="per-capita">Per Capita (kWh)</option>
+                            <option value="total">Total (TWh)</option>
+                            <option value="intensity">Intensity</option>
                         </select>
                     </div>
 
                     <button class="play-btn" id="playBtn">
-                        <span class="material-icons-outlined">play_circle</span>
-                        <span>Visualize</span>
+                        <span class="material-icons-outlined">play_arrow</span>
+                        <span>Play</span>
                     </button>
                 </div>
             </div>
 
-            <div class="hero-section">
-                <h1 class="hero-title">The Pulse of Our Planet</h1>
-                
-                <div class="hero-narrative">
-                    <p class="lead-text">
-                        Welcome to the heartbeat of modern civilization. What you see below isn't just a collection of cold statistics; 
-                        it is the unfolding story of human survival, economic ambition, and our urgent pivot toward sustainability.
-                    </p>
-                    <p>
-                        <strong>Let's decode the signal.</strong> We are currently witnessing a historic decoupling. 
-                        The KPI cards below reveal a paradox of progress: while our collective thirst for energy grows 
-                        to power new economies, our reliance on the old engines of carbon is beginning to falter.
-                    </p>
-                    <p>
-                        Look closely at the data: <strong>Total Energy Use</strong> is climbing, yet <strong>Fossil Fuel</strong> consumption is showing signs of a plateau. 
-                        Meanwhile, the green spark of <strong>Renewables</strong> is turning into a roaring fire, outpacing all other sectors. 
-                        This is the data of a world in transition—messy, vital, and undeniably moving forward.
-                    </p>
-                </div>
-            </div>
-
+            <!-- KPI Cards -->
             <div class="kpi-section">
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper energy">
-                        <span class="material-icons-outlined">bolt</span>
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <span class="material-icons-outlined">flash_on</span>
                     </div>
-                    <div class="kpi-data">
-                        <span class="kpi-label">Total Consumption</span>
+                    <div class="kpi-content">
                         <span class="kpi-value" id="kpiTotalEnergy">--</span>
-                        <div class="kpi-trend positive">
-                            <span class="material-icons-outlined">trending_up</span>
-                            <span>+2.4% vs prev.</span>
-                        </div>
+                        <span class="kpi-label">Total Energy Use</span>
+                        <span class="kpi-change positive">+2.4% vs last year</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper fossil">
-                        <span class="material-icons-outlined">oil_barrel</span>
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <span class="material-icons-outlined">local_gas_station</span>
                     </div>
-                    <div class="kpi-data">
-                        <span class="kpi-label">Fossil Fuels</span>
+                    <div class="kpi-content">
                         <span class="kpi-value" id="kpiFossil">--</span>
-                        <div class="kpi-trend negative">
-                            <span class="material-icons-outlined">trending_down</span>
-                            <span>-0.8% vs prev.</span>
-                        </div>
+                        <span class="kpi-label">Fossil Fuel Consumption</span>
+                        <span class="kpi-change negative">-0.8% vs last year</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper renewable">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                         <span class="material-icons-outlined">eco</span>
                     </div>
-                    <div class="kpi-data">
-                        <span class="kpi-label">Green Energy</span>
+                    <div class="kpi-content">
                         <span class="kpi-value" id="kpiRenewables">--</span>
-                        <div class="kpi-trend positive">
-                            <span class="material-icons-outlined">trending_up</span>
-                            <span>+8.5% vs prev.</span>
-                        </div>
+                        <span class="kpi-label">Renewables Consumption</span>
+                        <span class="kpi-change positive">+8.5% vs last year</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-icon-wrapper gdp">
-                        <span class="material-icons-outlined">payments</span>
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <span class="material-icons-outlined">trending_up</span>
                     </div>
-                    <div class="kpi-data">
-                        <span class="kpi-label">GDP per Capita</span>
+                    <div class="kpi-content">
                         <span class="kpi-value" id="kpiGDP">--</span>
-                        <div class="kpi-trend positive">
-                            <span class="material-icons-outlined">trending_up</span>
-                            <span>+3.1% vs prev.</span>
-                        </div>
+                        <span class="kpi-label">GDP per Capita ($)</span>
+                        <span class="kpi-change positive">+3.1% vs last year</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Charts Grid -->
             <div class="charts-section">
                 <div class="charts-grid">
-
-                    <div class="narrative-break">
-                        <h3>The Engine Room</h3>
-                        <p>Now, let’s drift down to the charts. This is the engine room of the dashboard. It starts with <strong>Global Energy Consumption</strong> and <strong>Energy Mix</strong>. If you toggle the view to "Area," you get this massive mountain range of data. It shows us that while we are excited about wind and solar, the "base load" of our civilization is still heavy. The Energy Mix breaks this down ruthlessly—you can see the massive blocks of Coal and Oil, but you also see that thin, vibrant sliver of Renewables getting wider every single year.</p>
-                    </div>
-
+                    <!-- Chart 1: Global Consumption Over Time -->
                     <div class="chart-card large">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -237,6 +206,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 2: Energy Mix -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -249,11 +219,7 @@
                         </div>
                     </div>
 
-                    <div class="narrative-break">
-                        <h3>Optimism & Efficiency</h3>
-                        <p>This is where the optimism lives. In the <strong>Renewable Energy Growth</strong> and <strong>Low Carbon Tech</strong> sections, the curve is exponential. We aren't just adding solar panels linearly; we are multiplying them. This ties directly into the <strong>Carbon Intensity</strong> chart, which answers the question: "How much CO2 do we emit for every dollar of wealth we create?" The line is trending down, meaning we are finally decoupling growth from pollution.</p>
-                    </div>
-
+                    <!-- Chart 3: Renewable Trends -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -266,6 +232,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 4: Energy vs GDP -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -278,6 +245,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 5: CO2 vs Energy -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -290,6 +258,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 6: Global Energy Share -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -302,11 +271,7 @@
                         </div>
                     </div>
 
-                    <div class="narrative-break">
-                        <h3>The Geopolitical Shift</h3>
-                        <p>The geopolitical story is told here. It says <strong>"Asia dominates growth,"</strong> and the charts prove it. In <strong>Regional Evolution</strong>, you see the US and Europe plateauing, while China and India are rocketing upwards. The center of gravity for the global energy market has shifted East, and it’s not going back.</p>
-                    </div>
-
+                    <!-- Chart 7: Regional Evolution -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -319,6 +284,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 8: Low Carbon Growth -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -331,6 +297,7 @@
                         </div>
                     </div>
 
+                    <!-- Chart 9: Top Consumers -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -343,11 +310,7 @@
                         </div>
                     </div>
 
-                    <div class="narrative-break">
-                        <h3>The Big Picture</h3>
-                        <p>Finally, the <strong>Global Energy Map</strong> ties it all together spatially. It allows you to see the inequality and the density of usage at a glance—the dark clusters of the industrialized north versus the lights coming on across the developing world. It’s a race against time, but the data shows we are finally running in the right direction.</p>
-                    </div>
-
+                    <!-- Chart 10: Global Map -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <div class="chart-title">
@@ -362,21 +325,25 @@
                 </div>
             </div>
 
+            <!-- Insights Section -->
             <div class="insights-section">
                 <div class="insight-card">
-                    <h3>Key Insights Summary</h3>
+                    <h3>Key Insights</h3>
                     <div class="insight-content">
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
-                            <p><strong>Renewable adoption accelerating:</strong> Clean energy sources have grown significantly over the last decade globally.</p>
+                            <p><strong>Renewable adoption accelerating:</strong> Clean energy sources have grown
+                                significantly over the last decade globally.</p>
                         </div>
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #4facfe;">public</span>
-                            <p><strong>Asia dominates growth:</strong> China and India account for major portions of the world's energy consumption growth since 2000.</p>
+                            <p><strong>Asia dominates growth:</strong> China and India account for major portions of the
+                                world's energy consumption growth since 2000.</p>
                         </div>
                         <div class="insight-item">
                             <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
-                            <p><strong>Energy transition underway:</strong> Fossil fuel consumption share is declining while renewables continue to grow.</p>
+                            <p><strong>Energy transition underway:</strong> Fossil fuel consumption share is declining
+                                while renewables continue to grow.</p>
                         </div>
                     </div>
                 </div>
@@ -404,12 +371,14 @@
                 </div>
             </div>
 
+            <!-- Footer -->
             <footer class="main-footer">
                 <p>Data from Our World in Data | Energy Insights Dashboard | Built with Plotly.js and D3.js</p>
             </footer>
         </main>
     </div>
 
+    <!-- Scripts -->
     <script src="js/chart1_consumption.js"></script>
     <script src="js/chart7_evolution.js"></script>
     <script src="js/chart9_top_consumers.js"></script>

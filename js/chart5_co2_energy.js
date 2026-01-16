@@ -8,10 +8,8 @@ class CO2EnergyChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // Filter data for the selected year
         const yearData = this.data.filter(d => d.year === year && d.primary_energy_consumption > 0);
 
-        // Process data: calculate intensity and prepare objects
         const traceData = yearData.map(d => {
             const intensity = d.primary_energy_consumption > 0
                 ? (d.fossil_fuel_consumption / d.primary_energy_consumption) * 100
@@ -25,9 +23,12 @@ class CO2EnergyChart {
             };
         }).filter(d => d.intensity > 0);
 
-        /* REMOVED: 'textLabels' logic.
-           We no longer calculate conditional labels because we don't want static text.
-        */
+        const textLabels = traceData.map(d => {
+            if (d.intensity > 88 && d.energy > 200) {
+                return d.country;
+            }
+            return "";
+        });
 
         const bubbleSizes = traceData.map(d => {
             return 5 + (d.intensity * 0.2);
@@ -36,16 +37,16 @@ class CO2EnergyChart {
         const trace = {
             x: traceData.map(d => d.energy),
             y: traceData.map(d => d.intensity),
-            
-            // We put country names in 'text' strictly for the hover tooltip
-            text: traceData.map(d => d.country),
-            
-            // CRITICAL CHANGE: changed from 'markers+text' to just 'markers'.
-            // This prevents Plotly from printing text on the canvas permanently.
-            mode: 'markers', 
-            
-            // REMOVED: textposition, textfont (no longer needed since we have no static text)
-
+            text: textLabels,
+            hovertext: traceData.map(d => d.country),
+            mode: 'markers+text',
+            textposition: 'top center',
+            textfont: {
+                family: 'Inter, sans-serif',
+                size: 10,
+                color: '#334155',
+                weight: 600
+            },
             marker: {
                 size: bubbleSizes,
                 sizemode: 'diameter',
@@ -70,9 +71,8 @@ class CO2EnergyChart {
                     width: 0.5
                 }
             },
-            // Updated template to use %{text} which now holds the country name
             hovertemplate:
-                '<b>%{text}</b><br>' +
+                '<b>%{hovertext}</b><br>' +
                 'Intensity: %{y:.1f}%<br>' +
                 'Energy: %{x:.1f} TWh<br>' +
                 '<extra></extra>',
