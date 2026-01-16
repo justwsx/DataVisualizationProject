@@ -10,6 +10,7 @@ class MixChart {
             renewables: '#22c55e',
             nuclear: '#8b5cf6'
         };
+        
     }
 
     update(selectedYear) {
@@ -165,3 +166,4 @@ class MixChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
+
