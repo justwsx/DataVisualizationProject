@@ -146,3 +146,4 @@ class ConsumptionChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
+
