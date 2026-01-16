@@ -1,4 +1,4 @@
-### 🌍 The Green Shift: Energy Transition and Climate Policy in Europe (2010-2024)
+### 🌍 The Green Shift: Energy Transition and Climate Policy in Europe
 
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
