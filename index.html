@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Insights Dashboard</title>
+    <title>Energy Insights Dashboard | The Pulse of Our Planet</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
@@ -43,24 +44,25 @@
                         <span class="material-icons-outlined">monetization_on</span>
                         <span>Economics</span>
                     </a>
-                    <a href="#section-geopolitics" class="nav-item">
-                        <span class="material-icons-outlined">public</span>
-                        <span>Geopolitics</span>
+                    <a href="#section-findings" class="nav-item">
+                        <span class="material-icons-outlined">psychology</span>
+                        <span>Findings</span>
                     </a>
                 </div>
             </nav>
 
             <div class="sidebar-footer">
-                <span class="data-source">Data Source: Our World in Data</span>
+                <span class="data-source">Source: Our World in Data</span>
             </div>
         </aside>
 
         <main class="main-content">
+            
             <div class="top-nav">
                 <div class="nav-left">
                     <div class="search-box">
                         <span class="material-icons-outlined">search</span>
-                        <input type="text" placeholder="Search data..." id="searchInput">
+                        <input type="text" placeholder="Search specific datasets..." id="searchInput">
                     </div>
                 </div>
                 
@@ -74,7 +76,7 @@
                     </div>
                     
                     <div class="control-item">
-                        <label>Region</label>
+                        <label>Geographic Scope</label>
                         <select id="countrySelect" class="filter-select">
                             <option value="World">World Analysis</option>
                             <option value="United States">United States</option>
@@ -83,7 +85,6 @@
                             <option value="Japan">Japan</option>
                             <option value="Germany">Germany</option>
                             <option value="United Kingdom">United Kingdom</option>
-                            <option value="France">France</option>
                         </select>
                     </div>
 
@@ -99,10 +100,10 @@
                 
                 <div class="highlight-box">
                     <p class="text-content">
-                        <strong>Civilization is, fundamentally, an energy conversion engine.</strong> From the glow of a smartphone screen in Tokyo to the industrial furnaces of the Ruhr Valley, every aspect of modern life is underwritten by our ability to harness power. What lies before you is not merely a collection of charts, but the story of human ambition, survival, and adaptation told through data.
+                        <strong>Civilization is, at its core, an energy conversion engine.</strong> Every breakthrough in human history—from the steam engine to the internet—has been underwritten by our ability to harness and direct power. This dashboard is not a simple collection of spreadsheets; it is a live reportage on the survival and ambition of 8 billion people.
                     </p>
                     <p class="text-content" style="margin-bottom: 0;">
-                        We stand at a defining moment in history. The data reveals a world in high tension: the unstoppable force of growing demand—driven by developing nations rising out of poverty—colliding with the immovable object of planetary limits. As you explore this report, look for the <strong>"Great Decoupling"</strong>: the moments where economic growth separates from carbon emissions, and where the exponential curve of renewables begins to challenge the century-old dominance of fossil fuels.
+                        We are living through the "Great Decoupling." For the first time in industrial history, the link between getting richer and polluting more is beginning to fray. As you navigate these chapters, observe the tension between the <strong>stubborn base load</strong> of fossil fuels and the <strong>exponential ascent</strong> of clean electrons. This is the story of how we are reinventing the way we power our future.
                     </p>
                 </div>
             </div>
@@ -113,7 +114,7 @@
                         <span class="material-icons-outlined">bolt</span>
                     </div>
                     <div class="kpi-data">
-                        <span class="kpi-label">Total Consumption</span>
+                        <span class="kpi-label">Global Consumption</span>
                         <span class="kpi-value" id="kpiTotalEnergy">--</span>
                         <div class="kpi-trend positive">
                             <span class="material-icons-outlined">trending_up</span>
@@ -127,7 +128,7 @@
                         <span class="material-icons-outlined">oil_barrel</span>
                     </div>
                     <div class="kpi-data">
-                        <span class="kpi-label">Fossil Fuels</span>
+                        <span class="kpi-label">Fossil Fuel Reliance</span>
                         <span class="kpi-value" id="kpiFossil">--</span>
                         <div class="kpi-trend negative">
                             <span class="material-icons-outlined">trending_down</span>
@@ -141,7 +142,7 @@
                         <span class="material-icons-outlined">eco</span>
                     </div>
                     <div class="kpi-data">
-                        <span class="kpi-label">Green Energy</span>
+                        <span class="kpi-label">Renewable Growth</span>
                         <span class="kpi-value" id="kpiRenewables">--</span>
                         <div class="kpi-trend positive">
                             <span class="material-icons-outlined">trending_up</span>
@@ -166,12 +167,12 @@
             </div>
 
             <div id="section-demand" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">history</span> 1. The Insatiable Hunger: A Global Overview</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">history</span> 1. The Global Appetite for Power</h2>
                 <p class="text-content">
-                    To understand our future, we must first grapple with the sheer scale of our present consumption. The chart below, <strong>"Global Energy Consumption,"</strong> traces the metabolic rate of humanity. Since 1990, humanity's thirst for energy has been unquenchable, nearly doubling in volume. This isn't just a line moving up; it represents billions of people gaining access to electricity, the construction of megacities in Asia, and the digitization of the global economy.
+                    To solve the climate equation, we must first understand the sheer scale of the demand. Since 1990, humanity's energy consumption has followed a near-relentless upward trajectory. This is the visual representation of the "Metabolic Rate" of our species—representing cities rising, the digital revolution, and billions of people escaping energy poverty.
                 </p>
                 <p class="text-content">
-                    But this growth is not evenly distributed. The <strong>Global Map</strong> below adds a crucial spatial dimension to this story. It highlights the profound inequality in energy access. While the industrialized North (US, Europe, Russia) glows with high-intensity usage, vast regions of the Global South are still in the early stages of their energy journey. The challenge of the 21st century is simple yet daunting: how do we satisfy this growing hunger for development without breaking the planet's climate systems?
+                    The <strong>Global Map</strong> below illustrates the spatial inequality of this consumption. Notice the sharp contrast between the energy-saturated Global North and the developing economies of the South. The transition isn't just about changing <em>how</em> we use energy, but ensuring <em>equitable access</em> to it as the map continues to darken with rising demand.
                 </p>
             </div>
 
@@ -179,265 +180,170 @@
                 <div class="chart-card large">
                     <div class="chart-header">
                         <div class="chart-title">
-                            <h2>Global Primary Energy Consumption Trend</h2>
-                            <p>Evolution of total energy consumption over the decades (TWh)</p>
+                            <h2>Primary Energy Consumption Trend</h2>
+                            <p>Decadal evolution of global energy use (TWh)</p>
                         </div>
                         <div class="chart-actions">
                             <button class="chart-btn active" data-view="lines">Lines</button>
                             <button class="chart-btn" data-view="area">Area</button>
                         </div>
                     </div>
-                    <div class="chart-body">
-                        <div id="chart-consumption"></div>
-                    </div>
+                    <div class="chart-body"><div id="chart-consumption"></div></div>
                 </div>
             </div>
 
              <div class="grid-full" style="margin-top: -50px;"> <div class="chart-card">
                     <div class="chart-header">
                         <div class="chart-title">
-                            <h2>Global Energy Distribution Map</h2>
-                            <p>Per capita consumption intensity by country (kWh)</p>
+                            <h2>Global Consumption Intensity Map</h2>
+                            <p>Per capita energy usage intensity by nation (kWh)</p>
                         </div>
                     </div>
-                    <div class="chart-body">
-                        <div id="chart-map"></div>
-                    </div>
+                    <div class="chart-body"><div id="chart-map"></div></div>
                 </div>
             </div>
 
             <div id="section-mix" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">pie_chart</span> 2. The Reality Check: What Powers Us?</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">pie_chart</span> 2. The Carbon Empire vs. The Electron Revolution</h2>
                 <p class="text-content">
-                    Despite the optimistic headlines about solar breakthroughs and wind farms, the data presents a sobering reality check. We are still, fundamentally, a civilization built on fire. The <strong>"Energy Mix"</strong> chart below peels back the layers of our consumption to reveal the stubborn dominance of the incumbents: Coal, Oil, and Gas still account for the vast majority of our power.
+                    What powers the global grid? This is the most sobering part of the story. Despite the rise of solar and wind, the world is still largely built on fire. The <strong>Energy Mix</strong> reveals the deep foundations of Coal, Oil, and Gas that still support our economy.
                 </p>
                 <p class="text-content">
-                    However, the static picture hides the dynamic shift. Look closely at the "Renewables" slice in the <strong>Market Share</strong> chart. While it starts small, it is the only category showing aggressive, compound growth year after year. We are in the middle of a war for market share, where atoms (Nuclear) and electrons (Renewables) are slowly besieging the carbon empire.
+                    However, the <strong>Market Share</strong> pie chart shows the battlefield. Every percentage point gained by Renewables and Nuclear represents a retreat for the Carbon Empire. We are watching a slow-motion siege of the fossil fuel incumbents by cleaner, more efficient technologies.
                 </p>
             </div>
 
             <div class="grid-dual">
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Energy Mix Composition</h2>
-                            <p>Volume of energy by source (TWh)</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-mix"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>Energy Mix Composition</h2><p>Absolute TWh by source</p></div></div>
+                    <div class="chart-body"><div id="chart-mix"></div></div>
                 </div>
-
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Market Share by Source</h2>
-                            <p>Percentage distribution of energy sources</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-share"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>Global Share Breakdown</h2><p>% distribution by source</p></div></div>
+                    <div class="chart-body"><div id="chart-share"></div></div>
                 </div>
             </div>
 
             <div id="section-transition" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">autorenew</span> 3. The Green Revolution: Speed and Scale</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">autorenew</span> 3. Tipping Points and Technological Momentum</h2>
                 <p class="text-content">
-                    This is where the data shifts from historical burden to future promise. While fossil fuels have linear growth, renewable technologies follow an exponential curve. The <strong>"Renewable Adoption Curve"</strong> shows a classic "hockey stick" trajectory. Solar and wind are no longer just "alternative" energies; in many regions, they have crossed the economic tipping point to become the cheapest source of new electricity.
+                    This is where the data turns into optimism. Renewable energy technologies don't grow linearly; they grow exponentially. The <strong>Adoption Curve</strong> below shows the classic "hockey stick" shape of a technology taking over. Wind and solar are no longer the energy of the future—they are the energy of <em>now</em>.
                 </p>
                 <p class="text-content">
-                    But renewables alone aren't the whole picture. The <strong>"Low Carbon Tech"</strong> chart combines renewables with nuclear power to show our total arsenal against climate change. A rising trend here is the clearest indicator of successful decarbonization policies. Watch how this line accelerates in the post-2010 era, driven by plummeting technology costs and aggressive government mandates in Europe and China.
+                    When we combine these with nuclear power in the <strong>Low Carbon Tech</strong> chart, we see the blueprint for a decarbonized world. This isn't just about saving the planet; it's about the superior economics of renewable power winning the global market.
                 </p>
             </div>
 
             <div class="grid-dual">
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Renewable Adoption Curve</h2>
-                            <p>Growth of wind, solar, and hydro over time</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-renewables"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>Renewable Adoption Path</h2><p>Wind, Solar, and Hydro growth</p></div></div>
+                    <div class="chart-body"><div id="chart-renewables"></div></div>
                 </div>
-
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Total Low Carbon Tech</h2>
-                            <p>Includes nuclear and renewables combined</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-low-carbon"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>Total Low Carbon Adoption</h2><p>Nuclear + Renewables</p></div></div>
+                    <div class="chart-body"><div id="chart-low-carbon"></div></div>
                 </div>
             </div>
 
             <div id="section-economics" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">analytics</span> 4. The Economic Equation: Doing More with Less</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">analytics</span> 4. The Prosperity Paradox: Decoupling Growth</h2>
                 <p class="text-content">
-                    For a century, an iron law governed economics: to grow GDP, you must burn more carbon. That law is finally breaking. The concept of <strong>"Decoupling"</strong> is visible in the data below. Advanced economies are now generating more wealth while using energy more efficiently and emitting less CO2 per unit of energy.
+                    For a century, economists believed that to grow wealth (GDP), you must burn more fuel. But the data shows that <strong>"Efficiency is the First Fuel."</strong> We are learning to generate more wealth with less power. The <strong>Carbon Intensity</strong> chart tracks how "dirty" each unit of energy is—and the trend is decisively downward.
                 </p>
                 <p class="text-content">
-                    The <strong>"Carbon Intensity"</strong> chart is perhaps the most critical metric for long-term sustainability. It measures how "dirty" our energy supply is. A downward trend here proves that we are learning to power our lifestyles with fewer emissions. It’s a race between efficiency (getting cleaner) and total demand (getting bigger).
-                </p>
-            </div>
-
-            <div class="grid-dual">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Wealth vs. Energy Consumption</h2>
-                            <p>Correlation between GDP and Energy use</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-gdp-energy"></div>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Carbon Intensity</h2>
-                            <p>CO2 emitted per unit of energy consumed</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-co2-energy"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="section-geopolitics" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">public</span> 5. The Shifting Center of Gravity</h2>
-                <p class="text-content">
-                    Energy is not just about physics; it is about power in the geopolitical sense. The charts below illustrate a massive shift in the world order. The center of gravity for global energy demand has moved decisively East. The <strong>"Regional Evolution"</strong> chart clearly demonstrates the rapid rise of Asia—specifically China and India—as the dominant engines of global demand in the 21st century.
-                </p>
-                <p class="text-content">
-                    This shift has profound implications. As Western consumption plateaus or declines due to efficiency and de-industrialization, the decisions made in Beijing and New Delhi regarding their energy mix (Coal vs. Renewables) will determine the climate future of the entire planet. The <strong>"Top Consumers"</strong> leaderboard is no longer just a list of users; it is a list of the key players who will define the next century.
+                    As we shift towards service economies and smarter manufacturing, we are finally breaking the iron link between development and destruction. This section proves that a green future is a more prosperous future.
                 </p>
             </div>
 
             <div class="grid-dual">
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Regional Evolution</h2>
-                            <p>Consumption trends by major global regions</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-evolution"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>GDP vs. Energy Consumption</h2><p>The correlation of prosperity</p></div></div>
+                    <div class="chart-body"><div id="chart-gdp-energy"></div></div>
                 </div>
-
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>Top Global Consumers</h2>
-                            <p>Ranking of nations by total primary energy</p>
-                        </div>
-                    </div>
-                    <div class="chart-body">
-                        <div id="chart-top-consumers"></div>
-                    </div>
+                    <div class="chart-header"><div class="chart-title"><h2>Carbon Intensity Trend</h2><p>CO2 emitted per energy unit</p></div></div>
+                    <div class="chart-body"><div id="chart-co2-energy"></div></div>
                 </div>
             </div>
 
-            <div class="insights-section">
+            <div id="section-geopolitics" class="grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Regional Evolution</h2><p>The rise of the East</p></div></div>
+                    <div class="chart-body"><div id="chart-evolution"></div></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Top Energy Consumers</h2><p>Ranked total consumption</p></div></div>
+                    <div class="chart-body"><div id="chart-top-consumers"></div></div>
+                </div>
+            </div>
+
+            <div id="section-findings" class="insights-section">
+                
                 <div class="insight-card">
-    <h3>Detailed Strategic Findings</h3>
-    <div class="insight-content">
-        <div class="insight-item">
-            <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
-            <div class="insight-text-wrapper">
-                <p><strong>The Exponential Rise of Clean Electrons:</strong></p>
-                <p>We are no longer in a phase of "alternative" energy. The data shows that <strong>Renewables</strong> have moved from a niche experiment to a global industrial imperative. With double-digit growth rates, solar and wind are consistently outperforming fossil fuels in terms of new capacity. This isn't just a policy shift; it's a <strong>technological tipping point</strong> where green energy has become the most cost-effective option for the global grid.</p>
-            </div>
-        </div>
+                    <h3>Detailed Strategic Findings</h3>
+                    <div class="insight-content">
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>The Exponential Rise of Clean Electrons:</strong></p>
+                                <p>We are no longer in a phase of "alternative" energy. The data shows that <strong>Renewables</strong> have moved from a niche experiment to a global industrial imperative. With double-digit growth rates, solar and wind are consistently outperforming fossil fuels in terms of new capacity. This is a <strong>technological tipping point</strong> where green energy has become the most cost-effective option for the global grid.</p>
+                            </div>
+                        </div>
 
-        <div class="insight-item">
-            <span class="material-icons-outlined" style="color: #4facfe;">public</span>
-            <div class="insight-text-wrapper">
-                <p><strong>The Great Migration of Demand:</strong></p>
-                <p>The global energy center of gravity has decisively shifted. While Western markets show a <strong>plateau or decline</strong> in consumption due to efficiency and service-based economies, <strong>Asia (led by China and India)</strong> accounts for nearly all modern demand growth. This means the climate battle won't be won in London or Washington, but in the industrial heartlands of the East, where balancing development with decarbonization is the ultimate challenge.</p>
-            </div>
-        </div>
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #4facfe;">public</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>The Great Migration of Demand:</strong></p>
+                                <p>The energy center of gravity has decisively shifted. While Western markets show a <strong>plateau or decline</strong> in consumption, <strong>Asia (led by China and India)</strong> accounts for nearly all modern demand growth. The climate battle will be won in the industrial heartlands of the East, where balancing development with decarbonization is the ultimate global challenge.</p>
+                            </div>
+                        </div>
 
-        <div class="insight-item">
-            <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
-            <div class="insight-text-wrapper">
-                <p><strong>The Paradox of Addition:</strong></p>
-                <p>Despite the "Green Revolution," fossil fuel consumption remains stubbornly high. The data reveals a sober truth: we aren't necessarily <em>replacing</em> dirty energy; we are <strong>adding</strong> clean energy to a world that is hungrier than ever. True <strong>Decoupling</strong>—growing the economy while <em>reducing</em> absolute emissions—is happening in advanced nations, but globally, the "Carbon Engine" still provides the base load for modern life.</p>
-            </div>
-        </div>
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>The Paradox of Addition:</strong></p>
+                                <p>Despite the "Green Revolution," fossil fuel consumption remains high. The data reveals that we aren't necessarily <em>replacing</em> dirty energy yet; we are <strong>adding</strong> clean energy to a world that is hungrier than ever. True <strong>Decoupling</strong>—growing wealth while reducing absolute emissions—is the final hurdle we must cross.</p>
+                            </div>
+                        </div>
 
-        <div class="insight-item">
-            <span class="material-icons-outlined" style="color: #f59e0b;">bolt</span>
-            <div class="insight-text-wrapper">
-                <p><strong>Efficiency as the "First Fuel":</strong></p>
-                <p>The "Carbon Intensity" metrics suggest that we are becoming much smarter. We now generate significantly more <strong>GDP per unit of energy</strong> than we did in 1990. This "invisible" progress is often overlooked, but it is the strongest weapon we have. The goal for the next decade is to accelerate this trend until energy waste becomes a relic of the industrial past.</p>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #f59e0b;">bolt</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>Efficiency as the "First Fuel":</strong></p>
+                                <p>Carbon Intensity metrics prove we are getting smarter. We generate significantly more <strong>GDP per unit of energy</strong> than in 1990. This "invisible" progress is our strongest weapon. The goal for the next decade is to accelerate this trend until energy waste becomes a relic of the industrial past.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="stats-card">
                     <h3>Data Source & Methodology</h3>
-                    
                     <p class="stats-description">
-                        This dashboard visualizes the comprehensive <strong>Energy Production & Consumption</strong> dataset curated by <em>Our World in Data</em>, based on primary data from the <strong>Statistical Review of World Energy</strong>. It provides a standardized view of global energy history.
+                        This analysis utilizes the <strong>Energy Production & Consumption</strong> dataset curated by <em>Our World in Data</em>, synthesized from the <strong>BP Statistical Review of World Energy</strong>.
                     </p>
 
                     <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value">150+</span>
-                            <span class="stat-label">Countries</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">1990-2022</span>
-                            <span class="stat-label">Temporal Range</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">Annual</span>
-                            <span class="stat-label">Granularity</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">TWh</span>
-                            <span class="stat-label">Primary Unit</span>
-                        </div>
+                        <div class="stat-item"><span class="stat-value">150+</span><span class="stat-label">Countries</span></div>
+                        <div class="stat-item"><span class="stat-value">1990-2022</span><span class="stat-label">Timeline</span></div>
+                        <div class="stat-item"><span class="stat-value">Annual</span><span class="stat-label">Granularity</span></div>
+                        <div class="stat-item"><span class="stat-value">TWh</span><span class="stat-label">Primary Unit</span></div>
                     </div>
 
                     <div class="dataset-meta">
-                        <div class="meta-row">
-                            <span class="material-icons-outlined">verified</span>
-                            <span><strong>License:</strong> Creative Commons BY 4.0</span>
-                        </div>
-                        <div class="meta-row">
-                            <span class="material-icons-outlined">update</span>
-                            <span><strong>Last Update:</strong> August 2023</span>
-                        </div>
-                        <div class="meta-row">
-                            <span class="material-icons-outlined">science</span>
-                            <span><strong>Method:</strong> Substitution method (primary energy)</span>
-                        </div>
+                        <div class="meta-row"><span class="material-icons-outlined">verified</span><span><strong>License:</strong> CC BY 4.0</span></div>
+                        <div class="meta-row"><span class="material-icons-outlined">update</span><span><strong>Updated:</strong> Aug 2023</span></div>
+                        <div class="meta-row"><span class="material-icons-outlined">science</span><span><strong>Method:</strong> Substitution method</span></div>
                     </div>
 
                     <a href="https://ourworldindata.org/energy" target="_blank" class="source-btn">
-                        <span>Explore Original Data</span>
+                        <span>Explore Original Source</span>
                         <span class="material-icons-outlined">open_in_new</span>
                     </a>
                 </div>
+            </div>
 
             <footer class="main-footer">
-                <p>Data from Our World in Data | Energy Insights Dashboard | Narrative Report</p>
+                <p>Data by Our World in Data | Energy Insights Narrative Report | Visualized with Plotly.js & D3.js</p>
             </footer>
         </main>
     </div>
