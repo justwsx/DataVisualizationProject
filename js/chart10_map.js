@@ -1,3 +1,4 @@
+
 class EnergyMapChart {
     constructor(data) {
         this.data = data;
@@ -21,7 +22,7 @@ class EnergyMapChart {
             z: zValues,
             text: text,
             colorscale: [
-                [0, '#22c55e'],      // Green - Low consumption (good)
+                [0, '#22c55e'],      // Green -Low consumption (good)
                 [0.3, '#84cc16'],    // Light green
                 [0.5, '#fbbf24'],    // Yellow/Orange - Medium consumption
                 [0.7, '#f97316'],    // Orange
@@ -105,3 +106,4 @@ class EnergyMapChart {
         }
     }
 }
+
