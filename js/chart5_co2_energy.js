@@ -8,15 +8,11 @@ class CO2EnergyChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // --- 1. DATA PROCESSING ---
-
-        // Filter data for the selected year and ensure valid energy consumption
+        // Filter data for the selected year
         const yearData = this.data.filter(d => d.year === year && d.primary_energy_consumption > 0);
 
-        // Map data to calculate Carbon Intensity
+        // Process data: calculate intensity and prepare objects
         const traceData = yearData.map(d => {
-            // Formula: (Fossil Fuel / Primary Energy) * 100
-            // This represents how "dirty" the energy mix is percentage-wise
             const intensity = d.primary_energy_consumption > 0
                 ? (d.fossil_fuel_consumption / d.primary_energy_consumption) * 100
                 : 0;
@@ -24,47 +20,39 @@ class CO2EnergyChart {
             return {
                 country: d.country,
                 energy: d.primary_energy_consumption,
-                intensity: Math.min(intensity, 100), // Cap at 100% to avoid data errors
+                intensity: Math.min(intensity, 100),
                 population: d.population
             };
-        }).filter(d => d.intensity > 0); // Exclude 0 values
+        }).filter(d => d.intensity > 0);
 
-        /* REMOVED LOGIC:
-           I removed the 'textLabels' block that was previously here.
-           It used to force static text for countries with intensity > 88%.
+        /* REMOVED: 'textLabels' logic.
+           We no longer calculate conditional labels because we don't want static text.
         */
 
-        // Calculate bubble sizes based on intensity (higher intensity = slightly larger bubble)
         const bubbleSizes = traceData.map(d => {
             return 5 + (d.intensity * 0.2);
         });
 
-        // --- 2. TRACE CONFIGURATION ---
-
         const trace = {
-            // X-Axis: Total Energy Consumption
             x: traceData.map(d => d.energy),
-            // Y-Axis: Carbon Intensity (%)
             y: traceData.map(d => d.intensity),
             
-            // Text for hover (previously distinct from static labels, now unified)
+            // We put country names in 'text' strictly for the hover tooltip
             text: traceData.map(d => d.country),
             
-            // Mode: 'markers' ONLY (Removed '+text' to hide static labels)
-            mode: 'markers',
+            // CRITICAL CHANGE: changed from 'markers+text' to just 'markers'.
+            // This prevents Plotly from printing text on the canvas permanently.
+            mode: 'markers', 
             
-            // Marker styling
+            // REMOVED: textposition, textfont (no longer needed since we have no static text)
+
             marker: {
                 size: bubbleSizes,
                 sizemode: 'diameter',
-                
-                // Color mapping: Red (dirty) to Green (clean)
                 color: traceData.map(d => d.intensity),
                 colorscale: 'RdYlGn',
-                reversescale: true, // Reverse so Red is high intensity (bad)
+                reversescale: true,
                 showscale: true,
-                
-                // Legend/Colorbar styling
                 colorbar: {
                     title: 'Carbon Intensity (%)',
                     titleside: 'right',
@@ -82,18 +70,14 @@ class CO2EnergyChart {
                     width: 0.5
                 }
             },
-            
-            // Tooltip configuration using the 'text' property defined above
+            // Updated template to use %{text} which now holds the country name
             hovertemplate:
                 '<b>%{text}</b><br>' +
                 'Intensity: %{y:.1f}%<br>' +
                 'Energy: %{x:.1f} TWh<br>' +
                 '<extra></extra>',
-            
             showlegend: false
         };
-
-        // --- 3. LAYOUT CONFIGURATION ---
 
         const layout = {
             title: {
@@ -105,20 +89,20 @@ class CO2EnergyChart {
                 }
             },
             margin: { t: 60, r: 100, b: 60, l: 60 },
-            paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
+            paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: { family: 'Inter, sans-serif' },
             xaxis: {
                 title: 'Primary Energy Consumption (TWh)',
                 gridcolor: '#e2e8f0',
                 zerolinecolor: '#e2e8f0',
-                type: 'log' // Log scale for wide range of energy consumption
+                type: 'log'
             },
             yaxis: {
                 title: 'Carbon Intensity (%)',
                 gridcolor: '#e2e8f0',
                 zerolinecolor: '#e2e8f0',
-                range: [0, 110] // Fixed range 0-100% (plus padding)
+                range: [0, 110]
             },
             hovermode: 'closest'
         };
