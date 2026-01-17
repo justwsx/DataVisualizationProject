@@ -149,6 +149,7 @@ body {
 
 /* --------------------------------------------------------------------------
    5. TOP NAVIGATION & CONTROLS
+   UPDATE: Refactored for Horizontal Layout (Label left of Control)
    -------------------------------------------------------------------------- */
 .top-nav { 
     display: flex; justify-content: space-between; align-items: flex-end; 
@@ -156,10 +157,26 @@ body {
     border-bottom: 1px solid var(--border); 
 }
 
-.nav-right { display: flex; gap: 25px; align-items: flex-end; flex-wrap: wrap; }
+.nav-right { 
+    display: flex; gap: 25px; 
+    align-items: center; /* UPDATE: Align centers vertically (was flex-end) */
+    flex-wrap: wrap; 
+}
 
+/* UPDATE: Control Item Wrapper */
+.control-item {
+    display: flex;
+    flex-direction: row; /* UPDATE: Puts Label next to Input (Horizontal) */
+    align-items: center; /* UPDATE: Vertically centers the text */
+    gap: 15px;           /* UPDATE: Spacing between text and input */
+}
+
+/* UPDATE: Label Styling */
 .control-item label { 
-    display: block; margin-bottom: 8px; 
+    display: block; 
+    margin-bottom: 0;    /* UPDATE: Removed bottom margin (no longer stacked) */
+    white-space: nowrap; /* UPDATE: Prevents label wrapping */
+    
     font-weight: 700; text-transform: uppercase; 
     font-size: 0.7rem; color: var(--text-l); 
 }
