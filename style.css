@@ -9,38 +9,34 @@
    -------------------------------------------------------------------------- */
 :root {
     /* --- BRAND COLORS --- */
-    /* Primary Indigo for focus elements */
     --primary: #4f46e5;       
     --primary-dark: #4338ca; 
-    
-    /* Vibrant Gradient for primary calls-to-action (Play Button) */
     --gradient-vibrant: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     
     /* --- LIGHT MODE PALETTE --- */
-    --bg-body: #f8fafc;       /* Cool light gray for the main background */
-    --bg-card: #ffffff;       /* Pure white for data containers */
-    --bg-sidebar: #ffffff;    /* White sidebar for clean look */
-    --bg-input: #f1f5f9;      /* Light gray for inputs/inactive states */
+    --bg-body: #f8fafc;       
+    --bg-card: #ffffff;       
+    --bg-sidebar: #ffffff;    
+    --bg-input: #f1f5f9;      
     
     /* --- TYPOGRAPHY COLORS --- */
-    --text-p: #0f172a;        /* Primary: Almost black for readability */
-    --text-s: #475569;        /* Secondary: Slate gray for context */
-    --text-l: #94a3b8;        /* Tertiary: Lighter gray for labels */
+    --text-p: #0f172a;        
+    --text-s: #475569;        
+    --text-l: #94a3b8;        
     
     /* --- UI DECORATION --- */
-    --border: #e2e8f0;        /* Subtle borders for structure */
-    --radius: 16px;           /* Modern rounded corners */
-    --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth 'Apple-like' motion */
+    --border: #e2e8f0;        
+    --radius: 16px;           
+    --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); 
     
-    /* Shadows for depth */
+    /* Shadows */
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
     --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --shadow-glow: 0 4px 15px rgba(79, 70, 229, 0.4); /* Used on colored buttons */
+    --shadow-glow: 0 4px 15px rgba(79, 70, 229, 0.4); 
 }
 
 /* --------------------------------------------------------------------------
    2. GLOBAL RESET & BASE
-   Standardizing box model and typography.
    -------------------------------------------------------------------------- */
 *, *::before, *::after { 
     margin: 0; padding: 0; box-sizing: border-box; 
@@ -51,31 +47,30 @@ body {
     background: var(--bg-body); 
     color: var(--text-p); 
     line-height: 1.6; 
-    overflow-x: hidden; /* Prevents horizontal scroll from animations */
+    overflow-x: hidden; 
 }
 
 /* --------------------------------------------------------------------------
    3. "GHOST" SIDEBAR LOGIC
-   The sidebar is invisible (transparent) by default to maximize screen real estate.
-   It reveals itself only when the user intends to navigate (Hover).
+   Invisible by default, reveals on hover.
    -------------------------------------------------------------------------- */
 .dashboard { display: flex; min-height: 100vh; }
 
 .sidebar {
     /* DEFAULT STATE: Invisible Touch Target */
-    width: 20px;          /* Small strip to catch the mouse cursor */
+    width: 20px;          
     background: transparent; 
-    opacity: 0;           /* Visually hidden */
+    opacity: 0;           
     
     /* Positioning */
     position: fixed; 
     top: 0; left: 0; height: 100vh; 
-    z-index: 1000;        /* Layers above everything else */
+    z-index: 1000;        
     
     /* Layout */
     display: flex; flex-direction: column;
-    overflow: hidden;     /* Hides text when collapsed */
-    white-space: nowrap;  /* Prevents text wrapping during animation */
+    overflow: hidden;     
+    white-space: nowrap;  
     
     /* Animation definition */
     transition: width var(--transition), opacity 0.3s ease, box-shadow 0.3s;
@@ -84,23 +79,18 @@ body {
 
 /* ACTIVE STATE: Triggered on Mouse Hover */
 .sidebar:hover {
-    width: 280px;         /* Expands to readable width */
+    width: 280px;         
     background: var(--bg-sidebar); 
-    opacity: 1;           /* Becomes visible */
-    
-    /* Deep shadow to create "Overlay" effect over content */
+    opacity: 1;           
     box-shadow: 10px 0 40px rgba(0,0,0,0.1); 
     border-right: 1px solid var(--border);
 }
 
 /* --- Sidebar Content Animations --- */
-/* Strategy: Content slides in slightly after the background expands for smoothness */
-
 .sidebar-header { 
     padding: 30px 24px; 
     display: flex; align-items: center; gap: 12px; 
     border-bottom: 1px solid var(--border);
-    
     opacity: 0; transform: translateX(-20px);
     transition: all 0.3s ease;
 }
@@ -124,7 +114,6 @@ body {
     font-weight: 500;
     transition: var(--transition);
 }
-
 .nav-item:hover { background: var(--bg-input); color: var(--primary); transform: translateX(4px); }
 .nav-item.active { background: var(--bg-input); color: var(--primary); font-weight: 700; }
 
@@ -135,31 +124,29 @@ body {
 }
 .sidebar:hover .sidebar-footer { opacity: 1; transition-delay: 0.3s; }
 
+/* --------------------------------------------------------------------------
+   4. MAIN CONTENT LAYOUT & SHIFT LOGIC
+   -------------------------------------------------------------------------- */
+.main-content { 
+    flex: 1; 
+    margin-left: 0;       
+    width: 100%;          
+    padding: 40px 50px;   
+    
+    /* UPDATE: Smooth transition for margin and width */
+    transition: margin-left 400ms cubic-bezier(0.4, 0, 0.2, 1), 
+                width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* --- NEW FEATURE: Content Shift on Sidebar Hover --- */
-/* Shift main content to the right when sidebar is expanded */
-.sidebar:hover ~ .main-content {
-    margin-left: 280px;        /* Matches the expanded sidebar width */
+/* Logic: Detect if .sidebar is hovered anywhere in the body, then shift .main-content */
+body:has(.sidebar:hover) .main-content {
+    margin-left: 280px;        /* Push content to the right */
     width: calc(100% - 280px); /* Adjust width to prevent horizontal scrolling */
 }
 
 /* --------------------------------------------------------------------------
-   4. MAIN CONTENT LAYOUT
-   Designed to use 100% of the screen width since the sidebar is an overlay.
-   -------------------------------------------------------------------------- */
-.main-content { 
-    flex: 1; 
-    margin-left: 0;       /* No margin needed (Sidebar floats) */
-    width: 100%;          /* Full width */
-    padding: 40px 50px;   /* Generous padding for breathing room */
-    transition: var(--transition);
-    /* Smooth adjustments if sidebar state changes. COntent moves to right */
-    transition: margin-left 400ms cubic-bezier(0.4, 0, 0.2, 1), 
-                width 400ms cubic-bezier(0.4, 0, 0.2, 1); /
-}
-
-/* --------------------------------------------------------------------------
    5. TOP NAVIGATION & CONTROLS
-   UPDATE: Refactored for Horizontal Layout (Label left of Control)
    -------------------------------------------------------------------------- */
 .top-nav { 
     display: flex; justify-content: space-between; align-items: flex-end; 
@@ -169,24 +156,22 @@ body {
 
 .nav-right { 
     display: flex; gap: 25px; 
-    align-items: center; /* UPDATE: Align centers vertically (was flex-end) */
+    align-items: center; /* Vertically center items */
     flex-wrap: wrap; 
 }
 
-/* UPDATE: Control Item Wrapper */
+/* UPDATE: Control Item Wrapper - Horizontal Layout */
 .control-item {
     display: flex;
-    flex-direction: row; /* UPDATE: Puts Label next to Input (Horizontal) */
-    align-items: center; /* UPDATE: Vertically centers the text */
-    gap: 15px;           /* UPDATE: Spacing between text and input */
+    flex-direction: row; /* Label next to Input */
+    align-items: center; 
+    gap: 15px;           
 }
 
-/* UPDATE: Label Styling */
 .control-item label { 
     display: block; 
-    margin-bottom: 0;    /* UPDATE: Removed bottom margin (no longer stacked) */
-    white-space: nowrap; /* UPDATE: Prevents label wrapping */
-    
+    margin-bottom: 0;    
+    white-space: nowrap; 
     font-weight: 700; text-transform: uppercase; 
     font-size: 0.7rem; color: var(--text-l); 
 }
@@ -231,12 +216,10 @@ input[type="range"]::-webkit-slider-thumb {
 /* --- FEATURE: VIBRANT PLAY BUTTON --- */
 .play-btn { 
     padding: 12px 28px; 
-    /* Gradient background for visual pop */
     background: var(--gradient-vibrant); 
     color: #fff; border: none; border-radius: 50px; 
     font-weight: 700; cursor: pointer; 
     display: flex; gap: 10px; align-items: center; 
-    /* Glow effect */
     box-shadow: var(--shadow-glow);
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -247,11 +230,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* --------------------------------------------------------------------------
    6. NARRATIVE TEXT (FULL WIDTH)
-   Removed max-width constraints so text flows across the monitor.
    -------------------------------------------------------------------------- */
 .narrative-container { 
     width: 100%; 
-    max-width: none;      /* KEY CHANGE: No width limit */
+    max-width: none;      
     margin-bottom: 3rem; 
     padding-right: 10px; 
 }
@@ -259,7 +241,7 @@ input[type="range"]::-webkit-slider-thumb {
 .main-title { 
     font-size: 2.5rem; font-weight: 800; color: var(--text-p); 
     margin-bottom: 1.5rem; letter-spacing: -1px; 
-    text-align: center;
+    text-align: center; /* Centered Title */
     width: 100%; 
 }
 
@@ -282,7 +264,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* --------------------------------------------------------------------------
    7. KPI CARDS
-   High-level metrics at a glance.
    -------------------------------------------------------------------------- */
 .kpi-section { 
     display: grid; grid-template-columns: repeat(4, 1fr); 
@@ -301,7 +282,6 @@ input[type="range"]::-webkit-slider-thumb {
     width: 56px; height: 56px; border-radius: 16px; 
     display: flex; align-items: center; justify-content: center; flex-shrink: 0; 
 }
-/* Light mode specific colors for icons */
 .kpi-icon-wrapper.energy { background: #fffbeb; color: #d97706; }
 .kpi-icon-wrapper.fossil { background: #fef2f2; color: #dc2626; }
 .kpi-icon-wrapper.renewable { background: #ecfdf5; color: #059669; }
@@ -332,7 +312,7 @@ input[type="range"]::-webkit-slider-thumb {
 /* --- FEATURE: COLORFUL CHART BUTTONS --- */
 .chart-btn { 
     padding: 8px 20px; 
-    border: 1px solid var(--primary); /* Colored border */
+    border: 1px solid var(--primary); 
     background: #fff; 
     border-radius: 30px; 
     cursor: pointer; 
@@ -340,11 +320,9 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 0.85rem; font-weight: 600;
     transition: all 0.3s ease;
 }
-
-.chart-btn:hover { background: #eef2ff; } /* Light indigo tint on hover */
-
+.chart-btn:hover { background: #eef2ff; }
 .chart-btn.active { 
-    background: var(--primary); /* Filled color when active */
+    background: var(--primary); 
     color: #fff; 
     box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
@@ -382,16 +360,16 @@ input[type="range"]::-webkit-slider-thumb {
 .source-btn { 
     display: flex; justify-content: center; align-items: center; gap: 10px; 
     background: #fff; 
-    border: 2px solid var(--primary); /* Thick colored border */
+    border: 2px solid var(--primary); 
     color: var(--primary); 
     padding: 14px; border-radius: 12px; 
     text-decoration: none; font-weight: 700; 
     transition: all 0.3s ease;
-    margin-top: 25px
+    margin-top: 25px; /* Added spacing */
 }
 
 .source-btn:hover { 
-    background: var(--primary); color: #fff; /* Invert colors on hover */
+    background: var(--primary); color: #fff; 
     box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
     transform: translateY(-2px);
 }
