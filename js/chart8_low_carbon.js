@@ -53,7 +53,7 @@ class LowCarbonChart {
                 name: 'Hydroelectric',
                 type: 'bar',
                 marker: {
-                    color: '#3b82f6',
+                    color: '#2b75ebff',
                     line: { color: 'rgba(255, 255, 255, 0.5)', width: 1 }
                 },
                 hovertemplate: '<b>Hydroelectric</b><br>Country: %{x}<br>Value: %{y:,.0f} kWh<extra></extra>'
@@ -64,7 +64,7 @@ class LowCarbonChart {
                 name: 'Renewables (Non-Hydro)',
                 type: 'bar',
                 marker: {
-                    color: '#22c55e',
+                    color: '#d319ecff',
                     line: { color: 'rgba(255, 255, 255, 0.5)', width: 1 }
                 },
                 hovertemplate: '<b>Renewables</b><br>Country: %{x}<br>Value: %{y:,.0f} kWh<extra></extra>'
@@ -75,7 +75,7 @@ class LowCarbonChart {
                 name: 'Nuclear',
                 type: 'bar',
                 marker: {
-                    color: '#8b5cf6',
+                    color: '#27e01aff',
                     line: { color: 'rgba(255, 255, 255, 0.5)', width: 1 }
                 },
                 hovertemplate: '<b>Nuclear</b><br>Country: %{x}<br>Value: %{y:,.0f} kWh<extra></extra>'
