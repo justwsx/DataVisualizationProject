@@ -422,6 +422,14 @@ input[type="range"]::-webkit-slider-thumb {
     border-top: 1px solid var(--border); margin-top: 60px; 
 }
 
+.brand-wrapper {
+    display: flex;           /* Places elements side by side */
+    flex-direction: row;     /* Horizontal direction (left -> right) */
+    align-items: center;     /* Vertically centers icon and text */
+    gap: 12px;               /* Space between the lightning icon and the text */
+    margin-bottom: 12px;
+}
+
 /* --------------------------------------------------------------------------
    10. RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
