@@ -145,6 +145,49 @@ body:has(.sidebar:hover) .main-content {
     width: calc(100% - 280px); /* Adjust width to prevent horizontal scrolling */
 }
 
+/* ==========================================================================
+   FEATURE: SMART LAYOUT ON SIDEBAR HOVER
+   Reorganize Top Nav elements when Sidebar expands to maintain aesthetics.
+   ========================================================================== */
+
+/* 1. Transform .nav-right into a precise Grid */
+body:has(.sidebar:hover) .nav-right {
+    display: grid;
+    /* Create 2 equal columns for perfect centering */
+    grid-template-columns: 1fr 1fr; 
+    
+    /* Spacing: 10px vertical, 30px horizontal between items */
+    gap: 10px 30px; 
+    
+    /* Ensure the container doesn't stretch unnecessarily */
+    width: auto;
+    margin-left: 20px; /* Add breathing room from Search box */
+}
+
+/* 2. Timeline Explorer: Span across top row (Centered) */
+/* Selects the first .control-item (Timeline) */
+body:has(.sidebar:hover) .nav-right .control-item:first-child {
+    grid-column: span 2; /* Take up full width of the grid */
+    justify-self: center; /* Center the slider */
+}
+
+/* 3. Geographic Focus: Align to the right (towards center) */
+/* Selects the second .control-item (Geo Focus) */
+body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) {
+    justify-self: end; 
+}
+
+/* 4. Play Button: Align to the left (towards center) */
+body:has(.sidebar:hover) .play-btn {
+    justify-self: start;
+}
+
+/* Optional: Slight adjust to Search Box to prevent squeezing */
+body:has(.sidebar:hover) .search-box {
+    width: 280px; /* Slightly compact search when menu is open */
+    transition: width 0.3s;
+}
+
 /* --------------------------------------------------------------------------
    5. TOP NAVIGATION & CONTROLS
    -------------------------------------------------------------------------- */
