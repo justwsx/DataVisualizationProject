@@ -135,6 +135,13 @@ body {
 }
 .sidebar:hover .sidebar-footer { opacity: 1; transition-delay: 0.3s; }
 
+/* --- NEW FEATURE: Content Shift on Sidebar Hover --- */
+/* Shift main content to the right when sidebar is expanded */
+.sidebar:hover ~ .main-content {
+    margin-left: 280px;        /* Matches the expanded sidebar width */
+    width: calc(100% - 280px); /* Adjust width to prevent horizontal scrolling */
+}
+
 /* --------------------------------------------------------------------------
    4. MAIN CONTENT LAYOUT
    Designed to use 100% of the screen width since the sidebar is an overlay.
@@ -145,6 +152,9 @@ body {
     width: 100%;          /* Full width */
     padding: 40px 50px;   /* Generous padding for breathing room */
     transition: var(--transition);
+    /* Smooth adjustments if sidebar state changes. COntent moves to right */
+    transition: margin-left 400ms cubic-bezier(0.4, 0, 0.2, 1), 
+                width 400ms cubic-bezier(0.4, 0, 0.2, 1); /
 }
 
 /* --------------------------------------------------------------------------
