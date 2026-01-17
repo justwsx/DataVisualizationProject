@@ -1,39 +1,47 @@
-/* ============================================================
-   ENERGY INSIGHTS DASHBOARD - LIGHT MODE (GHOST SIDEBAR)
-   ============================================================ */
+/* ==========================================================================
+   ENERGY INSIGHTS DASHBOARD - FINAL PRODUCTION STYLES
+   Theme: Light Mode | Layout: Full Width | Nav: Auto-Hide (Ghost)
+   ========================================================================== */
 
-/* --- 1. DESIGN TOKENS (VARIABLES) --- */
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (VARIABLES)
+   Centralized configuration for consistent theming across the app.
+   -------------------------------------------------------------------------- */
 :root {
-    /* Brand & Accent Colors */
-    --primary: #4f46e5;       /* Indigo */
+    /* --- BRAND COLORS --- */
+    /* Primary Indigo for focus elements */
+    --primary: #4f46e5;       
     --primary-dark: #4338ca; 
-    --accent-pink: #db2777;   /* Deep Pink */
-    --accent-green: #16a34a;  /* Green */
     
-    /* Gradient adapted for Light Mode (Subtle) */
-    --gradient: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    /* Vibrant Gradient for primary calls-to-action (Play Button) */
+    --gradient-vibrant: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     
     /* --- LIGHT MODE PALETTE --- */
-    --bg-body: #f8fafc;       /* Very light gray background */
-    --bg-card: #ffffff;       /* Pure white cards */
-    --bg-sidebar: #ffffff;    /* White sidebar */
-    --bg-input: #f1f5f9;      /* Light gray for inputs */
-    --bg-hover: #f1f5f9;      /* Hover state color */
+    --bg-body: #f8fafc;       /* Cool light gray for the main background */
+    --bg-card: #ffffff;       /* Pure white for data containers */
+    --bg-sidebar: #ffffff;    /* White sidebar for clean look */
+    --bg-input: #f1f5f9;      /* Light gray for inputs/inactive states */
     
-    /* Typography - Dark text for light background */
-    --text-p: #0f172a;        /* Main headings (Almost black) */
-    --text-s: #475569;        /* Secondary text (Slate gray) */
-    --text-l: #94a3b8;        /* Lighter labels */
+    /* --- TYPOGRAPHY COLORS --- */
+    --text-p: #0f172a;        /* Primary: Almost black for readability */
+    --text-s: #475569;        /* Secondary: Slate gray for context */
+    --text-l: #94a3b8;        /* Tertiary: Lighter gray for labels */
     
-    /* UI Decoration */
-    --border: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); /* Softer shadow */
+    /* --- UI DECORATION --- */
+    --border: #e2e8f0;        /* Subtle borders for structure */
+    --radius: 16px;           /* Modern rounded corners */
+    --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth 'Apple-like' motion */
+    
+    /* Shadows for depth */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
     --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --radius: 16px; 
-    --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-glow: 0 4px 15px rgba(79, 70, 229, 0.4); /* Used on colored buttons */
 }
 
-/* --- 2. GLOBAL RESET --- */
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE
+   Standardizing box model and typography.
+   -------------------------------------------------------------------------- */
 *, *::before, *::after { 
     margin: 0; padding: 0; box-sizing: border-box; 
 }
@@ -43,115 +51,112 @@ body {
     background: var(--bg-body); 
     color: var(--text-p); 
     line-height: 1.6; 
-    overflow-x: hidden; 
+    overflow-x: hidden; /* Prevents horizontal scroll from animations */
 }
 
-/* --- 3. GHOST SIDEBAR (LIGHT VERSION) --- */
+/* --------------------------------------------------------------------------
+   3. "GHOST" SIDEBAR LOGIC
+   The sidebar is invisible (transparent) by default to maximize screen real estate.
+   It reveals itself only when the user intends to navigate (Hover).
+   -------------------------------------------------------------------------- */
 .dashboard { display: flex; min-height: 100vh; }
 
 .sidebar {
-    /* INVISIBLE STATE */
-    width: 20px; 
-    background: transparent;
-    opacity: 0;
+    /* DEFAULT STATE: Invisible Touch Target */
+    width: 20px;          /* Small strip to catch the mouse cursor */
+    background: transparent; 
+    opacity: 0;           /* Visually hidden */
     
+    /* Positioning */
     position: fixed; 
     top: 0; left: 0; height: 100vh; 
-    z-index: 1000;
+    z-index: 1000;        /* Layers above everything else */
     
+    /* Layout */
     display: flex; flex-direction: column;
-    overflow: hidden; 
-    white-space: nowrap; 
+    overflow: hidden;     /* Hides text when collapsed */
+    white-space: nowrap;  /* Prevents text wrapping during animation */
     
-    transition: width var(--transition), opacity 0.3s ease;
+    /* Animation definition */
+    transition: width var(--transition), opacity 0.3s ease, box-shadow 0.3s;
     border-right: 1px solid transparent;
 }
 
-/* HOVER / ACTIVE STATE */
+/* ACTIVE STATE: Triggered on Mouse Hover */
 .sidebar:hover {
-    width: 280px; 
+    width: 280px;         /* Expands to readable width */
     background: var(--bg-sidebar); 
-    opacity: 1; 
-    /* Strong shadow to separate white sidebar from white body */
+    opacity: 1;           /* Becomes visible */
+    
+    /* Deep shadow to create "Overlay" effect over content */
     box-shadow: 10px 0 40px rgba(0,0,0,0.1); 
     border-right: 1px solid var(--border);
 }
 
-.main-content { 
-    flex: 1; 
-    margin-left: 0; /* Full screen content */
-    width: 100%; 
-    padding: 40px; 
-    transition: var(--transition);
-}
+/* --- Sidebar Content Animations --- */
+/* Strategy: Content slides in slightly after the background expands for smoothness */
 
-/* Sidebar Branding */
 .sidebar-header { 
     padding: 30px 24px; 
     display: flex; align-items: center; gap: 12px; 
-    border-bottom: 1px solid var(--border); 
+    border-bottom: 1px solid var(--border);
     
     opacity: 0; transform: translateX(-20px);
     transition: all 0.3s ease;
 }
-
 .sidebar:hover .sidebar-header { opacity: 1; transform: translateX(0); transition-delay: 0.1s; }
 
-.sidebar-header h1 { 
-    font-size: 1.2rem; 
-    color: var(--text-p); /* Dark text */
-    font-weight: 800;
-}
-
+.sidebar-header h1 { font-size: 1.2rem; font-weight: 800; color: var(--text-p); }
 .logo-icon { color: var(--primary); font-size: 28px; }
 
 .sidebar-nav { 
     flex: 1; padding: 20px 16px; overflow-y: auto; 
     opacity: 0; transition: opacity 0.2s ease;
 }
-
 .sidebar:hover .sidebar-nav { opacity: 1; transition-delay: 0.2s; }
 
+/* Navigation Links */
 .nav-item {
     display: flex; align-items: center; gap: 14px; 
     padding: 14px 16px; 
-    color: var(--text-s); /* Dark gray text */
+    color: var(--text-s); 
     text-decoration: none; border-radius: 12px; 
-    transition: var(--transition);
     font-weight: 500;
+    transition: var(--transition);
 }
 
-.nav-item:hover { 
-    background: var(--bg-hover); 
-    color: var(--primary); 
-    transform: translateX(4px); 
-}
-
-.nav-item.active { 
-    background: var(--bg-input); 
-    color: var(--primary); 
-    font-weight: 700;
-}
+.nav-item:hover { background: var(--bg-input); color: var(--primary); transform: translateX(4px); }
+.nav-item.active { background: var(--bg-input); color: var(--primary); font-weight: 700; }
 
 .sidebar-footer {
-    padding: 20px;
-    font-size: 0.8rem;
-    color: var(--text-l);
-    text-align: center;
-    border-top: 1px solid var(--border);
+    padding: 20px; font-size: 0.8rem; color: var(--text-l); 
+    text-align: center; border-top: 1px solid var(--border);
     opacity: 0;
 }
 .sidebar:hover .sidebar-footer { opacity: 1; transition-delay: 0.3s; }
 
+/* --------------------------------------------------------------------------
+   4. MAIN CONTENT LAYOUT
+   Designed to use 100% of the screen width since the sidebar is an overlay.
+   -------------------------------------------------------------------------- */
+.main-content { 
+    flex: 1; 
+    margin-left: 0;       /* No margin needed (Sidebar floats) */
+    width: 100%;          /* Full width */
+    padding: 40px 50px;   /* Generous padding for breathing room */
+    transition: var(--transition);
+}
 
-/* --- 4. TOP NAV & CONTROLS --- */
+/* --------------------------------------------------------------------------
+   5. TOP NAVIGATION & CONTROLS
+   -------------------------------------------------------------------------- */
 .top-nav { 
     display: flex; justify-content: space-between; align-items: flex-end; 
     padding-bottom: 30px; margin-bottom: 40px; 
     border-bottom: 1px solid var(--border); 
 }
 
-.nav-right { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.nav-right { display: flex; gap: 25px; align-items: flex-end; flex-wrap: wrap; }
 
 .control-item label { 
     display: block; margin-bottom: 8px; 
@@ -159,13 +164,13 @@ body {
     font-size: 0.7rem; color: var(--text-l); 
 }
 
-/* Light Mode Inputs need background contrast */
+/* Inputs styled for Light Mode */
 .search-box, .year-control-compact { 
     background: var(--bg-card); 
-    border: 1px solid var(--border); /* Added border for definition */
+    border: 1px solid var(--border); 
     padding: 8px 16px; border-radius: 50px; 
     display: flex; align-items: center; gap: 12px; 
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-card);
 }
 
 .search-box { width: 320px; }
@@ -173,19 +178,16 @@ body {
     background: transparent; border: none; outline: none; 
     width: 100%; font-size: 0.95rem; color: var(--text-p); 
 }
-.search-box .material-icons-outlined { color: var(--text-l); }
 
 #currentYearDisplay { 
-    background: var(--bg-input); 
-    color: var(--primary); font-weight: 700;
-    padding: 4px 12px; border-radius: 20px; 
+    background: var(--bg-input); color: var(--primary); 
+    font-weight: 700; padding: 4px 12px; border-radius: 20px; 
 }
 
 input[type="range"] { 
     -webkit-appearance: none; width: 250px; height: 6px; 
     background: var(--bg-input); border-radius: 3px; cursor: pointer; 
 }
-
 input[type="range"]::-webkit-slider-thumb { 
     -webkit-appearance: none; width: 18px; height: 18px; 
     background: var(--primary); border-radius: 50%; 
@@ -193,45 +195,56 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .filter-select { 
-    padding: 10px 16px; 
-    background: var(--bg-card);
-    border: 1px solid var(--border); 
-    border-radius: 12px; min-width: 200px; 
-    color: var(--text-p); cursor: pointer; 
-    box-shadow: var(--shadow);
+    padding: 10px 16px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 12px; 
+    min-width: 200px; cursor: pointer; box-shadow: var(--shadow-card);
+    color: var(--text-p);
 }
 
+/* --- FEATURE: VIBRANT PLAY BUTTON --- */
 .play-btn { 
-    padding: 12px 24px; background: var(--primary); 
+    padding: 12px 28px; 
+    /* Gradient background for visual pop */
+    background: var(--gradient-vibrant); 
     color: #fff; border: none; border-radius: 50px; 
-    font-weight: 600; cursor: pointer; display: flex; 
-    gap: 8px; align-items: center; 
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    transition: var(--transition);
+    font-weight: 700; cursor: pointer; 
+    display: flex; gap: 10px; align-items: center; 
+    /* Glow effect */
+    box-shadow: var(--shadow-glow);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.play-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.play-btn:hover { 
+    transform: translateY(-2px) scale(1.02); 
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); 
+}
 
-/* --- 5. TEXT & NARRATIVE --- */
-.narrative-container { width: 100%; max-width: 1000px; margin-bottom: 3rem; }
+/* --------------------------------------------------------------------------
+   6. NARRATIVE TEXT (FULL WIDTH)
+   Removed max-width constraints so text flows across the monitor.
+   -------------------------------------------------------------------------- */
+.narrative-container { 
+    width: 100%; 
+    max-width: none;      /* KEY CHANGE: No width limit */
+    margin-bottom: 3rem; 
+    padding-right: 10px; 
+}
 
 .main-title { 
-    font-size: 2.5rem; font-weight: 800; 
-    color: var(--text-p); margin-bottom: 1.5rem; 
-    letter-spacing: -1px; 
+    font-size: 2.5rem; font-weight: 800; color: var(--text-p); 
+    margin-bottom: 1.5rem; letter-spacing: -1px; 
+    text-align: left;
 }
 
 .highlight-box { 
-    background: var(--bg-card); 
-    padding: 2rem; border-radius: var(--radius); 
-    border-left: 4px solid var(--primary); 
-    box-shadow: var(--shadow); margin-bottom: 2rem; 
+    background: var(--bg-card); padding: 2rem; 
+    border-radius: var(--radius); border-left: 4px solid var(--primary); 
+    box-shadow: var(--shadow-card); margin-bottom: 2rem; 
 }
 
 .text-content { 
-    font-size: 1.1rem; line-height: 1.8; 
-    color: var(--text-s); margin-bottom: 1.5rem; 
+    font-size: 1.15rem; line-height: 1.8; color: var(--text-s); 
+    margin-bottom: 1.5rem; 
 }
-
 .text-content strong { color: var(--text-p); }
 
 .section-title { 
@@ -239,29 +252,28 @@ input[type="range"]::-webkit-slider-thumb {
     margin: 4rem 0 1.5rem 0; display: flex; align-items: center; gap: 12px; 
 }
 
-/* --- 6. KPI CARDS (Light Mode) --- */
+/* --------------------------------------------------------------------------
+   7. KPI CARDS
+   High-level metrics at a glance.
+   -------------------------------------------------------------------------- */
 .kpi-section { 
     display: grid; grid-template-columns: repeat(4, 1fr); 
     gap: 24px; margin-bottom: 50px; 
 }
 
 .kpi-card { 
-    background: var(--bg-card); 
-    padding: 24px; border-radius: var(--radius); 
+    background: var(--bg-card); padding: 24px; border-radius: var(--radius); 
     display: flex; align-items: center; gap: 20px; 
-    box-shadow: var(--shadow); border: 1px solid var(--border);
+    box-shadow: var(--shadow-card); border: 1px solid var(--border);
     transition: var(--transition); 
 }
-
 .kpi-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 
 .kpi-icon-wrapper { 
     width: 56px; height: 56px; border-radius: 16px; 
-    display: flex; align-items: center; justify-content: center; 
-    flex-shrink: 0; 
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; 
 }
-
-/* Using lighter backgrounds for icons in light mode */
+/* Light mode specific colors for icons */
 .kpi-icon-wrapper.energy { background: #fffbeb; color: #d97706; }
 .kpi-icon-wrapper.fossil { background: #fef2f2; color: #dc2626; }
 .kpi-icon-wrapper.renewable { background: #ecfdf5; color: #059669; }
@@ -270,43 +282,56 @@ input[type="range"]::-webkit-slider-thumb {
 .kpi-label { font-size: 0.75rem; color: var(--text-l); font-weight: 700; text-transform: uppercase; }
 .kpi-value { font-size: 1.6rem; font-weight: 800; color: var(--text-p); margin-top: 4px; }
 
-/* --- 7. CHARTS --- */
+/* --------------------------------------------------------------------------
+   8. CHART CONTAINERS & CONTROLS
+   -------------------------------------------------------------------------- */
 .grid-full { display: grid; grid-template-columns: 1fr; margin-bottom: 30px; }
 .grid-dual { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 30px; }
 
 .chart-card { 
-    background: var(--bg-card); 
-    border-radius: var(--radius); 
-    box-shadow: var(--shadow); 
-    border: 1px solid var(--border);
+    background: var(--bg-card); border-radius: var(--radius); 
+    box-shadow: var(--shadow-card); border: 1px solid var(--border);
     overflow: hidden; 
 }
 
 .chart-header { 
-    display: flex; justify-content: space-between; 
-    padding: 20px 24px; border-bottom: 1px solid var(--border); 
-    background: #ffffff;
+    display: flex; justify-content: space-between; padding: 20px 24px; 
+    border-bottom: 1px solid var(--border); background: #ffffff;
 }
-
 .chart-title h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-p); }
 .chart-title p { font-size: 0.85rem; color: var(--text-s); margin-top: 4px; }
 
+/* --- FEATURE: COLORFUL CHART BUTTONS --- */
 .chart-btn { 
-    padding: 6px 16px; border: 1px solid var(--border); 
-    background: #fff; border-radius: 20px; 
-    cursor: pointer; color: var(--text-s); font-size: 0.8rem; font-weight: 500;
+    padding: 8px 20px; 
+    border: 1px solid var(--primary); /* Colored border */
+    background: #fff; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    color: var(--primary); 
+    font-size: 0.85rem; font-weight: 600;
+    transition: all 0.3s ease;
 }
-.chart-btn.active { background: var(--bg-input); color: var(--primary); border-color: var(--primary); }
+
+.chart-btn:hover { background: #eef2ff; } /* Light indigo tint on hover */
+
+.chart-btn.active { 
+    background: var(--primary); /* Filled color when active */
+    color: #fff; 
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
 
 .chart-body { padding: 20px; height: 450px; }
 .chart-card.large .chart-body { height: 500px; }
 
-/* --- 8. INSIGHTS & FOOTER --- */
+/* --------------------------------------------------------------------------
+   9. INSIGHTS, STATS & FOOTER
+   -------------------------------------------------------------------------- */
 .insights-section { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 40px; }
 
 .insight-card, .stats-card { 
     background: var(--bg-card); padding: 30px; 
-    border-radius: var(--radius); box-shadow: var(--shadow); 
+    border-radius: var(--radius); box-shadow: var(--shadow-card); 
     border: 1px solid var(--border);
 }
 
@@ -322,25 +347,39 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-.stat-item { 
-    text-align: center; padding: 15px; 
-    background: var(--bg-input); border-radius: 12px; 
-}
+.stat-item { text-align: center; padding: 15px; background: var(--bg-input); border-radius: 12px; }
 .stat-value { display: block; font-size: 1.4rem; font-weight: 800; color: var(--text-p); }
 
+/* --- FEATURE: PROMINENT SOURCE BUTTON --- */
 .source-btn { 
     display: flex; justify-content: center; align-items: center; gap: 10px; 
-    background: var(--bg-input); color: var(--text-p); 
-    padding: 14px; border-radius: 12px; text-decoration: none; 
-    font-weight: 600; transition: var(--transition); 
+    background: #fff; 
+    border: 2px solid var(--primary); /* Thick colored border */
+    color: var(--primary); 
+    padding: 14px; border-radius: 12px; 
+    text-decoration: none; font-weight: 700; 
+    transition: all 0.3s ease;
 }
-.source-btn:hover { background: var(--border); }
+
+.source-btn:hover { 
+    background: var(--primary); color: #fff; /* Invert colors on hover */
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+    transform: translateY(-2px);
+}
 
 .main-footer { 
     text-align: center; padding: 40px 0; color: var(--text-l); 
     border-top: 1px solid var(--border); margin-top: 60px; 
 }
 
-/* RESPONSIVE */
-@media (max-width: 1200px) { .kpi-section, .grid-dual { grid-template-columns: 1fr; } }
-@media (max-width: 768px) { .top-nav { flex-direction: column; align-items: stretch; } .search-box { width: 100%; } }
+/* --------------------------------------------------------------------------
+   10. RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) { 
+    .kpi-section, .grid-dual { grid-template-columns: 1fr; } 
+}
+@media (max-width: 768px) { 
+    .top-nav { flex-direction: column; align-items: stretch; } 
+    .search-box { width: 100%; } 
+    .main-content { padding: 20px; }
+}
