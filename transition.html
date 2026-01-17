@@ -4,64 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Transition | Energy Insights</title>
+    
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard">
+        
         <aside class="sidebar">
-            <div class="sidebar-header"><span class="material-icons-outlined logo-icon">bolt</span><h1>Energy Insights</h1></div>
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <span class="nav-section-title">Navigation</span>
-                    <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
-                    <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
-                    <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
-                    <a href="transition.html" class="nav-item active"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
-                    <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
-                    <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+            <div class="sidebar-header">
+                <div class="brand-wrapper">
+                    <span class="material-icons-outlined logo-icon">bolt</span>
+                    <h1>Energy Insights</h1>
                 </div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>Live Data</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Main Menu</span>
+                <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+
+                <div style="height: 20px;"></div>
+                
+                <span class="nav-section-title">Analysis & Future</span>
+                <a href="transition.html" class="nav-item active"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
             </nav>
-            <div class="sidebar-footer"><span class="data-source">Source: Our World in Data</span></div>
+
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span class="material-icons-outlined" style="font-size: 18px;">trending_down</span>
+                    <span>Price Collapse</span>
+                </div>
+                <p class="widget-text">
+                    Since 2010, the cost of solar electricity has dropped by 89%, making it the cheapest energy source in history.
+                </p>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="footer-links">
+                    <span class="material-icons-outlined footer-icon">share</span>
+                    <span class="material-icons-outlined footer-icon">info</span>
+                    <span class="material-icons-outlined footer-icon">mail</span>
+                </div>
+                <span class="data-source">Source: Our World in Data</span>
+            </div>
         </aside>
 
         <main class="main-content">
+            
             <div class="top-nav">
-                <div class="nav-left"><div class="search-box"><span class="material-icons-outlined">search</span><input type="text" placeholder="Search data..." id="searchInput"></div></div>
+                <div class="nav-left">
+                    <div class="search-box">
+                        <span class="material-icons-outlined">search</span>
+                        <input type="text" placeholder="Search countries, regions or specific data..." id="searchInput">
+                    </div>
+                </div>
+                
                 <div class="nav-right">
-                    <div class="control-item"><label>Timeline</label><div class="year-control-compact"><span id="currentYearDisplay">2020</span><input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1"></div></div>
-                    <div class="control-item"><label>Geo</label><select id="countrySelect" class="filter-select"><option value="World">The Whole World</option><option value="United States">United States</option><option value="China">China</option><option value="India">India</option><option value="Japan">Japan</option><option value="Germany">Germany</option><option value="United Kingdom">United Kingdom</option><option value="France">France</option></select></div>
-                    <button class="play-btn" id="playBtn"><span class="material-icons-outlined">play_circle</span><span>Visualize Progress</span></button>
+                    <div class="control-item">
+                        <label>Timeline Explorer</label>
+                        <div class="year-control-compact">
+                            <span id="currentYearDisplay">2020</span>
+                            <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
+                        </div>
+                    </div>
+                    
+                    <div class="control-item">
+                        <label>Geographic Focus</label>
+                        <select id="countrySelect" class="filter-select">
+                            <option value="World">The Whole World</option>
+                            <option value="United States">United States</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Germany">Germany</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+
+                    <button class="play-btn" id="playBtn">
+                        <span class="material-icons-outlined">play_circle</span>
+                        <span>Visualize Progress</span>
+                    </button>
                 </div>
             </div>
 
             <div id="section-transition" class="narrative-container">
-                <h2 class="section-title"><span class="material-icons-outlined">autorenew</span> 3. The Tipping Point: Why Green is Winning</h2>
+                <h1 class="main-title">The Exponential Revolution</h1>
+                
+                <div class="highlight-box">
+                    <p class="text-content">
+                        <strong>For decades, green energy was a noble but expensive dream.</strong> Today, it is an economic inevitability. We are witnessing a "tipping point" where technology beats geology. Unlike coal or oil, which are commodities that must be dug up (and get more expensive as they run out), solar and wind are <em>technologies</em>. Like computers or smartphones, they get cheaper and better the more we build them.
+                    </p>
+                </div>
+
+                <h2 class="section-title"><span class="material-icons-outlined">show_chart</span> 1. The Hockey Stick Curve</h2>
                 <p class="text-content">
-                    For decades, green energy was a nice idea, but it was too expensive. That has completely changed. Look at the "hockey stick" curve in the <strong>Adoption</strong> chart. Why is it shooting up now? Because of <strong>economies of scale</strong>. China poured money into manufacturing solar panels, causing the price to crash by 90% in ten years.
+                    Look at the <strong>Rise of Renewables</strong> chart below. For years, the line is flat, barely moving. Then, suddenly, it shoots up vertically. This is what exponential growth looks like. Driven by massive manufacturing in China and subsidies in Europe, the price of solar panels crashed by nearly 90% in just ten years.
                 </p>
                 <p class="text-content">
-                    Now, in most places, building a new solar farm is cheaper than burning coal. That is the engine of the transition: it's no longer just about saving the planet; it's about saving money. When we combine this cheap renewable power with <strong>Nuclear</strong> (which provides stable, always-on power without CO2), we finally have a realistic blueprint to replace the old fossil fuel machine.
+                    This means the transition is no longer driven just by climate concerns; it is driven by cold, hard cash. In most of the world today, building a new solar farm is simply cheaper than running an existing coal plant.
                 </p>
             </div>
 
             <div class="grid-dual">
                 <div class="chart-card">
-                    <div class="chart-header"><div class="chart-title"><h2>The Rise of Renewables</h2><p>The accelerating growth of Wind, Solar, and Hydro energy.</p></div></div>
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>The Rise of Renewables</h2>
+                            <p>The accelerating growth of Wind, Solar, and Hydro energy (TWh).</p>
+                        </div>
+                    </div>
                     <div class="chart-body"><div id="chart-renewables"></div></div>
                 </div>
+
                 <div class="chart-card">
-                    <div class="chart-header"><div class="chart-title"><h2>Total Clean Energy Adoption</h2><p>Combining Renewables and Nuclear for a low-carbon view.</p></div></div>
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Total Low-Carbon Tech</h2>
+                            <p>Combining Renewables and Nuclear for a complete clean view.</p>
+                        </div>
+                    </div>
                     <div class="chart-body"><div id="chart-low-carbon"></div></div>
                 </div>
             </div>
+
+            <div class="narrative-container" style="margin-top: 20px;">
+                <h2 class="section-title"><span class="material-icons-outlined">grid_view</span> 2. The Stability Puzzle</h2>
+                <p class="text-content">
+                    Renewables have one weakness: intermittency. The sun sets, and the wind stops. That is why the second chart, <strong>Total Low-Carbon Tech</strong>, is crucial. It includes <strong>Nuclear</strong> and <strong>Hydro</strong>. These are the heavy lifters—the "baseload" power that keeps the grid stable when the weather doesn't cooperate. A truly green future requires this full team of technologies working together.
+                </p>
+            </div> 
+
+[Image of nuclear power plant diagram]
+
             
-            <footer class="main-footer"><p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p></footer>
+            <footer class="main-footer">
+                <p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p>
+            </footer>
         </main>
     </div>
+
     <script src="js/chart3_renewables.js"></script>
     <script src="js/chart8_low_carbon.js"></script>
     <script src="main.js"></script>
