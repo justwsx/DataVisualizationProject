@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Demand | Energy Insights</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="material-icons-outlined logo-icon">bolt</span>
+                <h1>Energy Insights</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Navigation</span>
+                    <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                    <a href="demand.html" class="nav-item active"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                    <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                    <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                    <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                    <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><span class="data-source">Source: Our World in Data</span></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <div class="nav-left">
+                    <div class="search-box"><span class="material-icons-outlined">search</span><input type="text" placeholder="Search data..." id="searchInput"></div>
+                </div>
+                <div class="nav-right">
+                    <div class="control-item">
+                        <label>Timeline Explorer</label>
+                        <div class="year-control-compact"><span id="currentYearDisplay">2020</span><input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1"></div>
+                    </div>
+                    <div class="control-item">
+                        <label>Geographic Focus</label>
+                        <select id="countrySelect" class="filter-select">
+                            <option value="World">The Whole World</option><option value="United States">United States</option><option value="China">China</option><option value="India">India</option><option value="Japan">Japan</option><option value="Germany">Germany</option><option value="United Kingdom">United Kingdom</option><option value="France">France</option>
+                        </select>
+                    </div>
+                    <button class="play-btn" id="playBtn"><span class="material-icons-outlined">play_circle</span><span>Visualize Progress</span></button>
+                </div>
+            </div>
+
+            <div id="section-demand" class="narrative-container">
+                <h2 class="section-title"><span class="material-icons-outlined">history</span> 1. Why Do We Need So Much Power?</h2>
+                <p class="text-content">
+                    Look at the consumption line below: it never stops climbing. Why? The answer is <strong>human progress</strong>. Since 1990, billions of people in China, India, and Southeast Asia have escaped extreme poverty. When people get richer, the first thing they do is buy appliances: refrigerators to keep food fresh, washing machines to save time, and air conditioning to survive the heat.
+                </p>
+                <p class="text-content">
+                    This creates a massive dilemma shown in the <strong>Inequality Map</strong>. The rich countries (in the North) have stopped growing their energy use because they are already developed. But the developing world (in the South) is just getting started. They have a right to the same quality of life we enjoy, but if they fuel their growth with coal and oil like we did, the climate will collapse. This is the central problem of our time.
+                </p>
+            </div>
+
+            <div class="grid-full">
+                <div class="chart-card large">
+                    <div class="chart-header">
+                        <div class="chart-title"><h2>The Trajectory of Global Energy Use</h2><p>Total primary energy consumed by humanity every year (measured in Terawatt-hours).</p></div>
+                        <div class="chart-actions"><button class="chart-btn active" data-view="lines">Lines</button><button class="chart-btn" data-view="area">Area</button></div>
+                    </div>
+                    <div class="chart-body"><div id="chart-consumption"></div></div>
+                </div>
+            </div>
+
+             <div class="grid-full" style="margin-top: -50px;"> <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>The Energy Inequality Map</h2><p>Intensity of energy usage per person. Darker nations represent higher consumption per capita.</p></div></div>
+                    <div class="chart-body"><div id="chart-map"></div></div>
+                </div>
+            </div>
+            
+            <footer class="main-footer"><p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p></footer>
+        </main>
+    </div>
+    <script src="js/chart1_consumption.js"></script>
+    <script src="js/chart10_map.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

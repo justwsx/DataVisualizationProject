@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Mix | Energy Insights</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="material-icons-outlined logo-icon">bolt</span><h1>Energy Insights</h1></div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Navigation</span>
+                    <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                    <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                    <a href="mix.html" class="nav-item active"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                    <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                    <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                    <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><span class="data-source">Source: Our World in Data</span></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <div class="nav-left"><div class="search-box"><span class="material-icons-outlined">search</span><input type="text" placeholder="Search data..." id="searchInput"></div></div>
+                <div class="nav-right">
+                    <div class="control-item"><label>Timeline</label><div class="year-control-compact"><span id="currentYearDisplay">2020</span><input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1"></div></div>
+                    <div class="control-item"><label>Geo</label><select id="countrySelect" class="filter-select"><option value="World">The Whole World</option><option value="United States">United States</option><option value="China">China</option><option value="India">India</option><option value="Japan">Japan</option><option value="Germany">Germany</option><option value="United Kingdom">United Kingdom</option><option value="France">France</option></select></div>
+                    <button class="play-btn" id="playBtn"><span class="material-icons-outlined">play_circle</span><span>Visualize Progress</span></button>
+                </div>
+            </div>
+
+            <div id="section-mix" class="narrative-container">
+                <h2 class="section-title"><span class="material-icons-outlined">pie_chart</span> 2. Why Can't We Just Quit Fossil Fuels?</h2>
+                <p class="text-content">
+                    It seems obvious: if fossil fuels are bad, we should stop using them. But the data shows we are still addicted—over 80% of our energy comes from Coal, Oil, and Gas. The reason is physics and convenience. Fossil fuels are incredibly <strong>energy-dense</strong> and easy to transport. You can store a pile of coal anywhere for months. You can fill a car with gas in 3 minutes and drive for hours.
+                </p>
+                <p class="text-content">
+                    Renewables are different. The sun doesn't always shine, and the wind doesn't always blow. To replace the "Old Giants" shown in the first chart, we don't just need solar panels; we need massive batteries and new power grids, which takes time and money to build. However, the <strong>Market Share</strong> chart reveals a slow victory: renewables are capturing almost all *new* growth, gradually pushing the fossils into a corner.
+                </p>
+            </div>
+
+            <div class="grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Energy Mix Breakdown</h2><p>Absolute volume of energy produced by source.</p></div></div>
+                    <div class="chart-body"><div id="chart-mix"></div></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Global Market Share</h2><p>The percentage distribution of each source in the total mix.</p></div></div>
+                    <div class="chart-body"><div id="chart-share"></div></div>
+                </div>
+            </div>
+            
+            <footer class="main-footer"><p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p></footer>
+        </main>
+    </div>
+    <script src="js/chart2_mix.js"></script>
+    <script src="js/chart6_share.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

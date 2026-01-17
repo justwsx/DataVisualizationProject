@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo & Findings | Energy Insights</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="material-icons-outlined logo-icon">bolt</span><h1>Energy Insights</h1></div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Navigation</span>
+                    <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                    <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                    <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                    <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                    <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                    <a href="geopolitics.html" class="nav-item active"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><span class="data-source">Source: Our World in Data</span></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <div class="nav-left"><div class="search-box"><span class="material-icons-outlined">search</span><input type="text" placeholder="Search data..." id="searchInput"></div></div>
+                <div class="nav-right">
+                    <div class="control-item"><label>Timeline</label><div class="year-control-compact"><span id="currentYearDisplay">2020</span><input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1"></div></div>
+                    <div class="control-item"><label>Geo</label><select id="countrySelect" class="filter-select"><option value="World">The Whole World</option><option value="United States">United States</option><option value="China">China</option><option value="India">India</option><option value="Japan">Japan</option><option value="Germany">Germany</option><option value="United Kingdom">United Kingdom</option><option value="France">France</option></select></div>
+                    <button class="play-btn" id="playBtn"><span class="material-icons-outlined">play_circle</span><span>Visualize Progress</span></button>
+                </div>
+            </div>
+
+            <div id="section-geopolitics" class="narrative-container">
+                <h2 class="section-title"><span class="material-icons-outlined">public</span> 5. A New World Order</h2>
+                <p class="text-content">
+                    The history of the 20th century was written by the West. But the history of the 21st century will be written in Asia. The charts below show a massive geopolitical shift. Demand in the US and Europe has plateaued—we are efficient and our populations are stable. But look at China and India: they are the new engines of the world.
+                </p>
+                <p class="text-content">
+                    This means the center of gravity has moved. If the West cuts emissions to zero, it won't matter if Asia builds coal plants. This is why climate change is a diplomatic problem, not just a scientific one. The rich world must help finance the green transition in the developing world, or we will all face the consequences together.
+                </p>
+            </div>
+
+            <div class="grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Regional Evolution</h2><p>The shifting centers of global energy consumption.</p></div></div>
+                    <div class="chart-body"><div id="chart-evolution"></div></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Top Energy Giants</h2><p>Ranked countries by their total primary energy consumption.</p></div></div>
+                    <div class="chart-body"><div id="chart-top-consumers"></div></div>
+                </div>
+            </div>
+
+            <div id="section-findings" class="insights-section">
+                
+                <div class="insight-card">
+                    <h3>Strategic Analysis & Key Takeaways</h3>
+                    <div class="insight-content">
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>Economics > Politics:</strong></p>
+                                <p>The transition is happening faster than laws require because renewables are now the cheapest option. Capitalism is now driving the green revolution, not just government policy.</p>
+                            </div>
+                        </div>
+
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #4facfe;">public</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>The Asia Challenge:</strong></p>
+                                <p>Since all future growth is in Asia/Africa, the West's primary role must shift from just "cutting own emissions" to exporting cheap green technology to these rising giants.</p>
+                            </div>
+                        </div>
+
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>The "Stacking" Problem:</strong></p>
+                                <p>We are currently adding green energy *on top* of fossil fuels to meet rising demand. To win, we need to actively *replace* (shut down) old plants, which is politically difficult.</p>
+                            </div>
+                        </div>
+
+                        <div class="insight-item">
+                            <span class="material-icons-outlined" style="color: #f59e0b;">bolt</span>
+                            <div class="insight-text-wrapper">
+                                <p><strong>Efficiency is Key:</strong></p>
+                                <p>The best energy is the energy we don't use. Advancements in LED lights, insulation, and software are silently doing more to save the planet than many power plants.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3>Dataset & Methodology</h3>
+                    <p class="stats-description">
+                        This dashboard uses the <em>Energy Production & Consumption</em> dataset from <em>Our World in Data</em>, utilizing primary data from the <strong>BP Statistical Review of World Energy</strong>.
+                    </p>
+
+                    <div class="stats-grid">
+                        <div class="stat-item"><span class="stat-value">150+</span><span class="stat-label">Nations</span></div>
+                        <div class="stat-item"><span class="stat-value">32 yrs</span><span class="stat-label">Data History</span></div>
+                        <div class="stat-item"><span class="stat-value">Annual</span><span class="stat-label">Updates</span></div>
+                        <div class="stat-item"><span class="stat-value">TWh</span><span class="stat-label">Standard Unit</span></div>
+                    </div>
+
+                    <div class="dataset-meta">
+                        <div class="meta-row"><span class="material-icons-outlined">verified</span><span><strong>License:</strong> Open Data (CC BY 4.0)</span></div>
+                        <div class="meta-row"><span class="material-icons-outlined">update</span><span><strong>Last Updated:</strong> Aug 2023</span></div>
+                        <div class="meta-row"><span class="material-icons-outlined">science</span><span><strong>Method:</strong> Standard Substitution</span></div>
+                    </div>
+
+                    <a href="https://ourworldindata.org/energy" target="_blank" class="source-btn">
+                        <span>Explore Source Data</span>
+                        <span class="material-icons-outlined">open_in_new</span>
+                    </a>
+                </div>
+            </div>
+            
+            <footer class="main-footer"><p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p></footer>
+        </main>
+    </div>
+    <script src="js/chart7_evolution.js"></script>
+    <script src="js/chart9_top_consumers.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

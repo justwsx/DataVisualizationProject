@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economics | Energy Insights</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header"><span class="material-icons-outlined logo-icon">bolt</span><h1>Energy Insights</h1></div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Navigation</span>
+                    <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                    <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                    <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                    <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                    <a href="economics.html" class="nav-item active"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                    <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><span class="data-source">Source: Our World in Data</span></div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <div class="nav-left"><div class="search-box"><span class="material-icons-outlined">search</span><input type="text" placeholder="Search data..." id="searchInput"></div></div>
+                <div class="nav-right">
+                    <div class="control-item"><label>Timeline</label><div class="year-control-compact"><span id="currentYearDisplay">2020</span><input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1"></div></div>
+                    <div class="control-item"><label>Geo</label><select id="countrySelect" class="filter-select"><option value="World">The Whole World</option><option value="United States">United States</option><option value="China">China</option><option value="India">India</option><option value="Japan">Japan</option><option value="Germany">Germany</option><option value="United Kingdom">United Kingdom</option><option value="France">France</option></select></div>
+                    <button class="play-btn" id="playBtn"><span class="material-icons-outlined">play_circle</span><span>Visualize Progress</span></button>
+                </div>
+            </div>
+
+            <div id="section-economics" class="narrative-container">
+                <h2 class="section-title"><span class="material-icons-outlined">analytics</span> 4. The Miracle of Decoupling</h2>
+                <p class="text-content">
+                    In the past, economists believed in an "Iron Law": to grow your GDP, you must burn more energy. If you stopped polluting, you would stop growing. We have proven that wrong. We are seeing <strong>Decoupling</strong>. This happens when an economy shifts from heavy industry (like steel mills) to services and technology (like software), and when machines become more efficient.
+                </p>
+                <p class="text-content">
+                    The <strong>Carbon Intensity</strong> chart proves we are getting smarter. We are squeezing more value out of every drop of oil and ray of sunshine. This is crucial news because it means we don't have to choose between poverty and climate change. We can have a prosperous, wealthy society that is also clean.
+                </p>
+            </div>
+
+            <div class="grid-dual">
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Economy vs. Energy</h2><p>How much energy is required to produce economic value.</p></div></div>
+                    <div class="chart-body"><div id="chart-gdp-energy"></div></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header"><div class="chart-title"><h2>Cleanliness of Energy (Intensity)</h2><p>The amount of CO2 emitted per unit of energy used.</p></div></div>
+                    <div class="chart-body"><div id="chart-co2-energy"></div></div>
+                </div>
+            </div>
+            
+            <footer class="main-footer"><p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p></footer>
+        </main>
+    </div>
+    <script src="js/chart4_gdp_energy.js"></script>
+    <script src="js/chart5_co2_energy.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
