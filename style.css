@@ -28,7 +28,7 @@
     --border: #e2e8f0;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --radius: 12px; 
-    --transition: 250ms ease;
+    --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
 }
 
 /* --- 2. GLOBAL RESET --- 
@@ -47,26 +47,46 @@ body {
     overflow-x: hidden; 
 }
 
-/* --- 3. DASHBOARD ARCHITECTURE --- 
-   The layout uses a fixed sidebar with a flexible main content area. */
+/* --- 3. DASHBOARD ARCHITECTURE (AUTO-HIDE LOGIC) --- 
+   The layout uses a "Ghost Sidebar" that is invisible until hovered. */
 .dashboard { display: flex; min-height: 100vh; }
 
 .sidebar {
-    width: 260px; 
-    background: var(--bg-sidebar); 
-    color: #fff;
+    /* DEFAULT STATE: Invisible Strip */
+    width: 20px; /* Just enough to catch the mouse cursor */
+    background: transparent; /* Totally see-through */
+    opacity: 0; /* Visually hidden */
+    
     position: fixed; 
+    top: 0;
+    left: 0;
     height: 100vh; 
-    z-index: 100; 
+    z-index: 1000; /* Must be above everything */
+    
     display: flex; 
     flex-direction: column;
+    overflow: hidden; /* Hide content when closed */
+    white-space: nowrap; /* Prevent text wrapping */
+    
+    /* Transition for slide + fade effect */
+    transition: width var(--transition), opacity 0.3s ease, background 0.3s;
+}
+
+/* ACTIVE STATE: Hovering the left edge triggers this */
+.sidebar:hover {
+    width: 260px; /* Full width */
+    background: var(--bg-sidebar); /* Restore background color */
+    opacity: 1; /* Make visible */
+    box-shadow: 5px 0 30px rgba(0,0,0,0.5); /* Add depth */
 }
 
 .main-content { 
     flex: 1; 
-    margin-left: 260px; 
+    /* CONTENT IS NOW FULL SCREEN */
+    margin-left: 0; 
+    width: 100%; 
     padding: 40px; 
-    width: calc(100% - 260px); 
+    transition: var(--transition);
 }
 
 /* Sidebar Branding & Navigation */
@@ -76,6 +96,16 @@ body {
     align-items: center; 
     gap: 12px; 
     border-bottom: 1px solid #ffffff1a; 
+    opacity: 0; /* Hide internally when closed */
+    transform: translateX(-20px);
+    transition: all 0.3s ease;
+}
+
+/* Show header content smoothly on hover */
+.sidebar:hover .sidebar-header {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
 }
 
 .sidebar-header h1 { 
@@ -87,7 +117,18 @@ body {
 
 .logo-icon { color: var(--accent-pink); font-size: 32px; }
 
-.sidebar-nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
+.sidebar-nav { 
+    flex: 1; 
+    padding: 20px 12px; 
+    overflow-y: auto; 
+    opacity: 0; /* Hide nav items initially */
+    transition: opacity 0.2s ease;
+}
+
+.sidebar:hover .sidebar-nav {
+    opacity: 1;
+    transition-delay: 0.2s;
+}
 
 .nav-item {
     display: flex; 
@@ -334,7 +375,8 @@ input[type="range"]::-webkit-slider-thumb {
 @media (max-width: 1400px) { .kpi-section, .grid-dual { grid-template-columns: 1fr; } }
 
 @media (max-width: 1024px) { 
-    .sidebar { transform: translateX(-100%); transition: var(--transition); } 
+    /* On tablets/mobile, sidebar handling might need touch event or just stay hidden/hamburger */
+    .sidebar { width: 0; } 
     .main-content { margin-left: 0; padding: 20px; width: 100%; } 
 }
 
