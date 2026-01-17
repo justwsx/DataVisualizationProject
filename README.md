@@ -80,5 +80,5 @@ DataVisualizationProject/
 ---
 
 #### 👥 The Team
-- **Wassim Fatnassi** (S4684857)
-- **Nahid Davoudi** (S5812831)
+- **Wassim Fatnassi - Layout structure and visual styling (HTML, CSS & UI Design)** 
+- **Nahid Davoudi - Interactive logic and chart integration (JavaScript & Data Visualization)** 
