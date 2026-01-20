@@ -362,3 +362,26 @@ const Dashboard = {
 document.addEventListener('DOMContentLoaded', () => {
     Dashboard.init();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('mobile-active');
+            // Cambia icona
+            const icon = toggleBtn.querySelector('span');
+            icon.textContent = sidebar.classList.contains('mobile-active') ? 'close' : 'menu';
+        });
+    }
+
+    // Chiudi la sidebar cliccando fuori
+    document.addEventListener('click', (e) => {
+        if (sidebar.classList.contains('mobile-active') && !sidebar.contains(e.target)) {
+            sidebar.classList.remove('mobile-active');
+            toggleBtn.querySelector('span').textContent = 'menu';
+        }
+    });
+});
