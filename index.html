@@ -16,11 +16,14 @@
 <body>
     <div class="dashboard">
         
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="brand-wrapper">
                     <span class="material-icons-outlined logo-icon">bolt</span>
                     <h1>Energy Insights</h1>
+                </div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
                 </div>
             </div>
 
@@ -38,6 +41,11 @@
                 <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
             </nav>
 
+            <div class="sidebar-widget">
+                <div class="widget-title">
+                    <span class="material-icons-outlined" style="font-size: 18px;"></span>
+            </div>
+
             <div class="sidebar-footer">
                 <div class="footer-links">
                     <span class="material-icons-outlined footer-icon">share</span>
@@ -50,28 +58,28 @@
 
         <main class="main-content">
             
-            <div class="top-nav">
-                <button id="sidebarToggle" class="icon-btn">
-                    <span class="material-icons-outlined">menu</span>
-                </button>
-
-                <span class="badge-nav">Interactive Data Story</span>
+            <div class="top-nav" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+                <span style="background: #e0e7ff; color: #4338ca; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                    Interactive Data Story
+                </span>
             </div>
 
-            <div class="narrative-container main-hero">
-                <h1 class="main-title">The Pulse of Our Planet</h1>
+            <div class="narrative-container" style="text-align: center; max-width: 900px; margin: 0 auto 50px auto;">
+                <h1 class="main-title" style="font-size: 3.5rem; margin-top: 20px; background: linear-gradient(135deg, #0f172a 0%, #334155 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    The Pulse of Our Planet
+                </h1>
                 
-                <p class="text-content large-desc">
+                <p class="text-content" style="font-size: 1.25rem; color: var(--text-s);">
                     <strong>Energy is the invisible blood of modern civilization.</strong><br>
                     Every time you switch on a light, stream a video, or drive a car, you participate in a massive global system. For 150 years, we built our prosperity by burning the past (fossil fuels). Now, we are racing to build a future powered by the sun, wind, and atom.
                 </p>
                 
-                <div class="highlight-box">
-                    <div class="highlight-content">
-                        <span class="material-icons-outlined highlight-icon">auto_stories</span>
+                <div class="highlight-box" style="text-align: left; margin-top: 40px; border-left: 6px solid var(--primary);">
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <span class="material-icons-outlined" style="font-size: 32px; color: var(--primary);">auto_stories</span>
                         <div>
-                            <h3>How to read this dashboard</h3>
-                            <p class="text-content">
+                            <h3 style="margin: 0 0 10px 0; color: var(--text-p);">How to read this dashboard</h3>
+                            <p class="text-content" style="margin-bottom: 0; font-size: 1rem;">
                                 This isn't just a collection of charts; it's a story in five chapters. Use the menu on the left to navigate from the explosive demand in Asia to the "hockey-stick" growth of green tech. We invite you to explore the data and discover how 8 billion people are solving the biggest puzzle of our time.
                             </p>
                         </div>
@@ -80,108 +88,119 @@
             </div>
 
             <div class="narrative-container">
-                <h3 class="section-subtitle">Key Indicators at a Glance</h3>
+                <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--text-l); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
+                    Key Indicators at a Glance
+                </h3>
             </div>
 
             <div class="kpi-section">
                 <div class="kpi-card">
-                    <div class="kpi-card-inner">
+                    <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
                             <span class="kpi-label">World Energy Use</span>
                             <span class="kpi-value" id="kpiTotalEnergy">--</span>
-                            <p class="kpi-sub">Terawatt-hours per year</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Terawatt-hours per year</p>
                         </div>
                         <div class="kpi-icon-wrapper energy"><span class="material-icons-outlined">bolt</span></div>
                     </div>
-                    <div class="kpi-trend positive">
+                    <div class="kpi-trend positive" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; width: 100%;">
                         <span class="material-icons-outlined">trending_up</span>
                         <span>Rising Demand (+1.5% YoY)</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-card-inner">
+                    <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
-                            <span class="kpi-label">Fossil Dominance</span>
+                            <span class="kpi-label">Fossil Fuel Dominance</span>
                             <span class="kpi-value" id="kpiFossil">--</span>
-                            <p class="kpi-sub">Share of total energy</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Share of total energy</p>
                         </div>
                         <div class="kpi-icon-wrapper fossil"><span class="material-icons-outlined">oil_barrel</span></div>
                     </div>
-                    <div class="kpi-trend negative">
+                    <div class="kpi-trend negative" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; width: 100%;">
                         <span class="material-icons-outlined">trending_down</span>
                         <span>Slowly decreasing</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-card-inner">
+                    <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
                             <span class="kpi-label">Green Energy</span>
                             <span class="kpi-value" id="kpiRenewables">--</span>
-                            <p class="kpi-sub">Renewables + Nuclear</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Renewables + Nuclear</p>
                         </div>
                         <div class="kpi-icon-wrapper renewable"><span class="material-icons-outlined">eco</span></div>
                     </div>
-                    <div class="kpi-trend positive">
+                    <div class="kpi-trend positive" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; width: 100%;">
                         <span class="material-icons-outlined">rocket_launch</span>
                         <span>Booming Adoption</span>
                     </div>
                 </div>
 
                 <div class="kpi-card">
-                    <div class="kpi-card-inner">
+                    <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
                             <span class="kpi-label">Economic Output</span>
                             <span class="kpi-value" id="kpiGDP">--</span>
-                            <p class="kpi-sub">Global GDP per capita</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Global GDP per capita</p>
                         </div>
                         <div class="kpi-icon-wrapper gdp"><span class="material-icons-outlined">payments</span></div>
                     </div>
-                    <div class="kpi-trend positive">
+                    <div class="kpi-trend positive" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; width: 100%;">
                         <span class="material-icons-outlined">trending_up</span>
                         <span>Decoupling from CO2</span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid-dual">
-                <a href="demand.html" class="insight-card link-card">
+            <div class="grid-dual" style="margin-top: 40px;">
+                <a href="demand.html" class="insight-card" style="text-decoration: none; transition: transform 0.2s; cursor: pointer;">
                     <h3 style="color: var(--primary);">1. Where is the demand coming from?</h3>
-                    <p>Explore how the rise of Asia and the developing world is reshaping global consumption patterns.</p>
-                    <div class="card-action">
+                    <p style="color: var(--text-s);">Explore how the rise of Asia and the developing world is reshaping global consumption patterns.</p>
+                    <div style="margin-top: 15px; display: flex; align-items: center; gap: 5px; color: var(--primary); font-weight: 600;">
                         <span>Explore Global Demand</span> <span class="material-icons-outlined">arrow_forward</span>
                     </div>
                 </a>
                 
-                <a href="transition.html" class="insight-card link-card">
+                <a href="transition.html" class="insight-card" style="text-decoration: none; transition: transform 0.2s; cursor: pointer;">
                     <h3 style="color: #059669;">3. Is the Green Revolution real?</h3>
-                    <p>See the exponential growth curves of solar and wind energy that are challenging the status quo.</p>
-                    <div class="card-action" style="color: #059669;">
+                    <p style="color: var(--text-s);">See the exponential growth curves of solar and wind energy that are challenging the status quo.</p>
+                    <div style="margin-top: 15px; display: flex; align-items: center; gap: 5px; color: #059669; font-weight: 600;">
                         <span>See the Transition</span> <span class="material-icons-outlined">arrow_forward</span>
                     </div>
                 </a>
             </div>  
 
-            <div id="section-team" class="narrative-container team-section">
+            <div id="section-team" class="narrative-container" style="margin-bottom: 40px; margin-top: 60px;">
                 <h2 class="section-title"><span class="material-icons-outlined">groups</span> Meet the Creators</h2>
-                <div class="grid-dual team-grid">
-                    <div class="insight-card team-card designer">
-                        <div class="team-icon"><span class="material-icons-outlined">palette</span></div>
-                        <div class="team-info">
-                            <h3>Wassim Fatnassi</h3>
-                            <span class="team-badge">UI & DESIGN LEAD</span>
-                            <p>Visual language, layout structure, and user experience (UX) design.</p>
+                <p class="text-content">This dashboard was designed and built to make complex energy data accessible to everyone.</p>
+                
+                <div class="grid-dual" style="grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
+                    
+                    <div class="insight-card" style="display: flex; align-items: center; gap: 25px; padding: 30px; border-left: 4px solid #43e97b;">
+                        <div style="background: linear-gradient(135deg, rgba(67, 233, 123, 0.2), rgba(56, 249, 215, 0.2)); padding: 18px; border-radius: 50%;">
+                            <span class="material-icons-outlined" style="font-size: 36px; color: #43e97b;">palette</span>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.4rem; color: #1e293b; border: none; padding: 0;">Wassim Fatnassi</h3>
+                            <span style="display: inline-block; background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin: 8px 0;">UI & DESIGN LEAD</span>
+                            <p style="margin-top: 5px; font-size: 0.9rem; color: var(--text-s);">Responsible for the visual language, layout structure, and user experience (UX) design.</p>
                         </div>
                     </div>
-                    <div class="insight-card team-card developer">
-                        <div class="team-icon"><span class="material-icons-outlined">code</span></div>
-                        <div class="team-info">
-                            <h3>Nahid Davoudi</h3>
-                            <span class="team-badge dev">DATA VIZ ENG.</span>
-                            <p>Architect of the interactive charts and D3.js/Plotly integration.</p>
+
+                    <div class="insight-card" style="display: flex; align-items: center; gap: 25px; padding: 30px; border-left: 4px solid #4facfe;">
+                        <div style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2)); padding: 18px; border-radius: 50%;">
+                            <span class="material-icons-outlined" style="font-size: 36px; color: #4facfe;">code</span>
+                        </div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.4rem; color: #1e293b; border: none; padding: 0;">Nahid Davoudi</h3>
+                            <span style="display: inline-block; background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin: 8px 0;">DATA VISUALIZATION ENG.</span>
+                            <p style="margin-top: 5px; font-size: 0.9rem; color: var(--text-s);">Architect of the interactive charts, data processing logic, and D3.js/Plotly integration.</p>
                         </div>
                     </div>
+
                 </div>
             </div>
 
