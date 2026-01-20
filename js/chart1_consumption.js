@@ -5,10 +5,15 @@ class ConsumptionChart {
         this.countryColors = countryColors;
         this.container = 'chart-consumption';
         this.viewMode = 'lines';
+        this.selectedCountry = null;
     }
 
     setViewMode(mode) {
         this.viewMode = mode;
+    }
+
+    setSelectedCountry(country) {
+        this.selectedCountry = country;
     }
 
     update(currentYear) {
@@ -19,112 +24,89 @@ class ConsumptionChart {
 
             if (countryData.length === 0) return null;
 
-            const baseConfig = {
+            const isTarget = country === "United States" || country === "China";
+            const isSelected = country === this.selectedCountry;
+            const color = this.countryColors[country] || '#6366f1';
+
+            return {
                 x: countryData.map(d => d.year),
                 y: countryData.map(d => d.primary_energy_consumption),
                 mode: 'lines',
                 name: country,
                 line: {
-                    color: this.countryColors[country] || '#6366f1',
-                    width: country === "United States" || country === "China" ? 3 : 2,
+                    color: isTarget || isSelected ? color : '#e2e8f0',
+                    width: isTarget ? 3.5 : (isSelected ? 3.5 : 1.5),
                     shape: 'spline'
                 },
-                hovertemplate: `<b>${country}</b><br>Year: %{x}<br>Energy: %{y:,.0f} kWh/person<extra></extra>`
+                hoverinfo: isTarget ? 'all' : 'skip',
+                hovertemplate: isTarget ? `<b>${country}</b>: %{y:,.0f} kWh<extra></extra>` : null,
+                fill: this.viewMode === 'area' ? 'tonexty' : 'none',
+                fillcolor: this.viewMode === 'area' ? this.hexToRgba(color, 0.12) : null
             };
-
-            if (this.viewMode === 'area') {
-                baseConfig.fill = 'tonexty';
-                baseConfig.fillcolor = this.hexToRgba(this.countryColors[country] || '#6366f1', 0.15);
-            }
-
-            return baseConfig;
         }).filter(trace => trace !== null);
+
+        const countryLabels = this.countries
+            .filter(country => country === "United States" || country === "China")
+            .map((country) => {
+                const countryData = this.data.filter(d => d.country === country).sort((a, b) => a.year - b.year);
+                if (countryData.length === 0) return null;
+                const lastPoint = countryData[countryData.length - 1];
+                
+                return {
+                    type: 'scatter',
+                    mode: 'text',
+                    x: [lastPoint.year], 
+                    y: [lastPoint.primary_energy_consumption],
+                    text: [country],
+                    textposition: 'middle right',
+                    cliponaxis: false,
+                    textfont: { 
+                        family: 'Inter, sans-serif', 
+                        size: 13, 
+                        color: this.countryColors[country], 
+                        weight: 700 
+                    },
+                    hoverinfo: 'skip',
+                    showlegend: false
+                };
+            }).filter(label => label !== null);
 
         const layout = {
             title: {
-                text: 'Primary Energy Consumption by Country (kWh per capita)',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
+                text: '<b>Primary Energy Consumption per Capita</b><br><span style="font-size: 13px; color: #64748b;">Average energy consumption per person over time (kWh per capita)</span>',
+                align: 'left',
+                x: 0,
+                y: 0.95,
+                font: { family: 'Inter, sans-serif', size: 18, color: '#1e293b' }
             },
             xaxis: {
-                title: '',
-                range: [1991, 2022],
+                range: [1990.8, 2022.2],
                 tickmode: 'linear',
                 dtick: 5,
-                gridcolor: 'rgba(226, 232, 240, 0.8)',
-                showgrid: true,
-                zeroline: false,
-                tickfont: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#64748b'
-                }
+                gridcolor: 'rgba(226, 232, 240, 0.6)',
+                showspikes: true,
+                spikemode: 'across',
+                spikedash: 'dot',
+                spikecolor: '#94a3b8',
+                spikethickness: 1.5,
+                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#64748b' }
             },
             yaxis: {
-                title: 'kWh per capita',
-                gridcolor: 'rgba(226, 232, 240, 0.8)',
-                showgrid: true,
-                zeroline: false,
-                tickfont: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#64748b'
-                }
+                ticksuffix: ' kWh',
+                nticks: 8,
+                gridcolor: 'rgba(226, 232, 240, 0.6)',
+                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#64748b' }
             },
-            margin: { l: 60, r: 30, t: 60, b: 40 },
+            margin: { l: 80, r: 160, t: 100, b: 50 },
             hovermode: 'x unified',
-            showlegend: true,
-            legend: {
-                orientation: 'h',
-                x: 0.5,
-                y: -0.2,
-                xanchor: 'center',
-                bgcolor: 'transparent',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#64748b'
-                }
-            },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            shapes: [{
-                type: 'line',
-                x0: currentYear,
-                x1: currentYear,
-                y0: 0,
-                y1: 1,
-                xref: 'x',
-                yref: 'paper',
-                line: {
-                    color: '#6366f1',
-                    width: 2,
-                    dash: 'dot'
-                }
-            }],
-            annotations: [{
-                x: currentYear,
-                y: 0.98,
-                xref: 'x',
-                yref: 'paper',
-                text: currentYear.toString(),
-                showarrow: true,
-                arrowhead: 2,
-                arrowwidth: 2,
-                arrowcolor: '#6366f1',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 12,
-                    color: '#6366f1'
-                },
-                bgcolor: 'rgba(255,255,255,0.9)',
+            hoverlabel: {
+                bgcolor: 'rgba(255, 255, 255, 0.98)',
                 bordercolor: '#e2e8f0',
-                borderwidth: 1,
-                borderpad: 4
-            }]
+                font: { family: 'Inter, sans-serif', size: 12, color: '#1e293b' }
+            },
+            showlegend: false,
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)'
         };
 
         const config = {
@@ -132,13 +114,13 @@ class ConsumptionChart {
             displayModeBar: false
         };
 
-        Plotly.react(this.container, traces, layout, config);
+        Plotly.react(this.container, [...traces, ...countryLabels], layout, config);
     }
 
     hexToRgba(hex, alpha) {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
+        const r = parseInt(hex.slice(1, 3), 16), 
+              g = parseInt(hex.slice(3, 5), 16), 
+              b = parseInt(hex.slice(5, 7), 16);
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
@@ -146,4 +128,3 @@ class ConsumptionChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
-
