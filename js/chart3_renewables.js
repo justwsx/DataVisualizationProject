@@ -12,6 +12,7 @@ class RenewablesChart {
         const startYear = 1990;
         const endYear = 2022;
         const target = "Canada";
+        const globalBenchmark = "Norway";
 
         // Find 2nd place in 1990
         const data1990 = this.data.filter(d => d.year === startYear && d.country !== target && this.countries.includes(d.country));
@@ -21,7 +22,7 @@ class RenewablesChart {
         const data2022 = this.data.filter(d => d.year === endYear && d.country !== target && this.countries.includes(d.country));
         this.rival2022 = data2022.sort((a, b) => b.renewables_energy_per_capita - a.renewables_energy_per_capita)[0]?.country;
 
-        this.highlighted = ["Canada", this.rival1990, this.rival2022];
+        this.highlighted = ["Canada", this.rival1990, this.rival2022, globalBenchmark];
     }
 
     update(currentYear) {
