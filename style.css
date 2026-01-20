@@ -1,59 +1,72 @@
 /* ==========================================================================
-   ENERGY INSIGHTS DASHBOARD - FINAL PRODUCTION STYLES
+   ENERGY INSIGHTS DASHBOARD - REFINED PRODUCTION STYLES
+   Features: Ghost Sidebar, Dynamic Layout Shift, Vibrant UI
    ========================================================================== */
 
 :root {
+    /* --- BRAND COLORS --- */
     --primary: #4f46e5;       
+    --primary-dark: #4338ca; 
     --gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    
+    /* --- PALETTE --- */
     --bg-body: #f8fafc;       
     --bg-card: #ffffff;       
+    --bg-sidebar: #ffffff;    
+    --bg-input: #f1f5f9;      
+    
+    /* --- TYPOGRAPHY --- */
     --text-p: #0f172a;        
     --text-s: #475569;        
     --text-l: #94a3b8;        
+    
+    /* --- UI DECORATION --- */
     --border: #e2e8f0;        
     --radius: 16px;           
     --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); 
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
 }
 
-/* 1. RESET & BASE */
+/* --- 1. GLOBAL RESET --- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
 body { 
     font-family: 'Inter', sans-serif; 
-    background: var(--bg-body); 
-    color: var(--text-p); 
-    line-height: 1.6; 
-    overflow-x: hidden; 
+    background: var(--bg-body); color: var(--text-p); 
+    line-height: 1.6; overflow-x: hidden; 
 }
 
-/* 2. SIDEBAR LOGIC (Desktop Hover + Mobile Toggle) */
+/* --- 2. GHOST SIDEBAR LOGIC --- */
+.dashboard { display: flex; min-height: 100vh; }
+
 .sidebar {
-    position: fixed;
-    top: 0; left: 0; height: 100vh;
-    width: 280px;
-    background: var(--bg-card);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--border);
-    transition: transform var(--transition), width var(--transition), opacity 0.3s;
-    
-    /* Desktop Default: Ghost Mode */
-    transform: translateX(-260px); /* Lascia 20px visibili a sinistra */
-    opacity: 0;
+    width: 20px; opacity: 0; /* Ghost default */
+    position: fixed; top: 0; left: 0; height: 100vh; z-index: 1000;        
+    background: transparent; display: flex; flex-direction: column;
+    overflow: hidden; white-space: nowrap;  
+    transition: width var(--transition), opacity 0.3s ease, background 0.3s, box-shadow 0.3s;
+    border-right: 1px solid transparent;
 }
 
-/* Desktop Hover */
+/* Hover State (Desktop) */
 @media (min-width: 1025px) {
     .sidebar:hover {
-        transform: translateX(0);
-        opacity: 1;
-        box-shadow: 10px 0 40px rgba(0,0,0,0.1);
+        width: 280px; opacity: 1;
+        background: var(--bg-sidebar); 
+        box-shadow: 10px 0 40px rgba(0,0,0,0.1); 
+        border-right: 1px solid var(--border);
     }
 }
 
-/* Contenuto interno Sidebar */
+/* Sidebar Interior Content */
+.sidebar-header, .sidebar-nav, .sidebar-footer { 
+    opacity: 0; transform: translateX(-20px); 
+    transition: all 0.3s ease; 
+}
+.sidebar:hover .sidebar-header, .sidebar:hover .sidebar-nav, .sidebar:hover .sidebar-footer,
+.sidebar.sidebar-active .sidebar-header, .sidebar.sidebar-active .sidebar-nav, .sidebar.sidebar-active .sidebar-footer { 
+    opacity: 1; transform: translateX(0); 
+}
+
 .sidebar-header { padding: 30px 24px; border-bottom: 1px solid var(--border); }
 .brand-wrapper { display: flex; align-items: center; gap: 12px; }
 .sidebar-header h1 { font-size: 1.2rem; font-weight: 800; }
@@ -61,97 +74,137 @@ body {
 
 .sidebar-nav { flex: 1; padding: 20px 16px; overflow-y: auto; }
 .nav-item {
-    display: flex; align-items: center; gap: 14px; 
-    padding: 14px 16px; color: var(--text-s); 
-    text-decoration: none; border-radius: 12px; font-weight: 500;
-    transition: 0.2s;
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px; 
+    color: var(--text-s); text-decoration: none; border-radius: 12px; 
+    font-weight: 500; transition: 0.2s;
 }
-.nav-item:hover, .nav-item.active { background: #f1f5f9; color: var(--primary); }
+.nav-item:hover, .nav-item.active { background: var(--bg-input); color: var(--primary); }
+.nav-item.active { font-weight: 700; }
 
-.sidebar-footer { padding: 20px; text-align: center; border-top: 1px solid var(--border); }
+.sidebar-footer { padding: 20px; font-size: 0.8rem; color: var(--text-l); border-top: 1px solid var(--border); }
 
-/* 3. MAIN CONTENT */
+/* --- 3. MAIN CONTENT & SHIFT LOGIC --- */
 .main-content { 
-    flex: 1; 
-    margin-left: 0;
-    padding: 40px 50px;
-    transition: margin-left var(--transition);
+    flex: 1; margin-left: 0; width: 100%; padding: 40px 50px;   
+    transition: margin-left var(--transition), width var(--transition);
 }
 
-/* Shift contenuto su Desktop quando passi il mouse */
-@media (min-width: 1025px) {
-    body:has(.sidebar:hover) .main-content {
-        margin-left: 280px;
-    }
+/* Content Shift on Hover */
+body:has(.sidebar:hover) .main-content {
+    margin-left: 280px; width: calc(100% - 280px);
 }
 
-/* 4. TOP NAVIGATION */
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 30px;
-    margin-bottom: 40px;
-    border-bottom: 1px solid var(--border);
+/* --- 4. TOP NAV & SMART REORGANIZATION --- */
+.top-nav { 
+    display: flex; justify-content: space-between; align-items: flex-end; 
+    padding-bottom: 30px; margin-bottom: 40px; border-bottom: 1px solid var(--border); 
 }
 
-/* Pulsante Menu (Indispensabile per Mobile) */
+/* Mobile Toggle Button */
 .icon-btn {
-    display: none; /* Nascosto su desktop */
-    background: #fff;
-    border: 1px solid var(--border);
-    padding: 10px;
-    border-radius: 12px;
-    cursor: pointer;
-    color: var(--primary);
+    display: none; background: #fff; border: 1px solid var(--border);
+    padding: 10px; border-radius: 12px; cursor: pointer; color: var(--primary);
+    margin-right: 15px;
 }
 
-/* 5. LAYOUT ELEMENTS (KPI, Grids) */
-.kpi-section { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-    gap: 24px; 
-    margin-bottom: 40px; 
-}
+.nav-right { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; transition: all 0.3s; }
 
-.kpi-card { 
-    background: var(--bg-card); 
-    padding: 24px; 
-    border-radius: var(--radius); 
+/* Smart Reorganization when Sidebar opens */
+body:has(.sidebar:hover) .nav-right {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 30px; margin-left: 20px;
+}
+body:has(.sidebar:hover) .nav-right .control-item:first-child { grid-column: span 2; justify-self: center; }
+body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) { justify-self: end; }
+body:has(.sidebar:hover) .play-btn { justify-self: start; }
+
+/* Control Items Styling */
+.control-item { display: flex; flex-direction: row; align-items: center; gap: 15px; }
+.control-item label { font-weight: 700; text-transform: uppercase; font-size: 0.7rem; color: var(--text-l); }
+
+.search-box, .year-control-compact { 
+    background: var(--bg-card); border: 1px solid var(--border); 
+    padding: 8px 16px; border-radius: 50px; display: flex; align-items: center; gap: 12px; 
     box-shadow: var(--shadow);
-    border: 1px solid var(--border);
 }
+.search-box { width: 320px; transition: width 0.3s; }
+body:has(.sidebar:hover) .search-box { width: 280px; }
 
-.grid-dual { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-    gap: 30px; 
+.search-box input { background: transparent; border: none; outline: none; width: 100%; color: var(--text-p); }
+#currentYearDisplay { background: var(--bg-input); color: var(--primary); font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+
+input[type="range"] { -webkit-appearance: none; width: 250px; height: 6px; background: var(--bg-input); border-radius: 3px; cursor: pointer; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--primary); border-radius: 50%; }
+
+.filter-select { padding: 10px 16px; border: 1px solid var(--border); border-radius: 12px; min-width: 200px; cursor: pointer; background: #fff; }
+
+.play-btn { 
+    padding: 12px 28px; background: var(--gradient); color: #fff; 
+    border: none; border-radius: 50px; font-weight: 700; cursor: pointer; 
+    display: flex; gap: 10px; align-items: center; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
 }
+.play-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); }
 
-/* 6. RESPONSIVE FIXES (Mobile) */
+/* --- 5. NARRATIVE & CARDS --- */
+.narrative-container { width: 100%; margin-bottom: 3rem; }
+.main-title { font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 1.5rem; }
+.highlight-box { background: var(--bg-card); padding: 2rem; border-radius: var(--radius); border-left: 4px solid var(--primary); box-shadow: var(--shadow); }
+.text-content { font-size: 1.15rem; line-height: 1.8; color: var(--text-s); margin-bottom: 1.5rem; }
+.section-title { font-size: 1.8rem; font-weight: 700; margin: 4rem 0 1.5rem 0; display: flex; align-items: center; gap: 12px; }
+
+/* KPI Section */
+.kpi-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 50px; }
+.kpi-card { 
+    background: var(--bg-card); padding: 24px; border-radius: var(--radius); 
+    display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow); border: 1px solid var(--border);
+    transition: var(--transition); 
+}
+.kpi-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.kpi-icon-wrapper { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.kpi-icon-wrapper.energy { background: #fffbeb; color: #d97706; }
+.kpi-icon-wrapper.fossil { background: #fef2f2; color: #dc2626; }
+.kpi-icon-wrapper.renewable { background: #ecfdf5; color: #059669; }
+.kpi-icon-wrapper.gdp { background: #eff6ff; color: #2563eb; }
+
+.kpi-value { font-size: 1.6rem; font-weight: 800; margin-top: 4px; }
+
+/* Charts */
+.grid-full, .grid-dual { display: grid; gap: 30px; margin-bottom: 30px; }
+.grid-dual { grid-template-columns: repeat(2, 1fr); }
+.chart-card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+.chart-header { display: flex; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+
+.chart-btn { padding: 8px 20px; border: 1px solid var(--primary); background: #fff; border-radius: 30px; cursor: pointer; color: var(--primary); font-weight: 600; }
+.chart-btn.active { background: var(--primary); color: #fff; }
+.chart-body { padding: 20px; height: 450px; }
+
+/* Insights & Footer */
+.insights-section { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+.insight-card, .stats-card { background: #fff; padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.stat-item { text-align: center; padding: 15px; background: var(--bg-input); border-radius: 12px; }
+.source-btn { display: flex; justify-content: center; align-items: center; gap: 10px; border: 2px solid var(--primary); color: var(--primary); padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 700; transition: 0.3s; }
+.source-btn:hover { background: var(--primary); color: #fff; }
+
+.main-footer { text-align: center; padding: 40px 0; color: var(--text-l); border-top: 1px solid var(--border); margin-top: 60px; }
+
+/* --- 6. RESPONSIVE BREAKPOINTS (FIXED) --- */
 @media (max-width: 1024px) {
-    .icon-btn { display: flex; } /* Mostra pulsante menu */
-    
-    .sidebar {
-        transform: translateX(-100%); /* Nascondi completamente */
-        opacity: 1; /* Togli trasparenza per evitare bug */
-        width: 280px;
-    }
-
-    /* Quando aggiungi la classe via JS */
-    .sidebar.mobile-active {
-        transform: translateX(0);
-        box-shadow: 20px 0 50px rgba(0,0,0,0.2);
-    }
-
-    .main-content {
-        padding: 20px;
-        margin-left: 0 !important;
-    }
-
-    .main-title { font-size: 2.2rem; }
+    .kpi-section, .grid-dual, .insights-section { grid-template-columns: 1fr; }
+    body:has(.sidebar:hover) .main-content { margin-left: 0; width: 100%; }
 }
 
 @media (max-width: 768px) {
-    .top-nav { flex-direction: column; gap: 20px; align-items: flex-start; }
+    .icon-btn { display: flex; } /* Pulsante visibile su mobile */
+    .top-nav { flex-direction: column; align-items: stretch; gap: 20px; }
+    .search-box { width: 100% !important; }
+    .main-content { padding: 20px; }
+
+    /* Sidebar Mobile Fix */
+    .sidebar {
+        left: -280px; width: 280px !important; opacity: 1 !important;
+        background: var(--bg-sidebar); border-right: 1px solid var(--border);
+        transition: transform var(--transition);
+    }
+    .sidebar.sidebar-active { transform: translateX(280px); box-shadow: 20px 0 50px rgba(0,0,0,0.2); }
 }
