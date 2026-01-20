@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Demand | Energy Insights</title>
-    
+
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
+
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 
 <body>
     <div class="dashboard">
-        
+
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="brand-wrapper">
@@ -29,16 +31,22 @@
 
             <nav class="sidebar-nav">
                 <span class="nav-section-title">Main Menu</span>
-                <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
-                <a href="demand.html" class="nav-item active"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
-                <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                <a href="index.html" class="nav-item"><span
+                        class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                <a href="demand.html" class="nav-item active"><span
+                        class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
+                <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy
+                        Mix</span></a>
 
                 <div style="height: 20px;"></div>
-                
+
                 <span class="nav-section-title">Analysis & Future</span>
-                <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
-                <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
-                <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green
+                        Transition</span></a>
+                <a href="economics.html" class="nav-item"><span
+                        class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                <a href="geopolitics.html" class="nav-item"><span
+                        class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
             </nav>
 
             <div class="sidebar-widget">
@@ -58,7 +66,7 @@
         </aside>
 
         <main class="main-content">
-            
+
             <div class="top-nav">
                 <div class="nav-left">
                     <div class="search-box">
@@ -66,7 +74,7 @@
                         <input type="text" placeholder="Search countries, regions or specific data..." id="searchInput">
                     </div>
                 </div>
-                
+
                 <div class="nav-right">
                     <div class="control-item">
                         <label>Timeline Explorer</label>
@@ -75,7 +83,7 @@
                             <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
                         </div>
                     </div>
-                    
+
                     <div class="control-item">
                         <label>Geographic Focus</label>
                         <select id="countrySelect" class="filter-select">
@@ -99,60 +107,76 @@
 
             <div id="section-demand" class="narrative-container">
                 <h1 class="main-title">The Unstoppable Hunger for Power</h1>
-                
+
                 <div class="highlight-box">
                     <p class="text-content">
-                        <strong>Why does the line always go up?</strong> Because energy is freedom. It is the ability to keep a hospital open at night, to pump clean water, and to connect to the internet. The steep climb you see in the charts below isn't just "consumption"—it represents billions of humans lifting themselves out of poverty and joining the modern world.
+                        <strong>Why does the line always go up?</strong> Because energy is freedom. It is the ability to
+                        keep a hospital open at night, to pump clean water, and to connect to the internet. The steep
+                        climb you see in the charts below isn't just "consumption"—it represents billions of humans
+                        lifting themselves out of poverty and joining the modern world.
                     </p>
                 </div>
 
-                <h2 class="section-title"><span class="material-icons-outlined">history</span> 1. A Century of Explosion</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">history</span> 1. A Century of Explosion
+                </h2>
                 <p class="text-content">
-                    For most of human history, our energy use was flat. We relied on wood and muscle. Then came the industrial revolution, and later, the digital revolution. The <strong>Global Consumption Trend</strong> chart below captures this exponential explosion.
+                    For most of human history, our energy use was flat. We relied on wood and muscle. Then came the
+                    industrial revolution, and later, the digital revolution. The <strong>Global Consumption
+                        Trend</strong> chart below captures this exponential explosion.
                 </p>
                 <p class="text-content">
-                    Notice how the curve rarely dips? Even during recessions or pandemics, our collective hunger for energy barely pauses. As populations grow and technology spreads to every corner of the globe, maintaining this supply—without destroying the biosphere—is the single greatest engineering challenge of our species.
+                    Notice how the curve rarely dips? Even during recessions or pandemics, our collective hunger for
+                    energy barely pauses. As populations grow and technology spreads to every corner of the globe,
+                    maintaining this supply—without destroying the biosphere—is the single greatest engineering
+                    challenge of our species.
                 </p>
             </div>
 
             <div class="grid-full">
                 <div class="chart-card large">
                     <div class="chart-header">
-                        <div class="chart-title">
-                            <h2>The Trajectory of Global Energy Use</h2>
-                            <p>Total primary energy consumed by humanity every year (measured in Terawatt-hours).</p>
-                        </div>
                         <div class="chart-actions">
                             <button class="chart-btn active" data-view="lines">Lines</button>
                             <button class="chart-btn" data-view="area">Area</button>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-consumption"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-consumption"></div>
+                    </div>
                 </div>
             </div>
 
             <div class="narrative-container" style="margin-top: 50px;">
-                <h2 class="section-title"><span class="material-icons-outlined">public_off</span> 2. The Great Divide: Energy Poverty</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">public_off</span> 2. The Great Divide:
+                    Energy Poverty</h2>
                 <p class="text-content">
-                    While the total number is huge, it hides a deep injustice. The <strong>Inequality Map</strong> below reveals the "Energy Gap." The dark zones (North America, Europe, Australia) are awash in power. We leave lights on in empty rooms.
+                    While the total number is huge, it hides a deep injustice. The <strong>Inequality Map</strong> below
+                    reveals the "Energy Gap." The dark zones (North America, Europe, Australia) are awash in power. We
+                    leave lights on in empty rooms.
                 </p>
                 <p class="text-content">
-                    But look at the lighter areas in the Global South. Billions of people still struggle with "Energy Poverty." As these nations develop, their demand will skyrocket. The critical question for the future is not *if* they will consume more energy, but *what kind* of energy they will choose. If the developing world follows the fossil-fuel path of the West, climate goals will be impossible to meet.
+                    But look at the lighter areas in the Global South. Billions of people still struggle with "Energy
+                    Poverty." As these nations develop, their demand will skyrocket. The critical question for the
+                    future is not *if* they will consume more energy, but *what kind* of energy they will choose. If the
+                    developing world follows the fossil-fuel path of the West, climate goals will be impossible to meet.
                 </p>
             </div>
 
-            <div class="grid-full"> 
+            <div class="grid-full">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div class="chart-title">
                             <h2>The Energy Inequality Map</h2>
-                            <p>Intensity of energy usage per person. Darker nations represent higher consumption per capita.</p>
+                            <p>Intensity of energy usage per person. Darker nations represent higher consumption per
+                                capita.</p>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-map"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-map"></div>
+                    </div>
                 </div>
             </div>
-            
+
             <footer class="main-footer">
                 <p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p>
             </footer>
@@ -163,4 +187,5 @@
     <script src="js/chart10_map.js"></script>
     <script src="main.js"></script>
 </body>
+
 </html>
