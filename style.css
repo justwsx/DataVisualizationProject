@@ -17,7 +17,6 @@
     --radius: 16px;           
     --transition: 400ms cubic-bezier(0.4, 0, 0.2, 1); 
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     --shadow-glow: 0 4px 15px rgba(79, 70, 229, 0.4); 
 }
 
@@ -29,9 +28,37 @@ body {
     line-height: 1.6; overflow-x: hidden; 
 }
 
-/* --- SUGGERIMENTO MOBILE (NOVITÀ) --- */
-.mobile-hint {
-    display: none; /* Nascosto su desktop */
+/* --- SMART DASHBOARD HINT (IL "TAB" BELLO) --- */
+.dashboard-hint {
+    position: fixed;
+    top: 15px; /* In alto */
+    left: 0;   /* A sinistra */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px 10px 25px; /* Più spazio a sx per indicare il bordo */
+    background: var(--gradient-vibrant);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 0 50px 50px 0; /* Arrotondato solo a destra */
+    box-shadow: var(--shadow-glow);
+    z-index: 500; /* Sotto la sidebar (1000) */
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    animation: hintPulse 2s infinite; /* Animazione discreta */
+}
+
+/* Nascondi il suggerimento quando la sidebar è attiva (Desktop & Mobile) */
+body:has(.sidebar:hover) .dashboard-hint {
+    opacity: 0;
+    transform: translateX(-100%); /* Scivola via a sinistra */
+}
+
+@keyframes hintPulse {
+    0% { transform: scale(1); box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 4px 25px rgba(79, 70, 229, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
 }
 
 /* 3. "GHOST" SIDEBAR LOGIC */
@@ -125,7 +152,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .text-content { font-size: 1.15rem; line-height: 1.8; color: var(--text-s); }
 
 /* 7. KPI CARDS */
-.kpi-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 50px; }
+.kpi-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 50px; }
 .kpi-card { background: var(--bg-card); padding: 24px; border-radius: var(--radius); display: flex; align-items: center; gap: 20px; border: 1px solid var(--border); transition: var(--transition); }
 .kpi-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
 .kpi-icon-wrapper { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -154,7 +181,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .brand-wrapper { display: flex; align-items: center; gap: 12px; }
 
 /* --------------------------------------------------------------------------
-   10. RESPONSIVE BREAKPOINTS (CON LOGICA SUGGERIMENTO)
+   10. RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
 @media (max-width: 1200px) { 
     .kpi-section, .grid-dual { grid-template-columns: 1fr; } 
@@ -165,31 +192,10 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
     .search-box { width: 100%; } 
     .main-content { padding: 20px; }
 
-    /* Stile suggerimento mobile */
-    .mobile-hint {
-        display: block;
-        position: fixed;
-        left: 25px; /* Vicino alla zona di tap di 20px */
-        top: 50%;
-        transform: translateY(-50%) rotate(-90deg); /* Scritta verticale */
-        transform-origin: center left;
-        z-index: 500;
-        background: var(--primary);
-        color: white;
-        padding: 6px 12px;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        white-space: nowrap;
-        pointer-events: none; /* Non blocca il tap sulla sidebar */
-        box-shadow: var(--shadow-glow);
-        transition: opacity 0.3s ease;
-    }
-
-    /* Nascondi il suggerimento quando la sidebar è aperta (hover su mobile) */
-    body:has(.sidebar:hover) .mobile-hint {
-        opacity: 0;
+    /* Ottimizzazione suggerimento mobile */
+    .dashboard-hint {
+        top: 10px;
+        font-size: 0.75rem;
+        padding: 8px 15px 8px 20px;
     }
 }
