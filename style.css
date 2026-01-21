@@ -539,44 +539,66 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
 .grid-journey .chapter-card:nth-child(5) { animation-delay: 0.6s; }
 
 /* ==========================================================================
-   12. CHAPTER NAVIGATION (NEXT BUTTONS)
+   12. CHAPTER NAVIGATION (PREV & NEXT)
    ========================================================================== */
 .chapter-nav-container {
     display: flex;
-    justify-content: center; /* Spinge il bottone a destra */
+    justify-content: center; /* Centra il gruppo di bottoni */
+    align-items: center;
+    gap: 20px; /* Spazio tra i due bottoni */
     margin: 40px 0 20px 0;
     padding-top: 30px;
-    border-top: 1px solid var(--border); /* Linea separatrice elegante */
+    border-top: 1px solid var(--border);
 }
 
+/* Bottone NEXT (Primario) */
 .next-chapter-btn {
     display: inline-flex;
     align-items: center;
-    gap: 15px;               /* Più spazio tra testo e freccia */
+    gap: 12px;
     background: var(--primary);
     color: white;
-    
-    /* MODIFICA QUI PER LA GRANDEZZA */
-    padding: 18px 45px;      /* Aumentato da 14px 30px -> Bottone più "cicciotto" */
-    font-size: 1.2rem;       /* Aumentato da 1rem -> Testo più grande */
-    
+    padding: 14px 30px;
     border-radius: 50px;
     text-decoration: none;
-    font-weight: 700;        /* Font un po' più grassetto */
+    font-weight: 600;
+    font-size: 1rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
 }
 
-/* Mantieni l'hover come prima */
 .next-chapter-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.4); /* Ombra più grande */
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
 }
 
-.next-chapter-btn span {
+/* Bottone PREV (Secondario / Outline) */
+.prev-chapter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    color: var(--text-s); /* Colore grigio scuro */
+    border: 2px solid var(--border); /* Bordo visibile */
+    padding: 12px 28px; /* Leggermente più piccolo del Next per gerarchia */
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.prev-chapter-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #f8fafc;
+    transform: translateY(-3px);
+}
+
+/* Stile per il testo piccolo dentro ai bottoni */
+.next-chapter-btn span, .prev-chapter-btn span {
     font-weight: 400;
-    opacity: 0.9;
+    opacity: 0.8;
     font-size: 0.9em;
-    margin-right: 5px;
 }
