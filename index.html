@@ -22,6 +22,8 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             position: relative;
             overflow: hidden;
+            /* MODIFICA: Assicura che occupi tutto lo spazio disponibile */
+            width: 100%; 
         }
         .hero-bg-icon {
             position: absolute;
@@ -137,14 +139,14 @@
             
             <div class="hero-gradient">
                 <span class="material-icons-outlined hero-bg-icon">public</span>
-                <div style="position: relative; z-index: 2; max-width: 800px;">
+                <div style="position: relative; z-index: 2; width: 100%;">
                     <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;">
                         Interactive Data Story
                     </span>
                     <h1 style="font-size: 3.5rem; margin: 20px 0 15px 0; line-height: 1.1; color: white;">
                         The Pulse of Our Planet
                     </h1>
-                    <p style="font-size: 1.25rem; color: #cbd5e1; max-width: 650px; line-height: 1.6;">
+                    <p style="font-size: 1.25rem; color: #cbd5e1; line-height: 1.6; width: 100%;">
                         Energy is the invisible blood of civilization. From the coal that built the 20th century to the solar panels powering the 21st. Explore the data behind the biggest shift in human history.
                     </p>
                     <a href="demand.html" class="start-btn">
