@@ -543,64 +543,75 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
    ========================================================================== */
 .chapter-nav-container {
     display: flex;
-    justify-content: center; /* Centra il gruppo di bottoni */
+    justify-content: center;
     align-items: center;
-    gap: 20px; /* Spazio tra i due bottoni */
+    gap: 20px;
     margin: 40px 0 20px 0;
     padding-top: 30px;
     border-top: 1px solid var(--border);
 }
 
-/* Bottone NEXT (Primario) */
+/* --- BOTTONE NEXT (Azione Principale) --- */
+/* Resta colorato e prominente */
 .next-chapter-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center; /* Assicura allineamento icone/testo */
     gap: 12px;
-    background: var(--primary);
+    
+    /* Colore Primario Forte */
+    background: var(--primary); 
     color: white;
-    padding: 14px 30px;
+    
+    padding: 14px 32px; /* Leggermente più largo */
     border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    border: 2px solid transparent; /* Per bilanciare le dimensioni col Prev */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); /* Ombra colorata */
 }
 
 .next-chapter-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.5);
 }
 
-
-/* Stile per il testo piccolo dentro ai bottoni */
-.next-chapter-btn span, .prev-chapter-btn span {
-    font-weight: 400;
-    opacity: 0.8;
-    font-size: 0.9em;
-}
-
-/* Bottone PREV (Aggiornato: Più visibile) */
+/* --- BOTTONE PREV (Azione Secondaria) --- */
+/* Stile "Soft Grey": Sfondo chiaro, testo scuro. Distinzione immediata. */
 .prev-chapter-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.354); /* Sfondo bianco per pulizia */
-    color: #ebeef4f3;    /* Slate 600 - Un grigio scuro molto leggibile */
-    border: 2px solid #cbd5e15d; /* Slate 300 - Bordo solido e ben definito */
-    padding: 12px 28px; 
+    
+    /* Colori neutri per differenziarlo dal Next */
+    background: #f1f5f9;   /* Slate 100 - Grigio chiarissimo */
+    color: #475569;        /* Slate 600 - Grigio scuro leggibile */
+    border: 2px solid #f1f5f9; /* Bordo uguale allo sfondo */
+    
+    padding: 14px 32px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .prev-chapter-btn:hover {
-    border-color: #334155; /* Diventa molto scuro al passaggio del mouse */
-    color: #1e293b;        /* Testo quasi nero */
-    background: #f8fafc;   /* Sfondo leggerissimo */
+    background: #e2e8f0;   /* Slate 200 - Sfondo un po' più scuro al passaggio */
+    color: #1e293b;        /* Slate 800 - Testo quasi nero */
+    border-color: #cbd5e1; /* Slate 300 - Bordo che si definisce */
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Aggiunta piccola ombra */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombra neutra, non colorata */
+}
+
+/* Stile per il testo piccolo (opzionale span interno) */
+.next-chapter-btn span, 
+.prev-chapter-btn span {
+    font-weight: 400;
+    opacity: 0.8;
+    font-size: 0.9em;
 }
