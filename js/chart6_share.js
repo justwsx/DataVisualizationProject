@@ -9,13 +9,13 @@ class ShareChart {
         if (!container) return;
 
         const yearData = this.data.filter(d => d.year === year);
-
         if (yearData.length === 0) return;
 
         let coal = 0, oil = 0, gas = 0, hydro = 0, nuclear = 0, renewables = 0;
 
         yearData.forEach(d => {
             const pop = d.population || 0;
+            // Summing up kWh
             coal += (d.coal_cons_per_capita || 0) * pop;
             oil += (d.oil_energy_per_capita || 0) * pop;
             gas += (d.gas_energy_per_capita || 0) * pop;
@@ -31,9 +31,11 @@ class ShareChart {
             nuclear += nuc;
         });
 
-        const values = [coal, oil, gas, nuclear, hydro, renewables];
+        // CONVERSION: Divide by 1,000,000,000 to convert kWh to TWh
+        const values = [coal, oil, gas, nuclear, hydro, renewables].map(v => v / 1000000000);
+        
         const labels = ["Coal", "Oil", "Natural Gas", "Nuclear", "Hydroelectric", "Renewables"];
-        const colors = ["#374151", "#4b5563", "#6b7280", "#8b5cf6", "#3b82f6", "#22c55e"];
+        const colors = ["#374151", "#8B4513", "#FFD700", "#8b5cf6", "#3b82f6", "#22c55e"];
 
         const trace = {
             values: values,
@@ -41,19 +43,21 @@ class ShareChart {
             type: 'pie',
             hole: 0.6,
             textinfo: 'label+percent',
-            textposition: 'outside',
+            textposition: 'inside', 
             automargin: true,
             marker: {
                 colors: colors,
-                line: {
-                    color: '#ffffff',
-                    width: 2
-                }
+                line: { color: '#ffffff', width: 2 }
+            },
+            insidetextfont: {
+                family: 'Inter, sans-serif',
+                size: 12,
+                color: '#ffffff'
             },
             hoverinfo: 'label+value+percent',
             hovertemplate:
                 '<b>%{label}</b><br>' +
-                'Energy: %{value:.0f} TWh<br>' +
+                'Energy: %{value:,.2f} TWh<br>' + // Displaying with 2 decimal places and commas
                 'Share: %{percent}<br>' +
                 '<extra></extra>'
         };
@@ -61,11 +65,7 @@ class ShareChart {
         const layout = {
             title: {
                 text: 'Global Energy Mix by Source',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
+                font: { family: 'Inter, sans-serif', size: 16, color: '#1e293b' }
             },
             annotations: [
                 {
@@ -83,33 +83,14 @@ class ShareChart {
                     y: 0.4
                 }
             ],
-            showlegend: true,
-            legend: {
-                orientation: 'h',
-                x: 0.5,
-                y: -0.1,
-                xanchor: 'center',
-                yanchor: 'top',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#475569'
-                },
-                bgcolor: 'rgba(255,255,255,0.5)',
-                bordercolor: '#e2e8f0',
-                borderwidth: 1
-            },
+            showlegend: false, 
             margin: { t: 80, r: 40, b: 80, l: 40 },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: { family: 'Inter, sans-serif' }
         };
 
-        const config = {
-            responsive: true,
-            displayModeBar: false
-        };
-
+        const config = { responsive: true, displayModeBar: false };
         Plotly.newPlot(this.elementId, [trace], layout, config);
     }
 
