@@ -51,7 +51,7 @@ class RenewablesChart {
 
         // Position labels at year 2007 above the lines as requested
         const labels = this.highlighted.map(country => {
-            const targetYear = 2020; 
+            const targetYear = 2009; 
             const countryDataAtYear = this.data.find(d => d.country === country && d.year === targetYear);
             
             if (!countryDataAtYear) return null;
@@ -110,3 +110,4 @@ class RenewablesChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
+
