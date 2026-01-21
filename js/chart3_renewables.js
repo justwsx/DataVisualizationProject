@@ -58,7 +58,7 @@ class RenewablesChart {
             };
         }).filter(trace => trace !== null);
 
-        // Labels with AGGRESSIVE spacing to prevent any overlap
+        
         const labels = this.highlighted.map(country => {
             const countryData = this.data.filter(d => d.country === country && d.year <= 2022).sort((a, b) => a.year - b.year);
             if (countryData.length === 0) return null;
@@ -66,18 +66,15 @@ class RenewablesChart {
             
             let labelText = `<b>${country}</b>`;
             
-            // Aggressive Y-axis shifts:
-            // 1. Brazil (Top): Move WAY UP (+25)
-            // 2. Australia (Middle): Move DOWN (-10)
-            // 3. Canada (Bottom): Move WAY DOWN (-40)
+           
             let yShiftValue = 0;
             
             if (country === "Brazil") {
-                yShiftValue = 25;    // Significant push UP
+                yShiftValue = 5;    
             } else if (country === "Australia") {
-                yShiftValue = -10;   // Small push DOWN
+                yShiftValue = -1;   
             } else if (country === "Canada") {
-                yShiftValue = -40;   // Large push DOWN
+                yShiftValue = -4;   
             }
             
             return {
@@ -87,7 +84,7 @@ class RenewablesChart {
                 y: [lastPoint.renewables_energy_per_capita],
                 text: [labelText], 
                 textposition: 'middle right',
-                yshift: yShiftValue, // Applying the aggressive shift
+                yshift: yShiftValue, 
                 textfont: { 
                     family: 'Inter, sans-serif', 
                     size: 11, 
