@@ -586,7 +586,7 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.578); /* Sfondo bianco per pulizia */
+    background: rgba(255, 255, 255, 0.354); /* Sfondo bianco per pulizia */
     color: #ebeef4f3;    /* Slate 600 - Un grigio scuro molto leggibile */
     border: 2px solid #cbd5e15d; /* Slate 300 - Bordo solido e ben definito */
     padding: 12px 28px; 
