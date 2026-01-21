@@ -19,7 +19,7 @@ class EvolutionChart {
                 y: countryData.map(d => d.primary_energy_consumption),
                 mode: 'lines',
                 stackgroup: 'one',
-                fillcolor: this.hexToRgba(this.countryColors[country] || '#6366f1', 0.6),
+                fillcolor: this.hexToRgba(this.countryColors[country] || '#6366f1', 0.15),
                 line: {
                     color: this.countryColors[country] || '#6366f1',
                     width: country === "United States" || country === "China" ? 3 : 1.5,
@@ -32,52 +32,37 @@ class EvolutionChart {
 
         const layout = {
             title: {
-                text: 'Energy Consumption Evolution by Country (kWh per capita)',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 16,
-                    color: '#1e293b'
-                }
+                text: '',
+                font: { family: 'Inter, sans-serif', size: 0 }
             },
             xaxis: {
                 title: '',
                 range: [1991, 2022],
                 tickmode: 'linear',
                 dtick: 5,
-                gridcolor: 'rgba(226, 232, 240, 0.8)',
+                gridcolor: 'rgba(226, 232, 240, 0.4)',
                 showgrid: true,
                 zeroline: false,
-                tickfont: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#64748b'
-                }
+                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#64748b' }
             },
             yaxis: {
                 title: 'kWh per capita',
-                gridcolor: 'rgba(226, 232, 240, 0.8)',
+                gridcolor: 'rgba(226, 232, 240, 0.4)',
                 showgrid: true,
                 zeroline: false,
-                tickfont: {
-                    family: 'Inter, sans-serif',
-                    size: 11,
-                    color: '#64748b'
-                }
+                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#64748b' },
+                tickformat: ',.0f'
             },
-            margin: { l: 60, r: 20, t: 60, b: 40 },
-            hovermode: 'x unified',
+            margin: { l: 70, r: 20, t: 20, b: 50 },
+            hovermode: false,
             showlegend: true,
             legend: {
                 orientation: 'h',
                 x: 0.5,
-                y: -0.15,
+                y: -0.25,
                 xanchor: 'center',
                 bgcolor: 'transparent',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 10,
-                    color: '#64748b'
-                }
+                font: { family: 'Inter, sans-serif', size: 10, color: '#64748b' }
             },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -89,11 +74,7 @@ class EvolutionChart {
                 y1: 1,
                 xref: 'x',
                 yref: 'paper',
-                line: {
-                    color: '#6366f1',
-                    width: 2,
-                    dash: 'dot'
-                }
+                line: { color: '#6366f1', width: 2, dash: 'dot' }
             }],
             annotations: [{
                 x: currentYear,
@@ -105,11 +86,7 @@ class EvolutionChart {
                 arrowhead: 2,
                 arrowwidth: 2,
                 arrowcolor: '#6366f1',
-                font: {
-                    family: 'Inter, sans-serif',
-                    size: 12,
-                    color: '#6366f1'
-                },
+                font: { family: 'Inter, sans-serif', size: 12, color: '#6366f1' },
                 bgcolor: 'rgba(255,255,255,0.9)',
                 bordercolor: '#e2e8f0',
                 borderwidth: 1,
