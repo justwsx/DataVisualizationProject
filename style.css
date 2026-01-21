@@ -537,3 +537,42 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
 .grid-journey .chapter-card:nth-child(3) { animation-delay: 0.4s; }
 .grid-journey .chapter-card:nth-child(4) { animation-delay: 0.5s; }
 .grid-journey .chapter-card:nth-child(5) { animation-delay: 0.6s; }
+
+/* ==========================================================================
+   12. CHAPTER NAVIGATION (NEXT BUTTONS)
+   ========================================================================== */
+.chapter-nav-container {
+    display: flex;
+    justify-content: flex-end; /* Spinge il bottone a destra */
+    margin: 40px 0 20px 0;
+    padding-top: 30px;
+    border-top: 1px solid var(--border); /* Linea separatrice elegante */
+}
+
+.next-chapter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--primary); /* Usa il colore principale */
+    color: white;
+    padding: 14px 30px;
+    border-radius: 50px; /* Arrotondato come il bottone Start */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+.next-chapter-btn:hover {
+    background: var(--primary-dark);
+    transform: translateX(5px); /* Si sposta leggermente a destra */
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+}
+
+.next-chapter-btn span {
+    font-weight: 400;
+    opacity: 0.9;
+    font-size: 0.9em;
+    margin-right: 5px;
+}
