@@ -488,52 +488,81 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
     transform: translateX(-10px);
 }
 
-/* ==========================================================================
-   11. PAGE TRANSITIONS & ANIMATIONS
-   Smooth entry animations for layout elements.
+//* ==========================================================================
+   11. PAGE TRANSITIONS & ANIMATIONS (ULTRA BOOSTED VERSION)
+   High-energy entry animations with aggressive easing and scaling.
    ========================================================================== */
 
-/* Define the keyframes (the movement logic) */
-@keyframes slideInFromLeft {
-    0% { opacity: 0; transform: translateX(-30px); }
-    100% { opacity: 1; transform: translateX(0); }
+/* --- Custom Easing Curves for "Punchy" feel --- */
+:root {
+    /* The "Power Snap": Starts incredibly fast, brakes hard at the end */
+    --ease-power: cubic-bezier(0.16, 1, 0.3, 1);
+    /* The "Elastic Pop": Slight overshoot and bounce back for items */
+    --ease-elastic: cubic-bezier(0.34, 1.3, 0.64, 1);
 }
 
-@keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(20px); }
+/* --- Keyframes Definitions --- */
+
+/* 1. Sidebar: Power Slide from Left */
+@keyframes powerSlideLeft {
+    0% { opacity: 0; transform: translateX(-120px); filter: blur(5px); }
+    100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+
+/* 2. Main Container: Deep Fade Up */
+@keyframes deepFadeUp {
+    0% { opacity: 0; transform: translateY(80px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Apply animations to main containers */
+/* 3. Cards & Hero: Energetic "Pop" (Scale + Move) */
+@keyframes popUpDynamic {
+    0% { 
+        opacity: 0; 
+        transform: translateY(50px) scale(0.9); /* Start lower and smaller */
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); /* End in place, full size */
+    }
+}
 
-/* 1. The Sidebar: Slides in quickly from the left */
+/* --- Applying Animations --- */
+
+/* Sidebar rushes in */
 .sidebar {
-    animation: slideInFromLeft 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    /* Longer duration, but the easing makes the start instant */
+    animation: powerSlideLeft 0.8s var(--ease-power) forwards;
 }
 
-/* 2. The Main Content: Fades in and moves up slightly later */
+/* Main content body rises dramatically */
 .main-content {
-    opacity: 0; /* Hidden initially to prevent flickering */
-    animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    animation-delay: 0.1s; /* Starts slightly after the sidebar */
-}
-
-/* 3. Staggered animation for the grid items inside main content 
-   (Optional: makes cards pop in one by one) */
-.kpi-card, .insight-card, .chart-card {
     opacity: 0;
-    animation: fadeUp 0.5s ease-out forwards;
+    animation: deepFadeUp 0.9s var(--ease-power) forwards;
+    animation-delay: 0.15s;
 }
 
-/* Delays for specific elements to create a "waterfall" effect */
-.kpi-card:nth-child(1) { animation-delay: 0.2s; }
-.kpi-card:nth-child(2) { animation-delay: 0.3s; }
-.kpi-card:nth-child(3) { animation-delay: 0.4s; }
-.kpi-card:nth-child(4) { animation-delay: 0.5s; }
+/* --- STAGGERED "POP" EFFECTS FOR ITEMS --- */
+/* Applies the elastic pop to all major cards and the hero section */
+.hero-gradient, .kpi-card, .insight-card, .grid-journey .chapter-card {
+    opacity: 0;
+    /* Using the elastic curve for a slight bounce effect */
+    animation: popUpDynamic 0.7s var(--ease-elastic) forwards;
+}
 
-.grid-journey .chapter-card { opacity: 0; animation: fadeUp 0.5s ease-out forwards; }
-.grid-journey .chapter-card:nth-child(1) { animation-delay: 0.2s; }
-.grid-journey .chapter-card:nth-child(2) { animation-delay: 0.3s; }
-.grid-journey .chapter-card:nth-child(3) { animation-delay: 0.4s; }
-.grid-journey .chapter-card:nth-child(4) { animation-delay: 0.5s; }
-.grid-journey .chapter-card:nth-child(5) { animation-delay: 0.6s; }
+/* Waterfall Sequence Delays */
+/* Hero first */
+.hero-gradient { animation-delay: 0.2s; }
+
+/* Then KPIs */
+.kpi-card:nth-child(1) { animation-delay: 0.3s; }
+.kpi-card:nth-child(2) { animation-delay: 0.35s; }
+.kpi-card:nth-child(3) { animation-delay: 0.4s; }
+.kpi-card:nth-child(4) { animation-delay: 0.45s; }
+
+/* Then Chapters/Insights */
+.grid-journey .chapter-card:nth-child(1), .grid-dual .insight-card:nth-child(1) { animation-delay: 0.5s; }
+.grid-journey .chapter-card:nth-child(2), .grid-dual .insight-card:nth-child(2) { animation-delay: 0.55s; }
+.grid-journey .chapter-card:nth-child(3) { animation-delay: 0.6s; }
+.grid-journey .chapter-card:nth-child(4) { animation-delay: 0.65s; }
+.grid-journey .chapter-card:nth-child(5) { animation-delay: 0.7s; }
