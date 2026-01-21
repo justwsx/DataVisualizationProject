@@ -4,13 +4,12 @@ class MixChart {
         this.container = 'chart-mix';
         this.colors = {
             coal: '#374151',
-            gas: '#6b7280',
-            oil: '#9ca3af',
+            gas: '#FFD700', // Yellow
+            oil: '#8B4513', // Brown
             hydro: '#3b82f6',
             renewables: '#22c55e',
             nuclear: '#8b5cf6'
         };
-        
     }
 
     update(selectedYear) {
@@ -62,7 +61,7 @@ class MixChart {
                 name: 'Coal',
                 type: 'bar',
                 marker: { color: this.colors.coal },
-                hovertemplate: '<b>%{x}</b><br>Coal: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Coal: %{y:,.0f} kWh<extra></extra>'
             },
             {
                 x: countries,
@@ -70,7 +69,7 @@ class MixChart {
                 name: 'Natural Gas',
                 type: 'bar',
                 marker: { color: this.colors.gas },
-                hovertemplate: '<b>%{x}</b><br>Gas: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Gas: %{y:,.0f} kWh<extra></extra>'
             },
             {
                 x: countries,
@@ -78,7 +77,7 @@ class MixChart {
                 name: 'Oil',
                 type: 'bar',
                 marker: { color: this.colors.oil },
-                hovertemplate: '<b>%{x}</b><br>Oil: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Oil: %{y:,.0f} kWh<extra></extra>'
             },
             {
                 x: countries,
@@ -86,7 +85,7 @@ class MixChart {
                 name: 'Hydroelectric',
                 type: 'bar',
                 marker: { color: this.colors.hydro },
-                hovertemplate: '<b>%{x}</b><br>Hydro: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Hydro: %{y:,.0f} kWh<extra></extra>'
             },
             {
                 x: countries,
@@ -94,7 +93,7 @@ class MixChart {
                 name: 'Renewables',
                 type: 'bar',
                 marker: { color: this.colors.renewables },
-                hovertemplate: '<b>%{x}</b><br>Renewables: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Renewables: %{y:,.0f} kWh<extra></extra>'
             },
             {
                 x: countries,
@@ -102,7 +101,7 @@ class MixChart {
                 name: 'Nuclear',
                 type: 'bar',
                 marker: { color: this.colors.nuclear },
-                hovertemplate: '<b>%{x}</b><br>Nuclear: %{y:,.0f} kWh<extra></extra>'
+                hovertemplate: 'Nuclear: %{y:,.0f} kWh<extra></extra>'
             }
         ];
 
@@ -166,4 +165,3 @@ class MixChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
-
