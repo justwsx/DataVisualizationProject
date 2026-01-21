@@ -588,9 +588,9 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
     gap: 12px;
     
     /* Colori neutri per differenziarlo dal Next */
-    background: #f1f5f991;   /* Slate 100 - Grigio chiarissimo */
-    color: hwb(217 25% 68%);        /* Slate 600 - Grigio scuro leggibile */
-    border: 2px solid #f1f5f9; /* Bordo uguale allo sfondo */
+    background: #f1f5f91f;   /* Slate 100 - Grigio chiarissimo */
+    color: hwb(0 100% 0%);        /* Slate 600 - Grigio scuro leggibile */
+    border: 2px solid #0a437b16; /* Bordo uguale allo sfondo */
     
     padding: 14px 32px;
     border-radius: 50px;
