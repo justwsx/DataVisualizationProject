@@ -11,7 +11,6 @@ class RenewablesChart {
         const mainTarget = "Canada";
         const competitor1 = "Australia";
         const competitor2 = "Brazil"; 
-
         this.highlighted = [mainTarget, competitor1, competitor2];
     }
 
@@ -26,19 +25,15 @@ class RenewablesChart {
             if (countryData.length === 0) return null;
 
             const isHighlighted = this.highlighted.includes(country);
-            
             let color = '#e2e8f0'; 
             let lineWidth = 1.2;
-            let opacity = 0.4;
+            let opacity = 0.3;
 
             if (isHighlighted) {
                 color = this.countryColors[country] || '#64748b';
                 lineWidth = 3.5;
                 opacity = 1;
-
-                if (country === mainTarget) {
-                    lineWidth = 4.5;
-                }
+                if (country === mainTarget) lineWidth = 4.5;
             }
 
             return {
@@ -46,11 +41,7 @@ class RenewablesChart {
                 y: countryData.map(d => d.renewables_energy_per_capita || 0),
                 mode: 'lines',
                 name: country,
-                line: {
-                    color: color,
-                    width: lineWidth,
-                    shape: 'spline'
-                },
+                line: { color: color, width: lineWidth, shape: 'spline' },
                 opacity: opacity,
                 hoverinfo: isHighlighted ? 'all' : 'skip',
                 hovertemplate: isHighlighted ? `<b>${country}</b>: %{y:,.0f} kWh<extra></extra>` : null,
@@ -58,40 +49,27 @@ class RenewablesChart {
             };
         }).filter(trace => trace !== null);
 
-        
+        // Position labels at year 2007 above the lines as requested
         const labels = this.highlighted.map(country => {
-            const countryData = this.data.filter(d => d.country === country && d.year <= 2022).sort((a, b) => a.year - b.year);
-            if (countryData.length === 0) return null;
-            const lastPoint = countryData[countryData.length - 1];
+            const targetYear = 2020; 
+            const countryDataAtYear = this.data.find(d => d.country === country && d.year === targetYear);
             
-            let labelText = `<b>${country}</b>`;
-            
-           
-            let yShiftValue = 0;
-            
-            if (country === "Brazil") {
-                yShiftValue = 5;    
-            } else if (country === "Australia") {
-                yShiftValue = -1;   
-            } else if (country === "Canada") {
-                yShiftValue = -4;   
-            }
-            
+            if (!countryDataAtYear) return null;
+
             return {
                 type: 'scatter', 
-                mode: 'text+markers',
-                x: [lastPoint.year], 
-                y: [lastPoint.renewables_energy_per_capita],
-                text: [labelText], 
-                textposition: 'middle right',
-                yshift: yShiftValue, 
+                mode: 'text',
+                x: [targetYear], 
+                y: [countryDataAtYear.renewables_energy_per_capita],
+                text: [`<b>${country}</b>`], 
+                textposition: 'top center',
+                yshift: 10, // Shifts text upward from the line
                 textfont: { 
                     family: 'Inter, sans-serif', 
-                    size: 11, 
+                    size: 12, 
                     color: this.countryColors[country], 
                     weight: 'bold' 
                 },
-                marker: { size: 6, color: this.countryColors[country] },
                 showlegend: false, 
                 hoverinfo: 'skip'
             };
@@ -99,12 +77,12 @@ class RenewablesChart {
 
         const layout = {
             title: {
-                text: `<b>Renewables Growth: Canada, Australia & Brazil</b>`,
+                text: `<b>Renewables Growth Trajectory</b>`,
                 font: { family: 'Inter, sans-serif', size: 17, color: '#1e293b' }, 
                 x: 0.05
             },
             xaxis: { 
-                range: [1989.5, 2024], 
+                range: [1990, 2022.8],
                 gridcolor: 'rgba(226, 232, 240, 0.6)', 
                 tickfont: { size: 11, color: '#64748b' } 
             },
@@ -113,19 +91,16 @@ class RenewablesChart {
                 gridcolor: 'rgba(226, 232, 240, 0.6)', 
                 tickfont: { size: 11, color: '#64748b' } 
             },
-            margin: { l: 65, r: 180, t: 80, b: 50 },
+            margin: { l: 60, r: 40, t: 80, b: 50 }, 
             hovermode: 'x unified',
             showlegend: false,
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
-            shapes: [
-                {
-                    type: 'line',
-                    x0: currentYear, x1: currentYear, y0: 0, y1: 1,
-                    xref: 'x', yref: 'paper',
-                    line: { color: '#22c55e', width: 1, dash: 'dot' }
-                }
-            ]
+            shapes: [{
+                type: 'line', x0: currentYear, x1: currentYear, y0: 0, y1: 1,
+                xref: 'x', yref: 'paper',
+                line: { color: '#22c55e', width: 1, dash: 'dot' }
+            }]
         };
 
         Plotly.react(this.container, [...traces, ...labels], layout, { responsive: true, displayModeBar: false });
