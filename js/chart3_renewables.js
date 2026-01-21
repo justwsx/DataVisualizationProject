@@ -4,28 +4,20 @@ class RenewablesChart {
         this.countries = majorCountries;
         this.countryColors = countryColors;
         this.container = 'chart-renewables';
-        
-        this.identifyKeyCompetitors();
+        this.identifyCompetitors();
     }
 
-    identifyKeyCompetitors() {
-        const startYear = 1990;
-        const endYear = 2022;
-        const target = "Canada";
+    identifyCompetitors() {
+        const mainTarget = "Canada";
+        const competitor1 = "Australia";
+        const competitor2 = "Brazil"; 
 
-        // Find 2nd place in 1990
-        const data1990 = this.data.filter(d => d.year === startYear && d.country !== target && this.countries.includes(d.country));
-        this.rival1990 = data1990.sort((a, b) => b.renewables_energy_per_capita - a.renewables_energy_per_capita)[0]?.country;
-
-        // Find 2nd place in 2022
-        const data2022 = this.data.filter(d => d.year === endYear && d.country !== target && this.countries.includes(d.country));
-        this.rival2022 = data2022.sort((a, b) => b.renewables_energy_per_capita - a.renewables_energy_per_capita)[0]?.country;
-
-        this.highlighted = ["Canada", this.rival1990, this.rival2022];
+        this.highlighted = [mainTarget, competitor1, competitor2];
     }
 
     update(currentYear) {
-        const main = "Canada";
+        const mainTarget = "Canada";
+        
         const traces = this.countries.map(country => {
             const countryData = this.data
                 .filter(d => d.country === country && d.year <= 2022)
@@ -34,60 +26,112 @@ class RenewablesChart {
             if (countryData.length === 0) return null;
 
             const isHighlighted = this.highlighted.includes(country);
+            
+            let color = '#e2e8f0'; 
+            let lineWidth = 1.2;
+            let opacity = 0.4;
+
+            if (isHighlighted) {
+                color = this.countryColors[country] || '#64748b';
+                lineWidth = 3.5;
+                opacity = 1;
+
+                if (country === mainTarget) {
+                    lineWidth = 4.5;
+                }
+            }
+
             return {
                 x: countryData.map(d => d.year),
                 y: countryData.map(d => d.renewables_energy_per_capita || 0),
                 mode: 'lines',
+                name: country,
                 line: {
-                    color: isHighlighted ? this.countryColors[country] : '#e2e8f0',
-                    width: isHighlighted ? 4 : 1.5,
+                    color: color,
+                    width: lineWidth,
                     shape: 'spline'
                 },
+                opacity: opacity,
                 hoverinfo: isHighlighted ? 'all' : 'skip',
+                hovertemplate: isHighlighted ? `<b>${country}</b>: %{y:,.0f} kWh<extra></extra>` : null,
                 showlegend: false
             };
-        }).filter(t => t !== null);
+        }).filter(trace => trace !== null);
 
-        // Get values for GAP calculation
-        const yearData = this.data.filter(d => d.year === currentYear);
-        const canVal = yearData.find(d => d.country === main)?.renewables_energy_per_capita || 0;
-        const riv1990Val = yearData.find(d => d.country === this.rival1990)?.renewables_energy_per_capita || 0;
-
-        const gap1990 = Math.abs(canVal - riv1990Val);
+        // Labels with AGGRESSIVE spacing to prevent any overlap
+        const labels = this.highlighted.map(country => {
+            const countryData = this.data.filter(d => d.country === country && d.year <= 2022).sort((a, b) => a.year - b.year);
+            if (countryData.length === 0) return null;
+            const lastPoint = countryData[countryData.length - 1];
+            
+            let labelText = `<b>${country}</b>`;
+            
+            // Aggressive Y-axis shifts:
+            // 1. Brazil (Top): Move WAY UP (+25)
+            // 2. Australia (Middle): Move DOWN (-10)
+            // 3. Canada (Bottom): Move WAY DOWN (-40)
+            let yShiftValue = 0;
+            
+            if (country === "Brazil") {
+                yShiftValue = 25;    // Significant push UP
+            } else if (country === "Australia") {
+                yShiftValue = -10;   // Small push DOWN
+            } else if (country === "Canada") {
+                yShiftValue = -40;   // Large push DOWN
+            }
+            
+            return {
+                type: 'scatter', 
+                mode: 'text+markers',
+                x: [lastPoint.year], 
+                y: [lastPoint.renewables_energy_per_capita],
+                text: [labelText], 
+                textposition: 'middle right',
+                yshift: yShiftValue, // Applying the aggressive shift
+                textfont: { 
+                    family: 'Inter, sans-serif', 
+                    size: 11, 
+                    color: this.countryColors[country], 
+                    weight: 'bold' 
+                },
+                marker: { size: 6, color: this.countryColors[country] },
+                showlegend: false, 
+                hoverinfo: 'skip'
+            };
+        }).filter(l => l !== null);
 
         const layout = {
-            title: { text: `<b>Renewables Gap Analysis: Canada vs ${this.rival1990}</b>`, x: 0.05 },
-            xaxis: { range: [1989.5, 2023.5], gridcolor: 'rgba(226, 232, 240, 0.6)' },
-            yaxis: { ticksuffix: ' kWh', gridcolor: 'rgba(226, 232, 240, 0.6)' },
-            margin: { l: 60, r: 150, t: 80, b: 50 },
+            title: {
+                text: `<b>Renewables Growth: Canada, Australia & Brazil</b>`,
+                font: { family: 'Inter, sans-serif', size: 17, color: '#1e293b' }, 
+                x: 0.05
+            },
+            xaxis: { 
+                range: [1989.5, 2024], 
+                gridcolor: 'rgba(226, 232, 240, 0.6)', 
+                tickfont: { size: 11, color: '#64748b' } 
+            },
+            yaxis: { 
+                ticksuffix: ' kWh', 
+                gridcolor: 'rgba(226, 232, 240, 0.6)', 
+                tickfont: { size: 11, color: '#64748b' } 
+            },
+            margin: { l: 65, r: 180, t: 80, b: 50 },
             hovermode: 'x unified',
             showlegend: false,
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
-            annotations: [
-                {
-                    x: currentYear, y: (canVal + riv1990Val) / 2, xref: 'x', yref: 'y',
-                    text: `Gap to 1990 Leader:<br><b>${gap1990.toLocaleString()}</b> kWh`,
-                    showarrow: true, arrowhead: 0, ax: -70, ay: 0,
-                    font: { size: 11, color: '#475569' },
-                    bgcolor: 'white', bordercolor: '#94a3b8', borderwidth: 1, borderpad: 5
-                }
-            ],
             shapes: [
                 {
                     type: 'line',
-                    x0: currentYear, x1: currentYear, y0: canVal, y1: riv1990Val,
-                    xref: 'x', yref: 'y',
-                    line: { color: '#94a3b8', width: 2, dash: 'solid' }
-                },
-                {
-                    type: 'line', x0: currentYear, x1: currentYear, y0: 0, y1: 1, xref: 'x', yref: 'paper',
+                    x0: currentYear, x1: currentYear, y0: 0, y1: 1,
+                    xref: 'x', yref: 'paper',
                     line: { color: '#22c55e', width: 1, dash: 'dot' }
                 }
             ]
         };
 
-        Plotly.react(this.container, traces, layout, { responsive: true, displayModeBar: false });
+        Plotly.react(this.container, [...traces, ...labels], layout, { responsive: true, displayModeBar: false });
     }
 
     resize() {
