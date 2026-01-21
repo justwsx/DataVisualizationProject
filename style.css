@@ -487,3 +487,53 @@ body:has(.sidebar:hover) .sidebar-instruction-btn {
     pointer-events: none;
     transform: translateX(-10px);
 }
+
+/* ==========================================================================
+   11. PAGE TRANSITIONS & ANIMATIONS
+   Smooth entry animations for layout elements.
+   ========================================================================== */
+
+/* Define the keyframes (the movement logic) */
+@keyframes slideInFromLeft {
+    0% { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply animations to main containers */
+
+/* 1. The Sidebar: Slides in quickly from the left */
+.sidebar {
+    animation: slideInFromLeft 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* 2. The Main Content: Fades in and moves up slightly later */
+.main-content {
+    opacity: 0; /* Hidden initially to prevent flickering */
+    animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.1s; /* Starts slightly after the sidebar */
+}
+
+/* 3. Staggered animation for the grid items inside main content 
+   (Optional: makes cards pop in one by one) */
+.kpi-card, .insight-card, .chart-card {
+    opacity: 0;
+    animation: fadeUp 0.5s ease-out forwards;
+}
+
+/* Delays for specific elements to create a "waterfall" effect */
+.kpi-card:nth-child(1) { animation-delay: 0.2s; }
+.kpi-card:nth-child(2) { animation-delay: 0.3s; }
+.kpi-card:nth-child(3) { animation-delay: 0.4s; }
+.kpi-card:nth-child(4) { animation-delay: 0.5s; }
+
+.grid-journey .chapter-card { opacity: 0; animation: fadeUp 0.5s ease-out forwards; }
+.grid-journey .chapter-card:nth-child(1) { animation-delay: 0.2s; }
+.grid-journey .chapter-card:nth-child(2) { animation-delay: 0.3s; }
+.grid-journey .chapter-card:nth-child(3) { animation-delay: 0.4s; }
+.grid-journey .chapter-card:nth-child(4) { animation-delay: 0.5s; }
+.grid-journey .chapter-card:nth-child(5) { animation-delay: 0.6s; }
