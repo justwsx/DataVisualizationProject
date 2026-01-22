@@ -368,6 +368,6 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
 
 /* Waterfall Delays */
 .kpi-card:nth-child(1) { animation-delay: 0.2s; }
-.kpi-card:nth-child(2) { animation-delay: 0.3s; }
-.kpi-card:nth-child(3) { animation-delay: 0.4s; }
-.kpi-card:nth-child(4) { animation-delay: 0.5s; }
+.kpi-card:nth-child(2) { animation-delay: 0.4s; }
+.kpi-card:nth-child(3) { animation-delay: 0.6s; }
+.kpi-card:nth-child(4) { animation-delay: 0.8s; }
