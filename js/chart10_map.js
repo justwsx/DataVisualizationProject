@@ -13,7 +13,7 @@ class EnergyMapChart {
         const zValues = yearData.map(d => d.primary_energy_consumption);
         const locations = yearData.map(d => d.country);
 
-        const trace = {
+        const choropleth = {
             type: 'choropleth',
             locationmode: 'country names',
             locations: locations,
@@ -29,11 +29,6 @@ class EnergyMapChart {
             autocolorscale: false,
             reversescale: false,
             marker: { line: { color: '#ffffff', width: 0.5 } },
-            hoverlabel: {
-                bgcolor: '#1e293b',
-                bordercolor: '#ffffff',
-                font: { family: 'Inter, sans-serif', size: 14, color: '#ffffff' }
-            },
             hovertemplate: '<b>%{text}</b><br>Energy: %{z:,.0f} kWh/person<extra></extra>',
             colorbar: {
                 title: { text: 'kWh per Capita', font: { family: 'Inter, sans-serif', size: 12 } },
@@ -45,10 +40,25 @@ class EnergyMapChart {
             }
         };
 
+        const iconMarkers = {
+            type: 'scattergeo',
+            mode: 'text',
+            text: ['🔥', '⚫'],
+            lon: [-98.5, 104.2],
+            lat: [39.8, 35.9],
+            textfont: { size: 28 },
+            hoverinfo: 'text',
+            hovertext: [
+                'United States<br>Dominant Energy Structure: Natural Gas',
+                'China<br>Dominant Energy Structure: Coal'
+            ],
+            showlegend: false
+        };
+
         const layout = {
             title: {
-                text: `Global Energy Distribution (${year})`,
-                font: { family: 'Inter, sans-serif', size: 16, color: '#1e293b' },
+                text: `The Energy Inequality Map<br><span style="font-size:12px;color:#64748b">Intensity of energy usage per person. Darker nations represent higher consumption per capita.</span>`,
+                font: { family: 'Inter, sans-serif', size: 18, color: '#1e293b' },
                 y: 0.95
             },
             geo: {
@@ -64,12 +74,40 @@ class EnergyMapChart {
                 lataxis: { range: [-60, 90] },
                 lonaxis: { range: [-180, 180] }
             },
-            margin: { t: 50, r: 0, b: 0, l: 0 },
+            annotations: [
+                {
+                    x: 0.02,
+                    y: 0.05,
+                    xref: 'paper',
+                    yref: 'paper',
+                    text:
+                        '<b>Symbol Legend</b><br>' +
+                        '🔥 Dominant Natural Gas Structure<br>' +
+                        '⚫ Dominant Coal Structure',
+                    showarrow: false,
+                    align: 'left',
+                    font: {
+                        family: 'Inter, sans-serif',
+                        size: 11,
+                        color: '#1e293b'
+                    },
+                    bgcolor: 'rgba(255,255,255,0.95)',
+                    bordercolor: '#e2e8f0',
+                    borderwidth: 1,
+                    borderpad: 6
+                }
+            ],
+            margin: { t: 90, r: 0, b: 0, l: 0 },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)'
         };
 
-        Plotly.newPlot(this.elementId, [trace], layout, { responsive: true, displayModeBar: false });
+        Plotly.newPlot(
+            this.elementId,
+            [choropleth, iconMarkers],
+            layout,
+            { responsive: true, displayModeBar: false }
+        );
     }
 
     resize() {
