@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Transition | Energy Insights</title>
-    
+
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <meta name="view-transition" content="same-origin" />
-    
+
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 
 <body>
     <div class="dashboard">
-        
+
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="brand-wrapper">
@@ -31,16 +33,22 @@
 
             <nav class="sidebar-nav">
                 <span class="nav-section-title">Main Menu</span>
-                <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
-                <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
-                <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
+                <a href="index.html" class="nav-item"><span
+                        class="material-icons-outlined">dashboard</span><span>Overview</span></a>
+                <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global
+                        Demand</span></a>
+                <a href="mix.html" class="nav-item"><span class="material-icons-outlined">pie_chart</span><span>Energy
+                        Mix</span></a>
 
                 <div style="height: 20px;"></div>
-                
+
                 <span class="nav-section-title">Analysis & Future</span>
-                <a href="transition.html" class="nav-item active"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
-                <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
-                <a href="geopolitics.html" class="nav-item"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
+                <a href="transition.html" class="nav-item active"><span
+                        class="material-icons-outlined">eco</span><span>Green Transition</span></a>
+                <a href="economics.html" class="nav-item"><span
+                        class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
+                <a href="geopolitics.html" class="nav-item"><span
+                        class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
             </nav>
 
             <div class="sidebar-widget">
@@ -65,7 +73,7 @@
                 <span class="text-desktop">Hover your mouse on the left to show the dashboard</span>
                 <span class="text-mobile">Tap the left edge to show the dashboard</span>
             </div>
-            
+
             <div class="top-nav">
                 <div class="nav-left">
                     <div class="search-box">
@@ -73,7 +81,7 @@
                         <input type="text" placeholder="Search countries, regions or specific data..." id="searchInput">
                     </div>
                 </div>
-                
+
                 <div class="nav-right">
                     <div class="control-item">
                         <label>Timeline Explorer</label>
@@ -82,7 +90,7 @@
                             <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
                         </div>
                     </div>
-                    
+
                     <div class="control-item">
                         <label>Geographic Focus</label>
                         <select id="countrySelect" class="filter-select">
@@ -106,19 +114,29 @@
 
             <div id="section-transition" class="narrative-container">
                 <h1 class="main-title">The Exponential Revolution</h1>
-                
+
                 <div class="highlight-box">
                     <p class="text-content">
-                        <strong>For decades, green energy was a noble but expensive dream.</strong> Today, it is an economic inevitability. We are witnessing a "tipping point" where technology beats geology. Unlike coal or oil, which are commodities that must be dug up (and get more expensive as they run out), solar and wind are <em>technologies</em>. Like computers or smartphones, they get cheaper and better the more we build them.
+                        <strong>For decades, green energy was a noble but expensive dream.</strong> Today, it is an
+                        economic inevitability. We are witnessing a "tipping point" where technology beats geology.
+                        Unlike coal or oil, which are commodities that must be dug up (and get more expensive as they
+                        run out), solar and wind are <em>technologies</em>. Like computers or smartphones, they get
+                        cheaper and better the more we build them.
                     </p>
                 </div>
 
-                <h2 class="section-title"><span class="material-icons-outlined">show_chart</span> 1. The Hockey Stick Curve</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">show_chart</span> 1. The Hockey Stick
+                    Curve</h2>
                 <p class="text-content">
-                    Look at the <strong>Rise of Renewables</strong> chart below. For years, the line is flat, barely moving. Then, suddenly, it shoots up vertically. This is what exponential growth looks like. Driven by massive manufacturing in China and subsidies in Europe, the price of solar panels crashed by nearly 90% in just ten years.
+                    Look at the <strong>Rise of Renewables</strong> chart below. For years, the line is flat, barely
+                    moving. Then, suddenly, it shoots up vertically. This is what exponential growth looks like. Driven
+                    by massive manufacturing in China and subsidies in Europe, the price of solar panels crashed by
+                    nearly 90% in just ten years.
                 </p>
                 <p class="text-content">
-                    This means the transition is no longer driven just by climate concerns; it is driven by cold, hard cash. In most of the world today, building a new solar farm is simply cheaper than running an existing coal plant.
+                    This means the transition is no longer driven just by climate concerns; it is driven by cold, hard
+                    cash. In most of the world today, building a new solar farm is simply cheaper than running an
+                    existing coal plant.
                 </p>
             </div>
 
@@ -130,7 +148,9 @@
                             <p>The accelerating growth of Wind, Solar, and Hydro energy (TWh).</p>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-renewables"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-renewables"></div>
+                    </div>
                 </div>
 
                 <div class="chart-card">
@@ -140,19 +160,44 @@
                             <p>Combining Renewables and Nuclear for a complete clean view.</p>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-low-carbon"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-low-carbon"></div>
+                    </div>
                 </div>
+            </div>
+            <div class="grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2>Fossil Fuel Price Volatility</h2>
+                            <p>Long-term trends and price shocks in oil, natural gas, and coal (1990–2022).</p>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div id="chart-fossilPrice"></div>
+                    </div>
+                </div>
+
+
             </div>
 
             <div class="narrative-container" style="margin-top: 30px;">
-                <h2 class="section-title"><span class="material-icons-outlined">grid_view</span> 2. Building the Perfect Machine</h2>
+                <h2 class="section-title"><span class="material-icons-outlined">grid_view</span> 2. Building the Perfect
+                    Machine</h2>
                 <p class="text-content">
-                    Critics often point out a flaw in renewables: <em>"What happens when the sun sets or the wind stops?"</em> It is a valid question, but we already have the answer. The solution isn't to rely on just one source, but to build a <strong>Balanced Portfolio</strong>.
+                    Critics often point out a flaw in renewables: <em>"What happens when the sun sets or the wind
+                        stops?"</em> It is a valid question, but we already have the answer. The solution isn't to rely
+                    on just one source, but to build a <strong>Balanced Portfolio</strong>.
                 </p>
                 <p class="text-content">
-                    Look closely at the second chart, <strong>Total Low-Carbon Tech</strong>. It reveals the unsung heroes of the transition: <strong>Hydro</strong> and <strong>Nuclear</strong>. These technologies provide the "steady heartbeat" (baseload) of the grid, running 24/7 regardless of the weather. When we combine the cheap, explosive growth of solar/wind with the unwavering stability of nuclear/hydro, we don't just get a green grid—we get a grid that is more resilient and secure than the fossil-fuel system it replaces.
+                    Look closely at the second chart, <strong>Total Low-Carbon Tech</strong>. It reveals the unsung
+                    heroes of the transition: <strong>Hydro</strong> and <strong>Nuclear</strong>. These technologies
+                    provide the "steady heartbeat" (baseload) of the grid, running 24/7 regardless of the weather. When
+                    we combine the cheap, explosive growth of solar/wind with the unwavering stability of nuclear/hydro,
+                    we don't just get a green grid—we get a grid that is more resilient and secure than the fossil-fuel
+                    system it replaces.
                 </p>
-            </div> 
+            </div>
 
             <div class="chapter-nav-container">
                 <a href="mix.html" class="prev-chapter-btn">
@@ -162,7 +207,7 @@
                     <span>Next:</span> Economics <span class="material-icons-outlined">arrow_forward</span>
                 </a>
             </div>
-            
+
             <footer class="main-footer">
                 <p>A Data Visualization Story | Designed with Plotly.js & D3.js | Data Source: Our World in Data</p>
             </footer>
@@ -171,6 +216,8 @@
 
     <script src="js/chart3_renewables.js"></script>
     <script src="js/chart8_low_carbon.js"></script>
+    <script src="js/chart11_fossil_price.js"></script>
     <script src="main.js"></script>
 </body>
+
 </html>
