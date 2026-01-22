@@ -2,7 +2,8 @@ import pandas as pd
 
 # --- CONFIGURATION ---
 INPUT_FILE = 'data/owid-energy-data.csv'
-OUTPUT_FILE = 'world_clean_dataset.csv'
+PRICE_FILE = 'data/fossil_price_table_1990_2022.csv'
+OUTPUT_FILE = 'world_energy_cleaned_final.csv'
 
 # Target country list for filtering
 COUNTRIES = [
@@ -21,15 +22,15 @@ COUNTRIES = [
 REQUIRED_COLUMNS = [
     'country', 'year', 'gdp', 'population', 'primary_energy_consumption',
     'coal_cons_per_capita', 'gas_energy_per_capita', 'oil_energy_per_capita',
-    'hydro_elec_per_capita', 'renewables_energy_per_capita', 'low_carbon_energy_per_capita',
-    'fossil_fuel_consumption', 'renewables_consumption'
+    'hydro_elec_per_capita', 'renewables_energy_per_capita',
+    'low_carbon_energy_per_capita', 'fossil_fuel_consumption',
+    'renewables_consumption'
 ]
 
 def preprocess_energy_data():
     print(f"Reading {INPUT_FILE}...")
 
-    # --- STEP 1: READ DATA ---
-    # Using regex separator to handle potential multiple commas
+    # --- STEP 1: READ MAIN DATA ---
     df = pd.read_csv(INPUT_FILE, sep=r',+', engine='python', low_memory=False)
 
     # --- STEP 2: FILTER COUNTRIES ---
@@ -41,26 +42,36 @@ def preprocess_energy_data():
     # --- STEP 4: NUMERIC CONVERSION ---
     numeric_cols = df.columns.difference(['country', 'year'])
     for col in numeric_cols:
-        df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # --- STEP 5: FILTER YEARS (1990 - 2022) ---
-    # This keeps only the data within your dashboard's timeline
+    # --- STEP 5: FILTER YEARS (1990–2022) ---
     df = df[(df['year'] >= 1990) & (df['year'] <= 2022)]
 
-    # --- STEP 6: FINAL NORMALIZATION ---
+    # --- STEP 6: LOAD PRICE DATA ---
+    print(f"Reading {PRICE_FILE}...")
+    price_df = pd.read_csv(PRICE_FILE)
+
+    price_df = price_df[
+        ['year', 'oil_price_global', 'gas_price_global', 'coal_price_global']
+    ]
+
+    # --- STEP 7: MERGE PRICE DATA ---
+    df = df.merge(price_df, on='year', how='left')
+
+    # --- STEP 8: FINAL CLEANING ---
     df = df.dropna(subset=['country', 'year'])
     df['year'] = df['year'].astype(int)
     df = df.sort_values(['country', 'year']).reset_index(drop=True)
 
-    # --- STEP 7: EXPORT ---
+    # --- STEP 9: EXPORT ---
     df.to_csv(OUTPUT_FILE, index=False)
-    
-    print("-" * 30)
-    print(f"Preprocessing finished successfully!")
+
+    print("-" * 40)
+    print("Preprocessing finished successfully!")
     print(f"File saved: {OUTPUT_FILE}")
     print(f"Year range: {df['year'].min()} to {df['year'].max()}")
-    print("-" * 30)
+    print(f"Columns: {list(df.columns)}")
+    print("-" * 40)
 
 if __name__ == "__main__":
-    # Calling the correct function name to avoid NameError
     preprocess_energy_data()
