@@ -97,6 +97,7 @@ const Dashboard = {
         if (typeof TopConsumersChart !== 'undefined') this.charts.topConsumers = new TopConsumersChart(this.data.energy);
         if (typeof EnergyMapChart !== 'undefined') this.charts.map = new EnergyMapChart(this.data.energy);
         if (typeof FossilPrice !== 'undefined') this.charts.fossilPrice = new FossilPrice(this.data.energy, 'chart-fossilPrice');
+        if (typeof EnergyIntensityChart !== 'undefined') { this.charts.energyIntensity = new EnergyIntensityChart(this.data.energy); }
         this.updateAllCharts();
     },
 
@@ -272,3 +273,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
