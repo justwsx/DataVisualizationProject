@@ -9,14 +9,14 @@ const Dashboard = {
     selectedCountry: 'World',
     minYear: 1990,
     maxYear: 2022,
-    
+
     // --- CONFIGURATION ---
     majorCountries: [
-        "United States", "China", "India", "Japan", 
-        "Germany", "Russia", "Brazil", "Canada", 
+        "United States", "China", "India", "Japan",
+        "Germany", "Russia", "Brazil", "Canada",
         "United Kingdom", "France", "Australia", "South Korea"
     ],
-    
+
     countryColors: {
         "United States": "#6366f1",
         "China": "#ec4899",
@@ -47,13 +47,13 @@ const Dashboard = {
     async loadData() {
         try {
             console.log("Loading energy dataset...");
-            const rawData = await d3.csv("data/world_clean_dataset.csv");
-            
+            const rawData = await d3.csv("data/world_energy_cleaned_final.csv");
+
             if (!rawData || rawData.length === 0) {
                 console.error("Failed to load data or empty dataset");
                 return;
             }
-            
+
             this.data.energy = rawData.map(d => ({
                 country: d.country,
                 year: +d.year,
@@ -67,15 +67,18 @@ const Dashboard = {
                 oil_energy_per_capita: +d.oil_energy_per_capita,
                 renewables_energy_per_capita: +d.renewables_energy_per_capita,
                 renewables_consumption: +d.renewables_consumption,
-                fossil_fuel_consumption: +d.fossil_fuel_consumption
+                fossil_fuel_consumption: +d.fossil_fuel_consumption,
+                oil_price_global: +d.oil_price_global,
+                gas_price_global: +d.gas_price_global,
+                coal_price_global: +d.coal_price_global
             })).filter(d => d.country && !isNaN(d.year) && !isNaN(d.primary_energy_consumption));
-            
+
             const years = [...new Set(this.data.energy.map(d => d.year))].sort((a, b) => a - b);
             this.minYear = years[0];
             this.maxYear = years[years.length - 1];
-            
+
             console.log(`Data loaded: ${this.data.energy.length} records`);
-            
+
         } catch (error) {
             console.error("Error loading data:", error);
         }
@@ -93,30 +96,30 @@ const Dashboard = {
         if (typeof LowCarbonChart !== 'undefined') this.charts.lowCarbon = new LowCarbonChart(this.data.energy);
         if (typeof TopConsumersChart !== 'undefined') this.charts.topConsumers = new TopConsumersChart(this.data.energy);
         if (typeof EnergyMapChart !== 'undefined') this.charts.map = new EnergyMapChart(this.data.energy);
-        
+        if (typeof FossilPrice !== 'undefined') this.charts.fossilPrice = new FossilPrice(this.data.energy, 'chart-fossilPrice');
         this.updateAllCharts();
     },
 
     setupEventListeners() {
         const slider = document.getElementById('yearSlider');
         const yearDisplay = document.getElementById('currentYearDisplay');
-        
+
         if (slider) {
             slider.min = this.minYear;
             slider.max = this.maxYear;
             slider.value = this.currentYear;
-            
+
             slider.addEventListener('input', (e) => {
                 this.currentYear = +e.target.value;
                 if (yearDisplay) yearDisplay.textContent = this.currentYear;
                 this.updateAllCharts();
-                this.updateKPIs(); 
+                this.updateKPIs();
             });
         }
-        
+
         const playBtn = document.getElementById('playBtn');
         if (playBtn) playBtn.addEventListener('click', () => this.toggleAnimation());
-        
+
         const viewBtns = document.querySelectorAll('.chart-btn[data-view]');
         viewBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -126,7 +129,7 @@ const Dashboard = {
                 this.updateChart1View();
             });
         });
-        
+
         const countrySelect = document.getElementById('countrySelect');
         if (countrySelect) {
             const countries = [...new Set(this.data.energy.map(d => d.country))].sort();
@@ -138,14 +141,14 @@ const Dashboard = {
                     countrySelect.appendChild(option);
                 }
             });
-            
+
             countrySelect.addEventListener('change', (e) => {
                 this.selectedCountry = e.target.value;
                 this.updateAllCharts();
                 this.updateKPIs();
             });
         }
-        
+
         window.addEventListener('resize', () => {
             Object.values(this.charts).forEach(chart => {
                 if (chart && typeof chart.resize === 'function') chart.resize();
@@ -164,7 +167,7 @@ const Dashboard = {
         this.isPlaying = !this.isPlaying;
         const playBtn = document.getElementById('playBtn');
         const playIcon = playBtn.querySelector('.material-icons-outlined');
-        
+
         if (this.isPlaying) {
             playIcon.textContent = 'pause';
             this.animateYear();
@@ -176,18 +179,18 @@ const Dashboard = {
 
     animateYear() {
         if (!this.isPlaying) return;
-        
+
         this.currentYear++;
         if (this.currentYear > this.maxYear) this.currentYear = this.minYear;
-        
+
         const slider = document.getElementById('yearSlider');
         const display = document.getElementById('currentYearDisplay');
         if (slider) slider.value = this.currentYear;
         if (display) display.textContent = this.currentYear;
-        
+
         this.updateAllCharts();
         this.updateKPIs();
-        
+
         this.animationTimer = setTimeout(() => this.animateYear(), 1000);
     },
 
@@ -199,47 +202,47 @@ const Dashboard = {
         });
     },
 
- 
+
     updateKPIs() {
-        
+
         let yearData = this.data.energy.filter(d => d.year === this.currentYear);
-        
+
         if (this.selectedCountry !== 'World') {
             yearData = yearData.filter(d => d.country === this.selectedCountry);
         }
 
         if (yearData.length > 0) {
-          
+
             const totalEnergy = yearData.reduce((sum, d) => sum + (d.primary_energy_consumption || 0), 0);
             const totalFossil = yearData.reduce((sum, d) => sum + (d.fossil_fuel_consumption || 0), 0);
             const totalRenewables = yearData.reduce((sum, d) => sum + (d.renewables_consumption || 0), 0);
-            
-           
+
+
             const totalGDP = yearData.reduce((sum, d) => sum + (d.gdp || 0), 0);
             const totalPop = yearData.reduce((sum, d) => sum + (d.population || 0), 0);
-          
+
             const gdpPerCapita = totalPop > 0 ? (totalGDP / totalPop) : 0;
 
-        
+
             const kpiTotal = document.getElementById('kpiTotalEnergy');
             if (kpiTotal) kpiTotal.textContent = (totalEnergy / 1000).toFixed(1) + 'k';
-            
+
             const kpiFossil = document.getElementById('kpiFossil');
             if (kpiFossil) kpiFossil.textContent = (totalFossil / 1000).toFixed(1) + 'k';
-            
+
             const kpiRenewables = document.getElementById('kpiRenewables');
             if (kpiRenewables) kpiRenewables.textContent = (totalRenewables / 1000).toFixed(1) + 'k';
-            
+
             const kpiGDP = document.getElementById('kpiGDP');
             if (kpiGDP) {
-           
+
                 kpiGDP.textContent = '$' + (gdpPerCapita / 1000).toFixed(1) + 'k';
             }
         } else {
-        
+
             ['kpiTotalEnergy', 'kpiFossil', 'kpiRenewables', 'kpiGDP'].forEach(id => {
                 const el = document.getElementById(id);
-                if(el) el.textContent = '-';
+                if (el) el.textContent = '-';
             });
         }
     }
