@@ -14,7 +14,7 @@ class TopConsumersChart {
 
         this.countryRegions = {
             "China": "Asia", "India": "Asia", "United States": "North America",
-            "Russia": "Europe", "Japan": "Asia", "Germany": "Europe",
+            "Russia": "Asia", "Japan": "Asia", "Germany": "Europe",
             "Brazil": "South America", "Canada": "North America",
             "United Kingdom": "Europe", "France": "Europe", "Italy": "Europe",
             "Australia": "Oceania", "South Korea": "Asia", "Saudi Arabia": "Asia",
@@ -193,3 +193,4 @@ class TopConsumersChart {
         Plotly.Plots.resize(document.getElementById(this.container));
     }
 }
+
