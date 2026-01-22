@@ -242,7 +242,19 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* Charts */
 .grid-full { display: grid; grid-template-columns: 1fr; margin-bottom: 30px; }
-.grid-dual { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 30px; }
+/* Trova la classe .grid-dual e modificala così */
+.grid-dual {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola colonna che occupa tutto lo spazio */
+    gap: 24px;                  /* Spazio verticale tra i due grafici */
+    width: 100%;
+}
+
+/* Assicuriamoci che le card occupino il 100% */
+.chart-card {
+    width: 100%;
+    min-height: 450px; /* Opzionale: aumenta l'altezza per sfruttare il nuovo spazio */
+}
 
 .chart-card {
     background: var(--bg-card); border-radius: var(--radius);
