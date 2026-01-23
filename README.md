@@ -100,7 +100,7 @@ Our narrative is built upon a high-quality academic dataset to ensure methodolog
 - **Data Lag:** The most recent data points (2024) are preliminary.
 - **Simplification:** Energy categories representing less than 1% of total volume were aggregated to ensure visual clarity.
 
---
+---
 
 ## 👥 The Team
 
