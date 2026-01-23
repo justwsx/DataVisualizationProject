@@ -72,7 +72,7 @@ update(year) {
             // Prima era [-50, 90]. 
             // Mettiamo [-65, 90] per includere Sud America e Nuova Zelanda
             // Se vuoi anche l'Antartide, metti -90.
-            lataxis: { range: [-90, 90] }, 
+            lataxis: { range: [-60, 90] }, 
             lonaxis: { range: [-180, 180] }
         },
         annotations: [
