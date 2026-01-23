@@ -46,7 +46,7 @@ class EnergyMapChart {
             text: ['🔥', '⚫'],
             lon: [-98.5, 104.2],
             lat: [39.8, 35.9],
-            textfont: { size: 28 },
+            textfont: { size: 20 },
             hoverinfo: 'text',
             hovertext: [
                 'United States<br>Dominant Energy Structure: Natural Gas',
@@ -57,7 +57,7 @@ class EnergyMapChart {
 
         const layout = {
             title: {
-                text: `The Energy Inequality Map<br><span style="font-size:12px;color:#64748b">Intensity of energy usage per person. Darker nations represent higher consumption per capita.</span>`,
+                //text: `The Energy Inequality Map<br><span style="font-size:12px;color:#64748b">Intensity of energy usage per person. Darker nations represent higher consumption per capita.</span>`,
                 font: { family: 'Inter, sans-serif', size: 18, color: '#1e293b' },
                 y: 0.95
             },
