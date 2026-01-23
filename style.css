@@ -577,7 +577,17 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
 .kpi-card:nth-child(3) { animation-delay: 0.6s; }
 .kpi-card:nth-child(4) { animation-delay: 0.8s; }
 
+/* 1. Il contenitore GENITORE (quello con le classi) */
 .chart-body.map-body {
-    padding: 0 !important;
-    overflow: hidden;      
+    padding: 0 !important;       /* Toglie il bordo bianco */
+    overflow: hidden;            /* Evita sbordamenti */
+    height: 550px !important;    /* IMPORTANTE: Forza l'altezza fissa, altrimenti è 0 */
+    position: relative;          /* Serve per posizionare il figlio */
+}
+
+/* 2. Il contenitore FIGLIO (quello con l'ID #chart-map) */
+#chart-map {
+    width: 100% !important;
+    height: 100% !important;     /* Occupa tutto lo spazio del genitore */
+    display: block;
 }
