@@ -15,12 +15,30 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
     <style>
+        /* Aggiungo uno stile per la sezione descrittiva pre-cards */
+        .narrative-lead {
+            max-width: 800px;
+            margin-bottom: 40px;
+        }
+        .narrative-lead h2 {
+            font-size: 2.2rem;
+            color: var(--text-p);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        .narrative-lead p {
+            font-size: 1.1rem;
+            color: var(--text-s);
+            line-height: 1.6;
+        }
+
+        /* Stili esistenti mantenuti e ottimizzati */
         .hero-gradient {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
             padding: 60px 40px;
             border-radius: 24px;
-            margin-bottom: 40px;
+            margin-bottom: 50px; /* Aumentato leggermente lo spazio */
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             position: relative;
             overflow: hidden;
@@ -36,10 +54,12 @@
             transform: rotate(-15deg);
             pointer-events: none;
         }
+        
+        /* Miglioramento visivo delle card per renderle più leggibili con molto testo */
         .chapter-card {
             background: white;
             border-radius: 16px;
-            padding: 25px;
+            padding: 28px; /* Più padding */
             border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -48,32 +68,43 @@
             height: 100%;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         .chapter-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             border-color: #cbd5e1;
         }
         .chapter-number {
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: #64748b;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
         .chapter-icon-bg {
             position: absolute;
-            bottom: -10px;
-            right: -10px;
-            font-size: 80px;
-            opacity: 0.1;
+            bottom: -15px;
+            right: -15px;
+            font-size: 100px; /* Icona più grande */
+            opacity: 0.08;
             transform: rotate(-10deg);
+            transition: all 0.3s ease;
         }
+        .chapter-card:hover .chapter-icon-bg {
+            opacity: 0.12;
+            transform: rotate(0deg) scale(1.1);
+        }
+        
         .grid-journey {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Card leggermente più larghe */
+            gap: 25px;
             margin-top: 30px;
         }
         .start-btn {
@@ -82,14 +113,15 @@
             gap: 10px;
             background: #4338ca;
             color: white;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 12px;
             font-weight: 600;
             text-decoration: none;
             transition: background 0.2s;
-            margin-top: 20px;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px -1px rgba(67, 56, 202, 0.4);
         }
-        .start-btn:hover { background: #3730a3; }
+        .start-btn:hover { background: #3730a3; transform: translateY(-1px); }
     </style>
 </head>
 
@@ -140,30 +172,91 @@
             
             <div class="hero-gradient">
                 <span class="material-icons-outlined hero-bg-icon">public</span>
-                <div style="position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                    <span style="background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                <div style="position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                    <span style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2);">
                         Interactive Data Story
                     </span>
-                    <h1 style="font-size: 3.5rem; margin: 20px 0 15px 0; line-height: 1.1; color: white;">
+                    <h1 style="font-size: 3.5rem; margin: 25px 0 20px 0; line-height: 1.1; color: white; font-weight: 800;">
                         The Pulse of Our Planet
                     </h1>
                     
-                    <p style="font-size: 1.25rem; color: #cbd5e1; line-height: 1.6; width: 100%; max-width: 1000px;">
-                        Civilization runs on energy, but the engine is changing. We built the modern world by burning the past, yet the future demands a cleaner pulse. As Asia rises and technology accelerates, we stand at a critical crossroads: remain tethered to fossil fuels or embrace the unstoppable economics of the green transition. This dashboard maps the conflict, the costs, and the data behind the biggest shift in human history.
+                    <p style="font-size: 1.2rem; color: #cbd5e1; line-height: 1.7; width: 100%; max-width: 900px;">
+                        Civilization runs on energy, but the engine is changing. We built the modern world by burning the past, yet the future demands a cleaner pulse. This dashboard is not just a collection of charts; it is a narrative journey through the conflict, the costs, and the data behind the biggest shift in human history.
                     </p>
                     
-                    <a href="demand.html" class="start-btn">
-                        Start the Journey <span class="material-icons-outlined">arrow_forward</span>
+                    <a href="#journey-start" class="start-btn">
+                        Explore the Narrative <span class="material-icons-outlined">arrow_downward</span>
                     </a>
                 </div>
             </div>
 
-            <div class="narrative-container">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
-                    <h3 style="font-size: 1.2rem; color: var(--text-l); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 0;">
-                        Live Indicators
-                    </h3>
-                    <span style="font-size: 0.9rem; color: var(--text-l);">Year: 2022 Data</span>
+            <div id="journey-start" class="narrative-container" style="margin-top: 60px;">
+                <div class="narrative-lead">
+                    <h2>How to read this story</h2>
+                    <p>
+                        Understanding the global energy system requires looking at it from multiple angles. 
+                        We have broken down this complex topic into <strong>5 sequential chapters (Cards)</strong>. 
+                        Each card below represents a critical layer of the analysis, guiding you from the "Status Quo" to the "Future Implications".
+                    </p>
+                </div>
+
+                <div class="grid-journey">
+                    <a href="demand.html" class="chapter-card" style="border-top: 5px solid #f59e0b;">
+                        <span class="chapter-number" style="color: #d97706;">Chapter 01 · The Hunger</span>
+                        <h3 style="margin: 5px 0 15px 0; color: var(--text-p); font-size: 1.4rem;">Global Demand</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-s); margin: 0; line-height: 1.6;">
+                            <strong>The Scope:</strong> Who is consuming the most energy today? <br>
+                            <strong>The Shift:</strong> See how the center of gravity is moving from the West to the rising giants of Asia.
+                        </p>
+                        <span class="material-icons-outlined chapter-icon-bg" style="color: #f59e0b;">timeline</span>
+                    </a>
+
+                    <a href="mix.html" class="chapter-card" style="border-top: 5px solid #ef4444;">
+                        <span class="chapter-number" style="color: #dc2626;">Chapter 02 · The Ingredients</span>
+                        <h3 style="margin: 5px 0 15px 0; color: var(--text-p); font-size: 1.4rem;">Energy Mix</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-s); margin: 0; line-height: 1.6;">
+                            <strong>The Analysis:</strong> Break down the global recipe. How much do we still rely on Coal, Oil, and Gas vs. low-carbon sources?
+                        </p>
+                        <span class="material-icons-outlined chapter-icon-bg" style="color: #ef4444;">pie_chart</span>
+                    </a>
+
+                    <a href="transition.html" class="chapter-card" style="border-top: 5px solid #10b981;">
+                        <span class="chapter-number" style="color: #059669;">Chapter 03 · The Change</span>
+                        <h3 style="margin: 5px 0 15px 0; color: var(--text-p); font-size: 1.4rem;">Green Transition</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-s); margin: 0; line-height: 1.6;">
+                            <strong>The Trend:</strong> Is the revolution real? Track the exponential growth of renewables and the speed of decarbonization.
+                        </p>
+                        <span class="material-icons-outlined chapter-icon-bg" style="color: #10b981;">eco</span>
+                    </a>
+
+                    <a href="economics.html" class="chapter-card" style="border-top: 5px solid #3b82f6;">
+                        <span class="chapter-number" style="color: #2563eb;">Chapter 04 · The Driver</span>
+                        <h3 style="margin: 5px 0 15px 0; color: var(--text-p); font-size: 1.4rem;">Economics</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-s); margin: 0; line-height: 1.6;">
+                            <strong>The Catalyst:</strong> Follow the money. Why renewable energy is becoming the cheapest option, defying historical norms.
+                        </p>
+                        <span class="material-icons-outlined chapter-icon-bg" style="color: #3b82f6;">monetization_on</span>
+                    </a>
+
+                    <a href="geopolitics.html" class="chapter-card" style="border-top: 5px solid #8b5cf6;">
+                        <span class="chapter-number" style="color: #7c3aed;">Final Verdict</span>
+                        <h3 style="margin: 5px 0 15px 0; color: var(--text-p); font-size: 1.4rem;">Geo & Findings</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-s); margin: 0; line-height: 1.6;">
+                            <strong>The Outcome:</strong> The new balance of power, strategic vulnerabilities, and the key takeaways for our future.
+                        </p>
+                        <span class="material-icons-outlined chapter-icon-bg" style="color: #8b5cf6;">psychology</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="narrative-container" style="margin-top: 80px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h3 style="font-size: 1.2rem; color: var(--text-l); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 0;">
+                            Live Indicators (2022)
+                        </h3>
+                        <p style="margin: 5px 0 0 0; color: var(--text-s); font-size: 0.95rem;">Key metrics monitoring the health of the transition.</p>
+                    </div>
                 </div>
             </div>
 
@@ -171,9 +264,9 @@
                 <div class="kpi-card">
                     <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
-                            <span class="kpi-label">World Energy Use</span>
+                            <span class="kpi-label">Total Consumption</span>
                             <span class="kpi-value" id="kpiTotalEnergy">--</span>
-                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">TWh / Year</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">TWh / Year<br><span style="color: #94a3b8; font-size: 0.75rem;">Scale of humanity's needs</span></p>
                         </div>
                         <div class="kpi-icon-wrapper energy"><span class="material-icons-outlined">bolt</span></div>
                     </div>
@@ -184,7 +277,7 @@
                         <div>
                             <span class="kpi-label">Fossil Dependence</span>
                             <span class="kpi-value" id="kpiFossil">--</span>
-                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">% of Global Mix</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">% of Global Mix<br><span style="color: #94a3b8; font-size: 0.75rem;">Are we breaking the addiction?</span></p>
                         </div>
                         <div class="kpi-icon-wrapper fossil"><span class="material-icons-outlined">oil_barrel</span></div>
                     </div>
@@ -193,9 +286,9 @@
                 <div class="kpi-card">
                     <div style="display: flex; justify-content: space-between; align-items: start; width: 100%;">
                         <div>
-                            <span class="kpi-label">Clean Energy</span>
+                            <span class="kpi-label">Clean Energy Share</span>
                             <span class="kpi-value" id="kpiRenewables">--</span>
-                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Nuclear + Renewables</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">Nuclear + Renewables<br><span style="color: #94a3b8; font-size: 0.75rem;">The pace of adoption</span></p>
                         </div>
                         <div class="kpi-icon-wrapper renewable"><span class="material-icons-outlined">eco</span></div>
                     </div>
@@ -206,87 +299,41 @@
                         <div>
                             <span class="kpi-label">Econ. Efficiency</span>
                             <span class="kpi-value" id="kpiGDP">--</span>
-                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">GDP Output per unit</p>
+                            <p style="font-size: 0.8rem; color: var(--text-l); margin-top: 5px;">GDP Output per Unit<br><span style="color: #94a3b8; font-size: 0.75rem;">Doing more with less</span></p>
                         </div>
                         <div class="kpi-icon-wrapper gdp"><span class="material-icons-outlined">trending_up</span></div>
                     </div>
                 </div>
             </div>
 
-            <div class="narrative-container" style="margin-top: 60px;">
-                <div style="border-left: 5px solid #4338ca; padding-left: 20px;">
-                    <h2 style="margin: 0; font-size: 2rem; color: var(--text-p);">Explore the Chapters</h2>
-                    <p style="margin: 5px 0 0 0; color: var(--text-s);">Follow the data story step by step.</p>
-                </div>
-
-                <div class="grid-journey">
-                    <a href="demand.html" class="chapter-card" style="border-top: 4px solid #f59e0b;">
-                        <span class="chapter-number" style="color: #f59e0b;">Chapter 01</span>
-                        <h3 style="margin: 5px 0 10px 0; color: var(--text-p);">Global Demand</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-s); margin: 0;">Who consumes the most? See how Asia is taking over the baton from the West.</p>
-                        <span class="material-icons-outlined chapter-icon-bg" style="color: #f59e0b;">timeline</span>
-                    </a>
-
-                    <a href="mix.html" class="chapter-card" style="border-top: 4px solid #ef4444;">
-                        <span class="chapter-number" style="color: #ef4444;">Chapter 02</span>
-                        <h3 style="margin: 5px 0 10px 0; color: var(--text-p);">Energy Mix</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-s); margin: 0;">Coal, Gas, or Solar? Analyze the ingredients of our global energy system.</p>
-                        <span class="material-icons-outlined chapter-icon-bg" style="color: #ef4444;">pie_chart</span>
-                    </a>
-
-                    <a href="transition.html" class="chapter-card" style="border-top: 4px solid #10b981;">
-                        <span class="chapter-number" style="color: #10b981;">Chapter 03</span>
-                        <h3 style="margin: 5px 0 10px 0; color: var(--text-p);">Green Transition</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-s); margin: 0;">Is the revolution real? Track the exponential growth of renewables.</p>
-                        <span class="material-icons-outlined chapter-icon-bg" style="color: #10b981;">eco</span>
-                    </a>
-
-                    <a href="economics.html" class="chapter-card" style="border-top: 4px solid #3b82f6;">
-                        <span class="chapter-number" style="color: #3b82f6;">Chapter 04</span>
-                        <h3 style="margin: 5px 0 10px 0; color: var(--text-p);">Economics</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-s); margin: 0;">Follow the money. Why renewable energy is becoming the cheapest option.</p>
-                        <span class="material-icons-outlined chapter-icon-bg" style="color: #3b82f6;">monetization_on</span>
-                    </a>
-
-                    <a href="geopolitics.html" class="chapter-card" style="border-top: 4px solid #8b5cf6;">
-                        <span class="chapter-number" style="color: #8b5cf6;">Final Verdict</span>
-                        <h3 style="margin: 5px 0 10px 0; color: var(--text-p);">Geo & Findings</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-s); margin: 0;">The new balance of power and the strategic takeaways for the future.</p>
-                        <span class="material-icons-outlined chapter-icon-bg" style="color: #8b5cf6;">psychology</span>
-                    </a>
-                </div>
-            </div>
-
-            <div id="section-team" class="narrative-container" style="margin-bottom: 60px; margin-top: 80px;">
-                <div style="text-align: center; margin-bottom: 40px;">
-                    <h2 class="section-title" style="justify-content: center;"><span class="material-icons-outlined">groups</span> Meet the Creators</h2>
-                    <p class="text-content" style="font-size: 1.1rem; color: var(--text-p); line-height: 1.5;">
-                        M.Sc. Students in <strong>Computer Science, Data Science & Engineering - AI Track</strong><br>
-                        <span style="font-size: 0.95rem; color: var(--text-s);"><strong>DIBRIS</strong> - Department of Informatics, Bioengineering, Robotics and Systems Engineering</span><br>
-                        <span style="font-size: 0.9rem; color: var(--text-l);">University of Genoa</span>
+            <div id="section-team" class="narrative-container" style="margin-bottom: 60px; margin-top: 100px;">
+                <div style="text-align: center; margin-bottom: 50px;">
+                    <h2 class="section-title" style="justify-content: center; font-size: 2rem;"><span class="material-icons-outlined">groups</span> Meet the Creators</h2>
+                    <p class="text-content" style="font-size: 1.15rem; color: var(--text-p); line-height: 1.6; max-width: 700px; margin: 10px auto;">
+                        This project is the result of a collaboration between Design and Data Engineering, developed at the <strong>University of Genoa</strong>.
                     </p>
                 </div>
                 
-                <div class="grid-dual" style="grid-template-columns: 1fr 1fr; gap: 30px;">
-                    <div class="insight-card" style="display: flex; align-items: center; gap: 20px; padding: 25px; border-top: 4px solid #43e97b;">
-                        <div style="background: #ecfdf5; padding: 15px; border-radius: 50%; border: 1px solid #d1fae5;">
-                            <span class="material-icons-outlined" style="font-size: 32px; color: #10b981;">palette</span>
+                <div class="grid-dual" style="grid-template-columns: 1fr 1fr; gap: 40px;">
+                    <div class="insight-card" style="display: flex; align-items: center; gap: 25px; padding: 30px; border-top: 4px solid #43e97b; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
+                        <div style="background: #ecfdf5; padding: 18px; border-radius: 50%; border: 1px solid #d1fae5;">
+                            <span class="material-icons-outlined" style="font-size: 36px; color: #10b981;">palette</span>
                         </div>
                         <div>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: #1e293b;">Wassim Fatnassi</h3>
-                            <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">UI & Design Lead</span>
-                            <p style="margin-top: 8px; font-size: 0.9rem; color: #475569; line-height: 1.4;">Visual language, UX design, and dashboard layout.</p>
+                            <h3 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Wassim Fatnassi</h3>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">UI & Design Lead</span>
+                            <p style="margin-top: 10px; font-size: 0.95rem; color: #475569; line-height: 1.5;">Responsible for the visual language, user experience design, and the storytelling structure of the dashboard.</p>
                         </div>
                     </div>
 
-                    <div class="insight-card" style="display: flex; align-items: center; gap: 20px; padding: 25px; border-top: 4px solid #4facfe;">
-                        <div style="background: #eff6ff; padding: 15px; border-radius: 50%; border: 1px solid #dbeafe;">
-                            <span class="material-icons-outlined" style="font-size: 32px; color: #2563eb;">code</span>
+                    <div class="insight-card" style="display: flex; align-items: center; gap: 25px; padding: 30px; border-top: 4px solid #4facfe; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
+                        <div style="background: #eff6ff; padding: 18px; border-radius: 50%; border: 1px solid #dbeafe;">
+                            <span class="material-icons-outlined" style="font-size: 36px; color: #2563eb;">code</span>
                         </div>
                         <div>
-                            <h3 style="margin: 0; font-size: 1.3rem; color: #1e293b;">Nahid Davoudi</h3>
-                            <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">Data Vis Engineer</span>
-                            <p style="margin-top: 8px; font-size: 0.9rem; color: #475569; line-height: 1.4;">D3.js implementation, data processing, and interactivity.</p>
+                            <h3 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Nahid Davoudi</h3>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">Data Vis Engineer</span>
+                            <p style="margin-top: 10px; font-size: 0.95rem; color: #475569; line-height: 1.5;">Focused on D3.js implementation, data preprocessing pipelines, and ensuring interactive responsiveness.</p>
                         </div>
                     </div>
                 </div>
