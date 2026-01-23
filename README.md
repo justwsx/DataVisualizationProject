@@ -1,6 +1,6 @@
-# The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
+## The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
 
-## 🔁 Reproducibility & Project Overview
+### 🔁 Reproducibility & Project Overview
 
 This project is an **interactive data-driven storytelling experience** analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.
 
@@ -10,11 +10,11 @@ This project is an **interactive data-driven storytelling experience** analyzing
 
 ---
 
-## 1. 🧹 Data Preprocessing Pipeline
+### 1. 🧹 Data Preprocessing Pipeline
 
 🗂️ All preprocessing scripts are located in the `preprocessing/` folder and are Jupyter notebooks. Run them **in order** to reproduce the data pipeline:
 
-### Step 1: 🧼 Dataset Cleaning
+#### Step 1: 🧼 Dataset Cleaning
 - **Notebook:** `preprocessing/1_data_cleaning.ipynb`
 - **Source:** *World Energy Consumption Dataset* (Oxford University / Our World in Data).
 - **Actions:**
@@ -22,24 +22,24 @@ This project is an **interactive data-driven storytelling experience** analyzing
   - **Time Window:** Focusing on the critical **2010-2024** period.
   - **Gap Filling:** Handling missing values via linear interpolation to ensure visual continuity.
 
-### Step 2: 🧠 Normalization & Transformation
+#### Step 2: 🧠 Normalization & Transformation
 - **Notebook:** `preprocessing/2_transformation.ipynb`
 - **Actions:**
   - **Normalization:** Converting raw values to percentages or per capita metrics for fair comparison between countries of different economic sizes.
   - **Aggregation:** Grouping minor energy categories (<1% of total volume) to reduce visual noise.
 - **Output:** Optimized CSV/JSON files ready for web integration.
 
-### Step 3: 🧩 Web Integration
+#### Step 3: 🧩 Web Integration
 - The processed data is output to the `data/` folder, where it is asynchronously fetched by the D3.js visualizations.
 
-#### ▶️ To run preprocessing
+### ▶️ To run preprocessing
 1. 📦 Install dependencies (see below).
 2. 🧪 Open the notebooks in `preprocessing/` and run all cells.
 3. 📁 The generated data will automatically update the website's data folder.
 
 ---
 
-## 2. 🚀 Serving/Building the Website Locally
+### 2. 🚀 Serving/Building the Website Locally
 
 🧱 The website uses **D3.js** to fetch data files. Due to browser security policies (CORS), **you cannot** simply double-click `index.html`. You must use a local server.
 
