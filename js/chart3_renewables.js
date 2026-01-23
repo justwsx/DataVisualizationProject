@@ -63,8 +63,7 @@ class RenewablesChart {
                 y: [countryDataAtYear.renewables_energy_per_capita],
                 text: [`<b>${country}</b>`], 
                 textposition: 'top center',
-                yshift: 45, // Shifts text upward from the line
-                cliponaxis: false
+                yshift: 25, // Shifts text upward from the line
                 textfont: { 
                     family: 'Inter, sans-serif', 
                     size: 12, 
