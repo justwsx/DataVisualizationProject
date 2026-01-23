@@ -577,18 +577,7 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
 .kpi-card:nth-child(3) { animation-delay: 0.6s; }
 .kpi-card:nth-child(4) { animation-delay: 0.8s; }
 
-/* ==========================================================================
-   9. CUSTOM STYLES FOR MAP CHART (demand.html)
-   ========================================================================== */
 .chart-body.map-body {
-    padding: 0 !important;       
-    overflow: hidden;           
-    height: 550px !important;  
-    position: relative;          
-}
-
-#chart-map {
-    width: 100% !important;
-    height: 100% !important;    
-    display: block;
+    padding: 0 !important;
+    overflow: hidden;      
 }
