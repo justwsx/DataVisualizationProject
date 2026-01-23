@@ -1,6 +1,6 @@
-# The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
+## The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
 
-## 🔁 Reproducibility & Project Overview
+### 🔁 Reproducibility & Project Overview
 
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
@@ -11,7 +11,7 @@ This project explores the energy transition using **interactive web-based storyt
 
 ---
 
-## 1. 🧹 Data Preprocessing Pipeline
+### 1. 🧹 Data Preprocessing Pipeline
 
 🗂️ The data processing logic is contained in the `process.py` script located in the root directory. Run this script to regenerate the cleaned datasets used by the visualization.
 
@@ -35,7 +35,7 @@ If you need to update the data or reproduce the cleaning steps:
 python process.py
 ```
 
-## 2. 🚀 Serving the Website Locally
+### 2. 🚀 Serving the Website Locally
 
 🧱 The website uses **D3.js** to fetch data asynchronously. To avoid CORS (Cross-Origin Resource Sharing) security blocks, you cannot simply open the `.html` files directly. You must use a local server.
 
