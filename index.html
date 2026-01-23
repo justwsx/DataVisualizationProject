@@ -15,10 +15,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
     <style>
-        /* Aggiungo uno stile per la sezione descrittiva pre-cards */
+        /* MODIFICATO: Centrato il blocco narrativo */
         .narrative-lead {
             max-width: 800px;
-            margin-bottom: 40px;
+            margin: 0 auto 40px auto; /* Margin auto per centrare il blocco */
+            text-align: center;       /* Testo centrato */
         }
         .narrative-lead h2 {
             font-size: 2.2rem;
@@ -32,13 +33,13 @@
             line-height: 1.6;
         }
 
-        /* Stili esistenti mantenuti e ottimizzati */
+        /* Stili esistenti */
         .hero-gradient {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
             padding: 60px 40px;
             border-radius: 24px;
-            margin-bottom: 50px; /* Aumentato leggermente lo spazio */
+            margin-bottom: 50px; 
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             position: relative;
             overflow: hidden;
@@ -55,11 +56,10 @@
             pointer-events: none;
         }
         
-        /* Miglioramento visivo delle card per renderle più leggibili con molto testo */
         .chapter-card {
             background: white;
             border-radius: 16px;
-            padding: 28px; /* Più padding */
+            padding: 28px;
             border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -86,12 +86,13 @@
             background: #f1f5f9;
             padding: 4px 8px;
             border-radius: 4px;
+            align-self: flex-start; /* Mantiene il badge a sinistra per design */
         }
         .chapter-icon-bg {
             position: absolute;
             bottom: -15px;
             right: -15px;
-            font-size: 100px; /* Icona più grande */
+            font-size: 100px;
             opacity: 0.08;
             transform: rotate(-10deg);
             transition: all 0.3s ease;
@@ -103,7 +104,7 @@
         
         .grid-journey {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Card leggermente più larghe */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             margin-top: 30px;
         }
@@ -172,7 +173,7 @@
             
             <div class="hero-gradient">
                 <span class="material-icons-outlined hero-bg-icon">public</span>
-                <div style="position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                <div style="position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center;">
                     <span style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2);">
                         Interactive Data Story
                     </span>
@@ -180,7 +181,7 @@
                         The Pulse of Our Planet
                     </h1>
                     
-                    <p style="font-size: 1.2rem; color: #cbd5e1; line-height: 1.7; width: 100%; max-width: 900px;">
+                    <p style="font-size: 1.2rem; color: #cbd5e1; line-height: 1.7; width: 100%; max-width: 900px; margin-left: auto; margin-right: auto;">
                         Civilization runs on energy, but the engine is changing. We built the modern world by burning the past, yet the future demands a cleaner pulse. This dashboard is not just a collection of charts; it is a narrative journey through the conflict, the costs, and the data behind the biggest shift in human history.
                     </p>
                     
