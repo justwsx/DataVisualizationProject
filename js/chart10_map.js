@@ -38,7 +38,7 @@ update(year) {
     const iconMarkers = {
         type: 'scattergeo',
         mode: 'text',
-        text: ['🔥', '⚫'],
+        text: ['ðŸ”¥', 'âš«'],
         lon: [-98.5, 104.2],
         lat: [39.8, 35.9],
         textfont: { size: 24 },
@@ -83,8 +83,8 @@ update(year) {
                 yref: 'paper',
                 text:
                     '<b>Symbol Legend</b><br>' +
-                    '🔥 Dominant Natural Gas Structure<br>' +
-                    '⚫ Dominant Coal Structure',
+                    'ðŸ”¥ Dominant Natural Gas Structure<br>' +
+                    'âš« Dominant Coal Structure',
                 showarrow: false,
                 align: 'left',
                 font: {
