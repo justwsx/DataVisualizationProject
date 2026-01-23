@@ -47,3 +47,25 @@ python -m http.server 8000
 ```
 
 Then open http://localhost:8000 in your browser 🌍.
+
+### 3. 🗺️ Folder Structure & Data Locations
+
+```text
+DataVisualizationProject/
+├── data/                  # Raw inputs and optimized datasets for D3
+├── js/                    # D3.js visualization logic and specific chart modules
+├── demand.html            # Story page: Energy Demand Analysis
+├── economics.html         # Story page: Economic Impact & Prices
+├── geopolitics.html       # Story page: Geopolitical Analysis & KPIs
+├── index.html             # Homepage: Main storytelling entry point
+├── main.js                # Global Dashboard initialization and event handling
+├── mix.html               # Story page: Energy Mix (Fossil vs Renewables)
+├── process.py             # Python script for data cleaning and processing
+├── style.css              # Main stylesheet (Typography & Layout)
+├── transition.html        # Story page: Focus on the transition timeline
+└── README.md
+```
+
+### 📌 Where does the data for visualizations live?
+✅ **All data used by the website's visualizations is in the `data/` folder.**
+The HTML pages (e.g., `economics.html`, `mix.html`) load specific subsets of data processed by `process.py` and render them using the scripts found in `js/` and `main.js`.
