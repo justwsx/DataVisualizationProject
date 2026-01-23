@@ -32,7 +32,8 @@ If you need to update the data or reproduce the cleaning steps:
 2. 🧪 Run the script from the root folder:
 
 ```bash
-python process.py```
+python process.py
+```
 
 ## 2. 🚀 Serving the Website Locally
 
@@ -43,3 +44,5 @@ From the project root directory, run:
 
 ```bash
 python -m http.server 8000```
+
+Then open http://localhost:8000 in your browser 🌍.
