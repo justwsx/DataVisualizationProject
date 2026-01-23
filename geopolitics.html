@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -113,6 +115,21 @@
                     </p>
                 </div>
 
+                <div class="geo-stats-grid">
+                    <div class="geo-stat-card">
+                        <span class="geo-stat-value" style="color: #db2777;">50%+</span>
+                        <span class="geo-stat-label">Global Coal Use (China)</span>
+                    </div>
+                    <div class="geo-stat-card">
+                        <span class="geo-stat-value" style="color: #2563eb;">FLAT</span>
+                        <span class="geo-stat-label">OECD Energy Demand</span>
+                    </div>
+                    <div class="geo-stat-card">
+                        <span class="geo-stat-value" style="color: #059669;">2x</span>
+                        <span class="geo-stat-label">Asia Growth vs World</span>
+                    </div>
+                </div>
+
                 <h2 class="section-title"><span class="material-icons-outlined">trending_up</span> 1. The Old Guard vs. The New Challengers</h2>
                 <p class="text-content">
                     The line chart below tracks energy use per person. Look at the <strong>United States (Purple Line)</strong> at the very top. It is high, but it is flat. The West has plateaued; we are essentially "finished" building our infrastructure.
@@ -129,7 +146,13 @@
                             <p>The shifting centers of global energy consumption per capita.</p>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-evolution"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-evolution"></div>
+                        <div class="analyst-note">
+                            <strong>Analyst Note: The "Outsourcing" Effect</strong>
+                            Part of the reason Western curves (like the US or UK) are flat or declining is de-industrialization. We moved heavy manufacturing to Asia. Effectively, the CO2 emitted by China to make an iPhone is "consumed" by the West.
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -150,7 +173,13 @@
                             <p>Top countries ranked by total primary energy consumption.</p>
                         </div>
                     </div>
-                    <div class="chart-body"><div id="chart-top-consumers"></div></div>
+                    <div class="chart-body">
+                        <div id="chart-top-consumers"></div>
+                        <div class="analyst-note" style="border-left-color: #ef4444; background: #fff5f5;">
+                            <strong>Analyst Note: The "Historical Guilt" Debate</strong>
+                            At climate summits (COP), developing nations argue: "You burned coal for 200 years to get rich. Why should we stop now?" This chart shows current flow, but if we looked at <em>cumulative</em> history, the US and Europe would still dwarf Asia.
+                        </div>
+                    </div>
                 </div>
             </div>
 
