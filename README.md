@@ -2,7 +2,7 @@
 
 ### 🔁 Reproducibility & Project Overview
 
-> **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
+> **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources.**
 
 This project explores the energy transition using **interactive web-based storytelling**.
 ✅ The codebase is open, and the data transformation steps are managed via a Python script to ensure transparency.
