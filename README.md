@@ -15,7 +15,7 @@ This project explores the energy transition using **interactive web-based storyt
 
 🗂️ The data processing logic is contained in the `process.py` script located in the root directory. Run this script to regenerate the cleaned datasets used by the visualization.
 
-### Step 1: 🧼 Data Cleaning & Enrichment
+### 🧼 Data Cleaning & Enrichment
 - **Script:** `process.py`
 - **Input:** Raw data located in the `data/` folder (including Fossil Fuel Prices).
 - **Operations:**
@@ -81,3 +81,34 @@ The HTML pages (e.g., `economics.html`, `mix.html`) load specific subsets of dat
 pip install pandas numpy
 ```
 > **Note:** The website itself does not require Node.js or a build step; it is a static site.
+
+## 5. 🧠 Methodology & Transparency
+
+Our narrative is built upon a high-quality academic dataset to ensure methodological transparency.
+
+### 📊 Data Sources
+- **Dataset:** World Energy Consumption Dataset.
+- **Source:** Maintained by researchers at **Oxford University (Our World in Data)** and hosted on Kaggle.
+- **Scope:** Global data filtered for EU Member States, focusing on the **2010-2024** window.
+
+### 🎨 Visual Encoding & Design
+- **Visualizing the Transition:** We use **D3.js** to map the growth of solar, wind, and hydro relative to traditional fossil fuels.
+- **Typography:** Adhering to the *Typography Triangle* principles—Sans-Serif for data labels (legibility) and Serif for narrative sections (flow).
+- **Accessibility:** High-contrast color palettes and clear ARIA labels.
+
+### ⚠️ Limitations & Uncertainty
+- **Data Lag:** The most recent data points (2024) are preliminary.
+- **Simplification:** Energy categories representing less than 1% of total volume were aggregated to ensure visual clarity.
+
+## 👥 The Team
+
+- **Wassim Fatnassi** - Layout structure and visual styling (HTML, CSS & UI Design).
+- **Nahid Davoudi** - Interactive logic and chart integration (JavaScript & Data Visualization).
+
+---
+
+## 📄 License
+
+This project is an academic Data Visualization exercise.
+Copyright (c) 2026.
+
