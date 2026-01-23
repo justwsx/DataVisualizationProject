@@ -198,6 +198,126 @@ input[type="range"]::-webkit-slider-thumb {
 }
 .play-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); }
 
+/* ==========================================================================
+   HOME PAGE & NARRATIVE STYLES
+   ========================================================================== */
+
+/* Hero Section */
+.hero-gradient {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    padding: 60px 40px;
+    border-radius: 24px;
+    margin-bottom: 50px; 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+    width: 100%; 
+}
+
+.hero-bg-icon {
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    font-size: 300px;
+    opacity: 0.05;
+    color: white;
+    transform: rotate(-15deg);
+    pointer-events: none;
+}
+
+/* Narrative Lead Text (Centered) */
+.narrative-lead {
+    max-width: 800px;
+    margin: 0 auto 40px auto; 
+    text-align: center;       
+}
+.narrative-lead h2 {
+    font-size: 2.2rem;
+    color: var(--text-p);
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+.narrative-lead p {
+    font-size: 1.1rem;
+    color: var(--text-s);
+    line-height: 1.6;
+}
+
+/* Journey Grid */
+.grid-journey {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* Chapter Cards */
+.chapter-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.chapter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.chapter-number {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #64748b;
+    margin-bottom: 15px;
+    display: inline-block;
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.chapter-icon-bg {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    font-size: 100px;
+    opacity: 0.08;
+    transform: rotate(-10deg);
+    transition: all 0.3s ease;
+}
+.chapter-card:hover .chapter-icon-bg {
+    opacity: 0.12;
+    transform: rotate(0deg) scale(1.1);
+}
+
+/* Call to Action Button */
+.start-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #4338ca;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-top: 25px;
+    box-shadow: 0 4px 6px -1px rgba(67, 56, 202, 0.4);
+}
+.start-btn:hover { background: #3730a3; transform: translateY(-1px); }
+
 /* --------------------------------------------------------------------------
    6. CONTENT & CHARTS
    -------------------------------------------------------------------------- */
@@ -278,7 +398,7 @@ input[type="range"]::-webkit-slider-thumb {
 .chart-body { padding: 20px; height: 450px; }
 .chart-card.large .chart-body { height: 500px; }
 
-/* Insights & Stats */
+/* Insights & Stats (Generic) */
 .insights-section { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 40px; }
 
 .insight-card, .stats-card {
@@ -287,17 +407,15 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: var(--radius);
     box-shadow: var(--shadow-card); 
     border: 1px solid var(--border);
-    
-    /* MODIFICA: Aggiunta transizione per l'effetto hover */
-    transition: all 0.3s ease; 
-    position: relative; /* Per gestire meglio z-index se necessario */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative; 
 }
 
-/* MODIFICA: Nuovo stato Hover */
+/* Base hover for standard insight cards */
 .insight-card:hover, .stats-card:hover {
-    transform: translateY(-5px);        /* Solleva la card */
-    box-shadow: var(--shadow-hover);    /* Aumenta l'ombra */
-    border-color: #cbd5e1;              /* Scurisce leggermente il bordo */
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
 }
 
 .insight-card h3, .stats-card h3 { font-size: 1.2rem; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
@@ -316,6 +434,62 @@ input[type="range"]::-webkit-slider-thumb {
     transition: all 0.3s ease; margin-top: 25px;
 }
 .source-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2); transform: translateY(-2px); }
+
+/* ==========================================================================
+   TEAM SECTION STYLES (Refactored)
+   ========================================================================== */
+
+/* Layout & Spacing */
+.team-section-margin { margin-bottom: 60px; margin-top: 100px; }
+.team-header { text-align: center; margin-bottom: 50px; }
+.section-title.centered { justify-content: center; font-size: 2rem; }
+.team-intro { font-size: 1.15rem; color: var(--text-p); line-height: 1.6; max-width: 700px; margin: 10px auto; }
+
+/* Specific Team Grid */
+.team-grid { gap: 40px; }
+
+/* Specific Team Card */
+.team-card {
+    display: flex; align-items: center; gap: 25px; padding: 30px;
+    /* Explicit transition */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Overriding hover specifically for Team Card (to force proper lift) */
+.team-card:hover {
+    transform: translateY(-5px) !important; /* Forces lift even if animation is locking it */
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+/* Borders & Avatars */
+.border-design { border-top: 4px solid #43e97b; }
+.border-data   { border-top: 4px solid #4facfe; }
+
+.member-avatar {
+    padding: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.bg-design { background: #ecfdf5; border: 1px solid #d1fae5; }
+.bg-data   { background: #eff6ff; border: 1px solid #dbeafe; }
+
+.member-avatar .material-icons-outlined { font-size: 36px; }
+.icon-design { color: #10b981; }
+.icon-data   { color: #2563eb; }
+
+/* Member Typography */
+.member-name {
+    margin: 0; font-size: 1.4rem; color: #1e293b;
+    border: none !important; padding-bottom: 0 !important;
+}
+.member-role {
+    font-size: 0.8rem; font-weight: 700; color: #64748b;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    display: block; margin-top: 4px;
+}
+.member-desc { margin-top: 10px; font-size: 0.95rem; color: #475569; line-height: 1.5; }
+
 
 /* --------------------------------------------------------------------------
    7. FOOTER & NAV
