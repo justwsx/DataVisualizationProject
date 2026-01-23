@@ -1,112 +1,45 @@
-The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
-🔁 Reproducibility & Project Overview
-An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.
+# The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
 
-This project explores the energy transition using interactive web-based storytelling. ✅ The codebase is open, and the data transformation steps are managed via a Python script to ensure transparency.
+## 🔁 Reproducibility & Project Overview
 
-🌐 Live Website: https://justwsx.github.io/DataVisualizationProject/
+> **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources, highlighting how EU policies have reshaped national energy profiles.**
 
-1. 🧹 Data Preprocessing Pipeline
-🗂️ The data processing logic is contained in the process.py script located in the root directory. Run this script to regenerate the cleaned datasets used by the visualization.
+This project explores the energy transition using **interactive web-based storytelling**.
+✅ The codebase is open, and the data transformation steps are managed via a Python script to ensure transparency.
 
-Step 1: 🧼 Data Cleaning & Enrichment
+**🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
 
-Script: process.py
+---
 
-Input: Raw data located in the data/ folder (including Fossil Fuel Prices).
+## 1. 🧹 Data Preprocessing Pipeline
 
-Operations:
+🗂️ The data processing logic is contained in the `process.py` script located in the root directory. Run this script to regenerate the cleaned datasets used by the visualization.
 
-Imports raw CSV data (World Energy Consumption / Our World in Data).
+### Step 1: 🧼 Data Cleaning & Enrichment
+- **Script:** `process.py`
+- **Input:** Raw data located in the `data/` folder (including Fossil Fuel Prices).
+- **Operations:**
+  - Imports raw CSV data (World Energy Consumption / Our World in Data).
+  - Filters specifically for **EU Member States**.
+  - Handles missing values via linear interpolation.
+  - Normalizes metrics (per capita / percentages) for fair comparison.
+- **Output:** Processed JSON/CSV files saved into `data/`, optimized for D3.js.
 
-Filters specifically for EU Member States.
-
-Handles missing values via linear interpolation.
-
-Normalizes metrics (per capita / percentages) for fair comparison.
-
-Output: Processed JSON/CSV files saved into data/, optimized for D3.js.
-
-▶️ To run preprocessing
-
+#### ▶️ To run preprocessing
 If you need to update the data or reproduce the cleaning steps:
 
-📦 Install dependencies (see Section 4).
+1. 📦 Install dependencies (see Section 4).
+2. 🧪 Run the script from the root folder:
 
-🧪 Run the script from the root folder:
+```bash
+python process.py```
 
-Bash
-python process.py
-2. 🚀 Serving the Website Locally
-🧱 The website uses D3.js to fetch data asynchronously. To avoid CORS (Cross-Origin Resource Sharing) security blocks, you cannot simply open the .html files directly. You must use a local server.
+## 2. 🚀 Serving the Website Locally
 
-Option: 🐍 Python HTTP Server (Fastest)
+🧱 The website uses **D3.js** to fetch data asynchronously. To avoid CORS (Cross-Origin Resource Sharing) security blocks, you cannot simply open the `.html` files directly. You must use a local server.
 
+### Option: 🐍 Python HTTP Server (Fastest)
 From the project root directory, run:
 
-Bash
-python -m http.server 8000
-Then open http://localhost:8000 in your browser 🌍.
-
-3. 🗺️ Folder Structure & Data Locations
-Plaintext
-DataVisualizationProject/
-├── data/                  # Raw inputs and optimized datasets for D3
-├── js/                    # D3.js visualization logic and specific chart modules
-├── demand.html            # Story page: Energy Demand Analysis
-├── economics.html         # Story page: Economic Impact & Prices
-├── geopolitics.html       # Story page: Geopolitical Analysis & KPIs
-├── index.html             # Homepage: Main storytelling entry point
-├── main.js                # Global Dashboard initialization and event handling
-├── mix.html               # Story page: Energy Mix (Fossil vs Renewables)
-├── process.py             # Python script for data cleaning and processing
-├── style.css              # Main stylesheet (Typography & Layout)
-├── transition.html        # Story page: Focus on the transition timeline
-└── README.md
-📌 Where does the data for visualizations live?
-
-✅ All data used by the website's visualizations is in the data/ folder. The HTML pages (e.g., economics.html, mix.html) load specific subsets of data processed by process.py and render them using the scripts found in js/ and main.js.
-
-4. 📦 Dependencies
-🛠️ To run the process.py preprocessing script, you need Python installed along with the following libraries:
-
-pandas (Data manipulation and cleaning)
-
-numpy (Numerical calculations)
-
-Bash
-pip install pandas numpy
-Note: The website itself does not require Node.js or a build step; it is a static site.
-
-5. 🧠 Methodology & Transparency
-Our narrative is built upon a high-quality academic dataset to ensure methodological transparency.
-
-📊 Data Sources
-
-Dataset: World Energy Consumption Dataset.
-
-Source: Maintained by researchers at Oxford University (Our World in Data) and hosted on Kaggle.
-
-Scope: Global data filtered for EU Member States, focusing on the 2010-2024 window.
-
-🎨 Visual Encoding & Design
-
-Visualizing the Transition: We use D3.js to map the growth of solar, wind, and hydro relative to traditional fossil fuels.
-
-Typography: Adhering to the Typography Triangle principles—Sans-Serif for data labels (legibility) and Serif for narrative sections (flow).
-
-Accessibility: High-contrast color palettes and clear ARIA labels.
-
-⚠️ Limitations & Uncertainty
-
-Data Lag: The most recent data points (2024) are preliminary.
-
-Simplification: Energy categories representing less than 1% of total volume were aggregated to ensure visual clarity.
-
-👥 The Team
-Wassim Fatnassi - Layout structure and visual styling (HTML, CSS & UI Design).
-
-Nahid Davoudi - Interactive logic and chart integration (JavaScript & Data Visualization).
-
-📄 License
-This project is an academic Data Visualization exercise. Copyright (c) 2026.
+```bash
+python -m http.server 8000```
