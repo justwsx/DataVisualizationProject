@@ -69,3 +69,15 @@ DataVisualizationProject/
 ### 📌 Where does the data for visualizations live?
 ✅ **All data used by the website's visualizations is in the `data/` folder.**
 The HTML pages (e.g., `economics.html`, `mix.html`) load specific subsets of data processed by `process.py` and render them using the scripts found in `js/` and `main.js`.
+
+## 4. 📦 Dependencies
+
+🛠️ To run the `process.py` preprocessing script, you need Python installed along with the following libraries:
+
+- **pandas** (Data manipulation and cleaning)
+- **numpy** (Numerical calculations)
+
+```bash
+pip install pandas numpy
+```
+> **Note:** The website itself does not require Node.js or a build step; it is a static site.
