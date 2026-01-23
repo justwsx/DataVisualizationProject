@@ -108,7 +108,7 @@ class MixChart {
         const layout = {
             barmode: 'stack',
             title: {
-                text: 'Energy Mix by Source (kWh per capita)',
+                //text: 'Energy Mix by Source (kWh per capita)',
                 font: {
                     family: 'Inter, sans-serif',
                     size: 16,
