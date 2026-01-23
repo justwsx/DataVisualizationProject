@@ -363,6 +363,23 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
 }
 
+/* --- LAYOUT SPECIFICO PER ENERGY MIX (mix.html) --- */
+/* Questa regola si applica SOLO al div che abbiamo appena rinominato */
+.mix-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide lo spazio in due metà esatte */
+    gap: 24px;                      /* Spazio tra i due grafici */
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+/* Gestione Mobile specifica per questa griglia */
+@media (max-width: 1024px) {
+    .mix-charts-grid {
+        grid-template-columns: 1fr; /* Su tablet/mobile tornano uno sotto l'altro */
+    }
+}
+
 .chart-card {
     background: var(--bg-card); border-radius: var(--radius);
     box-shadow: var(--shadow-card); border: 1px solid var(--border); overflow: hidden;
