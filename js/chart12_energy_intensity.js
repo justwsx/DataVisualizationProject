@@ -21,7 +21,12 @@ class EnergyIntensityChart {
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
-        window.addEventListener('resize', () => this.draw());
+        // Debounce sul resize per evitare sfarfallii
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => this.draw(), 100);
+        });
     }
 
     update() {
@@ -32,23 +37,29 @@ class EnergyIntensityChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // --- FIX VISIBILITÀ: Dimensioni Logiche Fisse ---
-        // Invece di chiedere al browser quanto è largo (che spesso sbaglia o cambia),
-        // definiamo noi una dimensione interna fissa. Il viewBox farà il resto.
-        const logicalWidth = 800;
-        const logicalHeight = 500;
+        // 1. FORZATURA DIMENSIONI (Il Fix Definitivo)
+        // Ignoriamo le regole CSS esterne che potrebbero rompere il layout.
+        // Impostiamo un'altezza fissa in PIXEL.
+        const fixedHeight = 500;
         
-        const margin = { top: 50, right: 120, bottom: 50, left: 60 };
-        const w = logicalWidth - margin.left - margin.right;
-        const h = logicalHeight - margin.top - margin.bottom;
-
-        // Reset contenitore HTML
         container.style.width = '100%';
-        container.style.height = 'auto'; // Lascia adattare l'altezza
-        container.style.minHeight = '400px'; // Sicurezza
+        container.style.height = `${fixedHeight}px`; // Altezza bloccata
+        container.style.minHeight = `${fixedHeight}px`;
+        container.style.overflow = 'hidden';
         container.innerHTML = '';
 
-        // Dati
+        // 2. Calcolo della larghezza reale disponibile
+        // Se getBoundingClientRect fallisce (es. elemento nascosto), usiamo un fallback
+        const rect = container.getBoundingClientRect();
+        const width = rect.width > 0 ? rect.width : 800;
+        const height = fixedHeight;
+
+        // Margini (Destro ampio per le etichette)
+        const margin = { top: 50, right: 130, bottom: 50, left: 60 };
+        const w = width - margin.left - margin.right;
+        const h = height - margin.top - margin.bottom;
+
+        // 3. Preparazione Dati
         const processedData = this.countries.map(country => {
             const values = this.data
                 .filter(d => 
@@ -59,12 +70,11 @@ class EnergyIntensityChart {
                 .map(d => ({
                     year: d.year,
                     value: d.primary_energy_consumption / (d.gdp / d.population),
-                    original: d 
                 }));
             return { country, values };
         }).filter(group => group.values.length > 0);
 
-        // Scale (basate sulle dimensioni logiche fisse)
+        // Scale
         const allYears = processedData.flatMap(d => d.values.map(v => v.year));
         const x = d3.scaleLinear().domain(d3.extent(allYears)).range([0, w]);
 
@@ -72,15 +82,12 @@ class EnergyIntensityChart {
         const yMax = d3.max(allValues) || 1;
         const y = d3.scaleLinear().domain([0, yMax * 1.1]).range([h, 0]);
 
-        // --- SVG con ViewBox ---
-        // Qui avviene la magia: viewBox definisce le coordinate interne (800x500),
-        // ma style width/height dicono al browser di occupare tutto lo spazio del div.
+        // 4. CREAZIONE SVG (Senza ViewBox per evitare scaling strani su schermi giganti)
+        // Usiamo width e height diretti per mappare 1:1 i pixel dello schermo.
         const svg = d3.select(container).append("svg")
-            .attr("viewBox", `0 0 ${logicalWidth} ${logicalHeight}`)
-            .attr("preserveAspectRatio", "xMidYMid meet")
-            .style("width", "100%")
-            .style("height", "100%") // Occupa tutto il div padre
-            .style("max-height", "600px") // Limite per non diventare enorme su schermi giganti
+            .attr("width", width)
+            .attr("height", height)
+            .style("display", "block") // Rimuove spazi bianchi sotto svg inline
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -103,34 +110,36 @@ class EnergyIntensityChart {
         svg.append("text").attr("transform", "rotate(-90)").attr("y", -45).attr("x", -h/2)
             .text("Energy Intensity (Indicator)").attr("fill", "#1e293b").attr("text-anchor", "middle").style("font-size", "12px");
 
+        // Titolo
         svg.append("text").attr("x", w/2).attr("y", -20)
             .text("Energy Intensity over Time").attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#475569").style("font-size", "16px");
 
-        // Linee
+        // Linee e Etichette
         const line = d3.line().x(d => x(d.year)).y(d => y(d.value));
 
         processedData.forEach(group => {
             const color = this.colors[group.country];
             const lastPoint = group.values[group.values.length - 1];
 
-            // Linea visibile
+            // Linea
             svg.append("path").datum(group.values)
                 .attr("fill", "none").attr("stroke", color).attr("stroke-width", 3).attr("d", line);
 
-            // Linea invisibile per hover facile
+            // Overlay invisibile per tooltip facile
             svg.append("path").datum(group.values)
-                .attr("fill", "none").attr("stroke", "transparent").attr("stroke-width", 15).attr("d", line)
+                .attr("fill", "none").attr("stroke", "transparent").attr("stroke-width", 20).attr("d", line)
+                .style("cursor", "pointer")
                 .on("mouseover", (e) => {
                     this.tooltip.style("opacity", 1).html(`<b>${group.country}</b>`)
                         .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
                 })
                 .on("mouseout", () => this.tooltip.style("opacity", 0));
 
-            // Punto finale
+            // Pallino finale
             svg.append("circle").attr("cx", x(lastPoint.year)).attr("cy", y(lastPoint.value))
                 .attr("r", 5).attr("fill", color);
 
-            // Etichetta
+            // Etichetta finale
             svg.append("text").attr("x", x(lastPoint.year) + 10).attr("y", y(lastPoint.value) + 4)
                 .text(group.country).attr("fill", color).style("font-size", "12px").style("font-weight", "bold");
         });
