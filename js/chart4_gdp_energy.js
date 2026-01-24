@@ -28,7 +28,6 @@ class GDPEnergyChart {
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
-        // Resize: ridisegna tutto al cambio finestra
         window.addEventListener('resize', () => this.draw());
     }
 
@@ -45,19 +44,16 @@ class GDPEnergyChart {
         const container = document.getElementById(this.containerId);
         if (!container) return;
 
-        // --- MANIERE FORTI: Forziamo l'altezza a 600px fissi ---
-        // Questo impedisce al grafico di essere schiacciato
+        // --- FIX ALTEZZA (Maniere forti) ---
         container.style.height = '600px'; 
         container.style.minHeight = '600px';
         container.style.width = '100%';
-        container.style.overflow = 'hidden'; // Niente scrollbar
+        container.style.overflow = 'hidden';
         container.innerHTML = '';
 
-        // Dimensioni fisse interne (Canvas)
         const width = container.offsetWidth || 800;
-        const height = 600; // Deve corrispondere allo style.height sopra
+        const height = 600; 
         
-        // Margini molto ampi per sicurezza
         const margin = { top: 50, right: 30, bottom: 150, left: 70 };
         const w = width - margin.left - margin.right;
         const h = height - margin.top - margin.bottom;
@@ -70,25 +66,31 @@ class GDPEnergyChart {
             .filter(d => d.primary_energy_consumption > 0 && d.gdp > 0)
             .sort((a, b) => (b.population||0) - (a.population||0));
 
-        // SVG
         const svg = d3.select(container).append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width).attr("height", height)
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // Scale (Ho allargato i range per distanziare le bolle)
-        const x = d3.scaleLog().domain([500, 200000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
-        
-        // Ho ridotto drasticamente il raggio massimo (da 50 a 30) perché erano giganti
+        // --- FIX CLUSTERING (Scale Logaritmiche) ---
+        // Ho abbassato drasticamente i minimi dei domini (da 500/50 a 1)
+        // per dare spazio ai valori piccoli invece di schiacciarli sugli assi.
+        // Ho anche aumentato leggermente i massimi per sicurezza.
+        const x = d3.scaleLog().domain([1, 300000]).range([0, w]).clamp(true);
+        const y = d3.scaleLog().domain([1, 150000]).range([h, 0]).clamp(true);
         const r = d3.scaleSqrt().domain([0, 1e9]).range([2, 30]); 
 
-        const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
+        // Formattatore per le etichette degli assi
+        const formatAxis = d => {
+            if (d >= 1000) return d/1000 + 'k';
+            return d; // Mostra il numero normale per valori < 1000 (es. 1, 10, 100)
+        };
 
-        // Asse X
+        // Asse X (Aggiunti tick per 1, 10, 100)
         svg.append("g").attr("transform", `translate(0,${h})`)
-            .call(d3.axisBottom(x).tickValues([1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-h))
+            .call(d3.axisBottom(x)
+                .tickValues([1, 10, 100, 1000, 10000, 100000]) // Nuovi valori tick
+                .tickFormat(formatAxis)
+                .tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").attr("stroke", "#cbd5e1"));
 
@@ -96,9 +98,12 @@ class GDPEnergyChart {
             .text("GDP per Capita ($)")
             .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Asse Y
+        // Asse Y (Aggiunti tick per 1, 10)
         svg.append("g")
-            .call(d3.axisLeft(y).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-w))
+            .call(d3.axisLeft(y)
+                .tickValues([1, 10, 100, 1000, 5000, 10000, 50000, 100000])
+                .tickFormat(formatAxis)
+                .tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").remove());
 
@@ -122,7 +127,7 @@ class GDPEnergyChart {
             .on("mouseover", (e, d) => {
                 d3.select(e.target).attr("stroke", "#333").attr("stroke-width", 2);
                 this.tooltip.style("opacity", 1)
-                    .html(`<b>${d.country}</b><br>GDP: $${d3.format(",.0f")(d.gdp/1e9)}B<br>Energy: ${d3.format(",.0f")(d.primary_energy_consumption)}`)
+                    .html(`<b>${d.country}</b><br>GDP: $${d3.format(",.1f")(d.gdp/1e9)}B<br>Energy: ${d3.format(",.0f")(d.primary_energy_consumption)}`)
                     .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
             })
             .on("mouseout", (e) => {
@@ -134,8 +139,6 @@ class GDPEnergyChart {
         const keys = Object.keys(this.colors);
         const itemW = 110; 
         const rowSize = Math.floor(w / itemW);
-        
-        // Spostiamo la legenda ben sotto l'area del grafico
         const legendContainer = svg.append("g").attr("transform", `translate(0, ${h + 60})`);
 
         keys.forEach((key, i) => {
