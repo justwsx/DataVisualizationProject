@@ -57,11 +57,9 @@ python process.py
 
 1. **Clone this repository**
    ```bash
-   git clone https://github.com/NMSW-datavis/visualizing-Conflict-and-Human-Suffering-through-Data.git
-   cd visualizing-conflict
+   git clone https://github.com/justwsx/DataVisualizationProject.git
+   cd DataVisualizationProject
    ```
-
-Adattalo
 
 ### Option: 🐍 Python HTTP Server (Fastest)
 From the project root directory, run:
