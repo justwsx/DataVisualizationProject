@@ -76,7 +76,7 @@ class GDPEnergyChart {
         // GDP: da 300 a 150k (era 1 a 300k)
         // Energy: da 500 a 150k (era 1 a 150k)
         const x = d3.scaleLog().domain([100, 50000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([100, 150000]).range([h, 0]).clamp(true);
+        const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
         
         // --- MODIFICA 2: BOLLE GIGANTI ---
         // Ho aumentato il range del raggio da [2, 30] a [6, 70].
@@ -103,7 +103,7 @@ class GDPEnergyChart {
         // Asse Y
         svg.append("g")
             .call(d3.axisLeft(y)
-                .tickValues([100, 1000, 5000, 10000, 50000, 100000])
+                .tickValues([50, 1000, 5000, 10000, 50000, 100000])
                 .tickFormat(formatAxis)
                 .tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
