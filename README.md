@@ -108,13 +108,13 @@ Our narrative is built upon a high-quality academic dataset to ensure methodolog
 - **Scope:** Global data filtered for World Member States, focusing on the **1990-2022** window.
 
 ### 🎨 Visual Encoding & Design
-- **Visualizing the Transition:** We use **D3.js** to map the growth of solar, wind, and hydro relative to traditional fossil fuels.
-- **Typography:** Adhering to the *Typography Triangle* principles—Sans-Serif for data labels (legibility) and Serif for narrative sections (flow).
-- **Accessibility:** High-contrast color palettes and clear ARIA labels.
+- **The Visualization:** We use **D3.js** to clearly map the transition from fossil fuels to renewable sources (Solar, Wind, Hydro).
+- **Typography:** We combine **Sans-Serif** fonts for data readability (charts/labels) and **Serif** fonts for narrative flow (text), balancing clarity and style.
+- **Accessibility:** Designed with high-contrast colors and ARIA labels to ensure the project is inclusive.
 
-### ⚠️ Limitations & Uncertainty
-- **Data Lag:** The most recent data points (2024) are preliminary.
-- **Simplification:** Energy categories representing less than 1% of total volume were aggregated to ensure visual clarity.
+### ⚠️ Data Limitations
+- **Preliminary Data:** The figures for 2024 are estimates and may be updated in the future.
+- **Grouping:** To keep the visualization clean, energy categories representing less than **1%** of the total have been grouped together.
 
 ---
 
