@@ -2,7 +2,7 @@ class CO2EnergyChart {
     constructor(data) {
         this.data = data;
         this.elementId = 'chart-co2-energy';
-        this.year = 2020; // Default
+        this.year = 2020;
 
         // Scala colori personalizzata (Verde -> Giallo -> Rosso)
         this.colorScale = d3.scaleLinear()
@@ -15,13 +15,12 @@ class CO2EnergyChart {
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
-        // Observer per ridimensionamento fluido
+        // Observer per ridimensionamento
         const container = document.getElementById(this.elementId);
         if (container) {
             this.observer = new ResizeObserver(entries => {
                 for (let entry of entries) {
                     if (entry.contentRect.width > 0) {
-                        // Debounce leggero
                         requestAnimationFrame(() => this.draw());
                     }
                 }
@@ -29,7 +28,6 @@ class CO2EnergyChart {
             this.observer.observe(container);
         }
 
-        // Primo render
         this.draw();
     }
 
@@ -42,7 +40,7 @@ class CO2EnergyChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // 1. SETUP DIMENSIONI FISSE VERTICALI
+        // 1. DIMENSIONI FISSE
         const fixedHeight = 600;
         container.style.width = '100%';
         container.style.height = `${fixedHeight}px`;
@@ -54,12 +52,12 @@ class CO2EnergyChart {
         const width = rect.width > 0 ? rect.width : 800;
         const height = fixedHeight;
 
-        // Margine destro ampio per la Colorbar
-        const margin = { top: 70, right: 120, bottom: 80, left: 70 };
+        // Margini: Top ridotto (no titolo), Bottom aumentato (per asse X)
+        const margin = { top: 20, right: 120, bottom: 100, left: 70 };
         const w = width - margin.left - margin.right;
         const h = height - margin.top - margin.bottom;
 
-        // 2. PREPARAZIONE DATI (Logica originale)
+        // 2. DATI
         const yearData = this.data.filter(d => d.year === this.year && d.primary_energy_consumption > 0);
         const hasFossilData = yearData.some(d => d.fossil_fuel_consumption > 0);
 
@@ -68,7 +66,6 @@ class CO2EnergyChart {
             if (hasFossilData && d.fossil_fuel_consumption > 0) {
                 intensity = (d.fossil_fuel_consumption / d.primary_energy_consumption) * 100;
             } else {
-                // Calcolo manuale fallback
                 const fossil = (d.coal_cons_per_capita||0) + (d.gas_energy_per_capita||0) + (d.oil_energy_per_capita||0);
                 const clean = (d.renewables_energy_per_capita||0) + (d.hydro_elec_per_capita||0) + (d.low_carbon_energy_per_capita||0);
                 const total = fossil + clean;
@@ -82,21 +79,18 @@ class CO2EnergyChart {
             };
         })
         .filter(d => d.intensity !== null && d.intensity >= 0 && d.intensity <= 100 && d.population > 0)
-        .sort((a, b) => b.population - a.population); // Bolle grandi sotto
+        .sort((a, b) => b.population - a.population);
 
         // 3. SCALE
-        // X Logaritmica (Energy)
         const x = d3.scaleLog()
-            .domain([100, 150000]) // Range tipico consumi
+            .domain([100, 150000])
             .range([0, w])
             .clamp(true);
 
-        // Y Lineare (Intensity %)
         const y = d3.scaleLinear()
-            .domain([-5, 105]) // Leggero padding
+            .domain([-5, 105])
             .range([h, 0]);
 
-        // Raggio (Population)
         const r = d3.scaleSqrt()
             .domain([0, 1.4e9])
             .range([4, 50]);
@@ -109,31 +103,33 @@ class CO2EnergyChart {
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // 5. ASSI E GRIGLIA
+        // 5. ASSI
         const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
+        const xTicks = [100, 500, 1000, 5000, 10000, 50000, 100000];
 
-        // Griglia X
+        // Griglia X (Verticale)
         svg.append("g").attr("transform", `translate(0,${h})`)
-            .call(d3.axisBottom(x).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat("").tickSize(-h))
+            .call(d3.axisBottom(x).tickValues(xTicks).tickFormat("").tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").remove());
 
-        // Griglia Y
+        // Griglia Y (Orizzontale)
         svg.append("g")
             .call(d3.axisLeft(y).tickValues([0, 20, 40, 60, 80, 100]).tickFormat("").tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").remove());
 
-        // Asse X Labels
+        // ASSE X (Etichette e Linea)
         svg.append("g").attr("transform", `translate(0,${h})`)
-            .call(d3.axisBottom(x).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat(formatK))
-            .call(g => g.select(".domain").attr("stroke", "#cbd5e1"))
-            .call(g => g.selectAll("text").attr("fill", "#64748b").style("font-size", "11px"));
+            .call(d3.axisBottom(x).tickValues(xTicks).tickFormat(formatK))
+            .call(g => g.select(".domain").attr("stroke", "#cbd5e1").attr("stroke-width", 1)) // Linea asse visibile
+            .call(g => g.selectAll("text").attr("fill", "#64748b").style("font-size", "11px").attr("dy", "10px")); // Spazio extra per le etichette
 
-        svg.append("text").attr("x", w/2).attr("y", h + 40)
-            .text("Primary Energy Consumption (kWh per capita)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
+        svg.append("text").attr("x", w/2).attr("y", h + 45)
+            .text("Primary Energy Consumption (kWh per capita)")
+            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Asse Y Labels
+        // ASSE Y (Etichette)
         svg.append("g")
             .call(d3.axisLeft(y).tickValues([0, 20, 40, 60, 80, 100]).tickFormat(d => d + "%"))
             .call(g => g.select(".domain").remove())
@@ -141,10 +137,6 @@ class CO2EnergyChart {
 
         svg.append("text").attr("transform", "rotate(-90)").attr("y", -50).attr("x", -h/2)
             .text("Carbon Intensity (%)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
-
-        // Titolo
-        svg.append("text").attr("x", w/2).attr("y", -30)
-            .text("Carbon Intensity of Energy Consumption").attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "18px");
 
         // 6. BOLLE
         svg.selectAll("circle")
@@ -170,62 +162,43 @@ class CO2EnergyChart {
             });
 
         // 7. ANNOTAZIONI
-        // "Bubble size = Population"
         svg.append("rect").attr("x", 10).attr("y", 10).attr("width", 140).attr("height", 24).attr("fill", "rgba(255,255,255,0.9)").attr("stroke", "#e2e8f0");
         svg.append("text").attr("x", 20).attr("y", 26).text("Bubble size = Population").style("font-size", "11px").attr("fill", "#64748b");
 
-        // "Lower % = Cleaner Energy"
         svg.append("rect").attr("x", w - 150).attr("y", h - 40).attr("width", 150).attr("height", 24).attr("fill", "rgba(255,255,255,0.9)").attr("stroke", "#e2e8f0");
         svg.append("text").attr("x", w - 140).attr("y", h - 24).text("Lower % = Cleaner Energy").style("font-size", "11px").attr("fill", "#059669");
 
-        // 8. COLORBAR (LEGENDA GRADIENTE)
+        // 8. LEGENDA COLORBAR
         this.drawColorBar(svg, w, h);
     }
 
     drawColorBar(svg, w, h) {
-        // Definisci il gradiente
         const defs = svg.append("defs");
         const linearGradient = defs.append("linearGradient")
             .attr("id", "intensity-gradient")
             .attr("x1", "0%").attr("y1", "100%")
-            .attr("x2", "0%").attr("y2", "0%"); // Verticale, dal basso (0) all'alto (100)
+            .attr("x2", "0%").attr("y2", "0%");
 
-        // Stops del gradiente basati sulla scala colori
         const stops = [0, 25, 50, 75, 90, 100];
         stops.forEach(s => {
-            linearGradient.append("stop")
-                .attr("offset", `${s}%`)
-                .attr("stop-color", this.colorScale(s));
+            linearGradient.append("stop").attr("offset", `${s}%`).attr("stop-color", this.colorScale(s));
         });
 
-        // Disegna la barra
         const barWidth = 15;
-        const barHeight = h * 0.6; // Alta il 60% del grafico
+        const barHeight = h * 0.6;
         const barX = w + 40;
-        const barY = h * 0.2; // Centrata verticalmente
+        const barY = h * 0.2;
 
         const legendG = svg.append("g").attr("transform", `translate(${barX}, ${barY})`);
 
-        // Titolo Legenda
-        legendG.append("text")
-            .attr("x", 0).attr("y", -10)
-            .text("Intensity")
-            .style("font-size", "11px").attr("fill", "#475569").style("font-weight", "bold");
+        legendG.append("text").attr("x", 0).attr("y", -10).text("Intensity").style("font-size", "11px").attr("fill", "#475569").style("font-weight", "bold");
+        legendG.append("rect").attr("width", barWidth).attr("height", barHeight).style("fill", "url(#intensity-gradient)").attr("stroke", "#e2e8f0");
 
-        // Rettangolo colorato
-        legendG.append("rect")
-            .attr("width", barWidth).attr("height", barHeight)
-            .style("fill", "url(#intensity-gradient)")
-            .attr("stroke", "#e2e8f0");
-
-        // Ticks della legenda
         const legendScale = d3.scaleLinear().domain([0, 100]).range([barHeight, 0]);
         const legendAxis = d3.axisRight(legendScale).tickValues([0, 20, 40, 60, 80, 100]).tickFormat(d => d + "%");
 
-        legendG.append("g")
-            .attr("transform", `translate(${barWidth}, 0)`)
-            .call(legendAxis)
-            .call(g => g.select(".domain").remove())
+        legendG.append("g").attr("transform", `translate(${barWidth}, 0)`)
+            .call(legendAxis).call(g => g.select(".domain").remove())
             .call(g => g.selectAll("text").style("font-size", "10px").attr("fill", "#64748b"));
     }
 
