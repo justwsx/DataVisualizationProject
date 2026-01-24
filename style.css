@@ -656,3 +656,57 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
     width: 100%;
     overflow: visible; /* Importante per far vedere la legenda a destra */
 }
+
+
+#chart-map {
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: transparent;
+}
+
+
+.map-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    pointer-events: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+
+.legend-box {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #1e293b;
+}
+
+.map-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    pointer-events: none; 
+    opacity: 0;           
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 9999;        
+    transition: opacity 0.2s;
+}
