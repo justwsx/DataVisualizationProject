@@ -14,7 +14,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
+    <style>
+        .verdict-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .verdict-item {
+            padding: 15px;
+            border-left: 3px solid #e2e8f0;
+        }
 
+        .verdict-item h4 {
+            margin: 0 0 10px 0;
+            color: #1e293b;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .verdict-item p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            .verdict-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -45,12 +79,6 @@
                 <a href="geopolitics.html" class="nav-item active"><span class="material-icons-outlined">psychology</span><span>Geo & Findings</span></a>
             </nav>
 
-            <div class="sidebar-widget">
-                <div class="widget-title">
-                    <span class="material-icons-outlined" style="font-size: 18px;"></span>
-                </div>
-            </div>
-
             <div class="sidebar-footer">
                 <div class="footer-links">
                     <span class="material-icons-outlined footer-icon">share</span>
@@ -62,11 +90,6 @@
         </aside>
 
         <main class="main-content">
-            <!--<div class="sidebar-instruction-btn">
-                <span class="material-icons-outlined icon">info</span>
-                <span class="text-desktop">Hover your mouse on the left to show the dashboard</span>
-                <span class="text-mobile">Tap the left edge to show the dashboard</span>
-            </div>-->
             
             <div class="top-nav">
                 <div class="nav-left">
@@ -84,20 +107,6 @@
                             <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
                         </div>
                     </div>
-                    
-                    <!--<div class="control-item">
-                        <label>Geographic Focus</label>
-                        <select id="countrySelect" class="filter-select">
-                            <option value="World">The Whole World</option>
-                            <option value="United States">United States</option>
-                            <option value="China">China</option>
-                            <option value="India">India</option>
-                            <option value="Japan">Japan</option>
-                            <option value="Germany">Germany</option>
-                            <option value="United Kingdom">United Kingdom</option>
-                            <option value="France">France</option>
-                        </select>
-                    </div>-->
 
                     <button class="play-btn" id="playBtn">
                         <span class="material-icons-outlined">play_circle</span>
@@ -185,40 +194,54 @@
 
             <div id="section-findings" class="insights-section" style="margin-top: 60px;">
                 
-                <div class="insight-card">
+                <div class="insight-card" style="padding-bottom: 30px;">
                     <h3>Final Verdict: Strategic Takeaways</h3>
-                    <div class="insight-content">
-                        <div class="insight-item">
-                            <span class="material-icons-outlined" style="color: #43e97b;">trending_up</span>
-                            <div class="insight-text-wrapper">
-                                <p><strong>Economics > Politics:</strong></p>
-                                <p>The transition is accelerating not because of laws, but because renewables are now cheaper. Capitalism, not just altruism, is driving the revolution.</p>
-                            </div>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+                        Synthesizing 30 years of global data, four critical trends define the path forward.
+                    </p>
+                    
+                    <div class="verdict-grid">
+                        
+                        <div class="verdict-item" style="border-left-color: #43e97b;">
+                            <h4>
+                                <span class="material-icons-outlined" style="color: #43e97b;">monetization_on</span>
+                                The Economic Tipping Point
+                            </h4>
+                            <p>
+                                The era where sustainability required "sacrifice" is ending.  The data shows that the transition is accelerating not because of political ideology, but because of cold, hard economics. In many parts of the world, building new solar or wind capacity is now cheaper than running existing coal plants. The driving force of the green revolution has shifted from <em>altruism</em> to <em>capitalism</em>.
+                            </p>
                         </div>
 
-                        <div class="insight-item">
-                            <span class="material-icons-outlined" style="color: #4facfe;">public</span>
-                            <div class="insight-text-wrapper">
-                                <p><strong>The "Asia Challenge":</strong></p>
-                                <p>The future of the climate is decided in Beijing and New Delhi, not Washington or Brussels. The West's goal must be reducing the cost of green tech for the Global South.</p>
-                            </div>
+                        <div class="verdict-item" style="border-left-color: #4facfe;">
+                            <h4>
+                                <span class="material-icons-outlined" style="color: #4facfe;">public</span>
+                                The "Asia Challenge"
+                            </h4>
+                            <p>
+                                The future of the global climate is no longer being decided in Washington, Brussels, or Geneva. It is being decided in Beijing, New Delhi, and Jakarta. As the West plateaus, the Global South is hungry for energy. The primary mission for developed nations must shift from purely domestic targets to exporting cheap, scalable green technology that allows developing nations to leapfrog fossil fuels entirely.
+                            </p>
                         </div>
 
-                        <div class="insight-item">
-                            <span class="material-icons-outlined" style="color: #f5576c;">eco</span>
-                            <div class="insight-text-wrapper">
-                                <p><strong>The "Stacking" Problem:</strong></p>
-                                <p>Currently, we are mostly adding green energy *on top* of fossil fuels to meet new demand. To win, we must actively *replace* and shut down old plants.</p>
-                            </div>
+                        <div class="verdict-item" style="border-left-color: #f5576c;">
+                            <h4>
+                                <span class="material-icons-outlined" style="color: #f5576c;">layers</span>
+                                The "Stacking" Trap
+                            </h4>
+                            <p>
+                                Despite the exponential growth of renewables, our data reveals an uncomfortable truth: we are mostly <em>adding</em> clean energy on top of fossil fuels , rather than replacing them. Total global energy demand is growing so fast that renewables are barely keeping up with the <em>increase</em>. To win, we must move from an "Energy Addition" phase to an "Energy Substitution" phase.
+                            </p>
                         </div>
 
-                        <div class="insight-item">
-                            <span class="material-icons-outlined" style="color: #f59e0b;">bolt</span>
-                            <div class="insight-text-wrapper">
-                                <p><strong>Efficiency is the Hero:</strong></p>
-                                <p>The best energy is the energy we don't use. "Decoupling" GDP from carbon is real, and it proves we can have prosperity without pollution.</p>
-                            </div>
+                        <div class="verdict-item" style="border-left-color: #f59e0b;">
+                            <h4>
+                                <span class="material-icons-outlined" style="color: #f59e0b;">bolt</span>
+                                The Great Decoupling
+                            </h4>
+                            <p>
+                                The most optimistic finding in our dataset is the phenomenon of "Decoupling." For the first time in history, advanced economies have managed to grow their GDP while lowering their energy footprint. This proves that energy efficiency is the unsung hero of the transition. It shatters the old myth that you need pollution to have prosperity—a crucial blueprint for the rest of the world to follow.
+                            </p>
                         </div>
+
                     </div>
                 </div>
 
