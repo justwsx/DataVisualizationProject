@@ -10,7 +10,6 @@ class GDPEnergyChart {
             "Oceania": "#eaa400", "Other": "#6b7280"
         };
 
-        // Tua lista completa delle region
         this.regions = {
             "United States": "North America", "Canada": "North America", "Mexico": "North America",
             "Brazil": "South America", "Argentina": "South America", "Chile": "South America",
@@ -24,7 +23,8 @@ class GDPEnergyChart {
             "Nigeria": "Africa", "Kenya": "Africa", "Morocco": "Africa"
         };
 
-        this.tooltip = d3.select("body").append("div")
+        // Tooltip setup
+        this.tooltip = d3.select("body").selectAll(".d3-tooltip").data([0]).join("div")
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
@@ -43,14 +43,20 @@ class GDPEnergyChart {
     draw() {
         const container = document.getElementById(this.containerId);
         if (!container) return;
+
+        // --- FIX CRUCIALE: Forziamo lo stile del contenitore via JS ---
+        // Questo sovrascrive eventuali CSS esterni che bloccano l'altezza
+        container.style.width = '100%';
+        container.style.height = 'auto';     // Lascia che si allunghi quanto serve
+        container.style.minHeight = '500px'; // Altezza minima garantita
+        container.style.overflow = 'visible'; // Impedisce il taglio del contenuto
         container.innerHTML = '';
 
-        // --- CAMBIAMENTO CRUCIALE: Dimensioni Logiche Fisse ---
-        // Definiamo una tela virtuale comoda dove tutto ci sta sicuro.
-        // Il browser poi la ridimensionerà (zoom) per adattarla al div.
+        // Dimensioni Logiche (Tela Virtuale)
+        // Usiamo 800x520 per un aspetto più "wide" che sta meglio negli schermi
         const logicalWidth = 800;
-        const logicalHeight = 600; // Abbondiamo in altezza
-        const margin = { top: 60, right: 40, bottom: 160, left: 70 }; // Bottom 160px per legenda comoda
+        const logicalHeight = 520; 
+        const margin = { top: 60, right: 40, bottom: 130, left: 70 };
         
         const w = logicalWidth - margin.left - margin.right;
         const h = logicalHeight - margin.top - margin.bottom;
@@ -63,50 +69,57 @@ class GDPEnergyChart {
             .filter(d => d.primary_energy_consumption > 0 && d.gdp > 0)
             .sort((a, b) => (b.population||0) - (a.population||0));
 
-        // Creazione SVG con viewBox (Responsive reale)
+        // SVG Responsivo
         const svg = d3.select(container).append("svg")
             .attr("viewBox", `0 0 ${logicalWidth} ${logicalHeight}`)
             .attr("preserveAspectRatio", "xMidYMid meet")
             .style("width", "100%")
-            .style("height", "auto") // Lascia che l'altezza si adatti alla larghezza
+            .style("height", "auto")
             .style("font-family", "Inter, sans-serif")
+            .style("overflow", "visible") // Sicurezza extra
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
         // Scale
-        const x = d3.scaleLog().domain([1000, 300000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([50, 100000]).range([h, 0]).clamp(true);
-        const r = d3.scaleSqrt().domain([0, 1e9]).range([3, 50]); 
+        const x = d3.scaleLog().domain([500, 200000]).range([0, w]).clamp(true); // Range GDP aggiustato
+        const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
+        const r = d3.scaleSqrt().domain([0, 1e9]).range([3, 45]); // Bolle leggermente più piccole
 
-        // Assi
-        const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
+        // Formato numeri assi
+        const formatK = d => {
+            if (d >= 1000) return d/1000 + 'k';
+            return d;
+        };
 
+        // Griglia e Assi
+        // X Axis
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x).tickValues([1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-h))
-            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0"))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").attr("stroke", "#cbd5e1"));
 
-        svg.append("text").attr("x", w/2).attr("y", h + 45)
+        svg.append("text").attr("x", w/2).attr("y", h + 40)
             .text("GDP per Capita ($)")
-            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "14px");
+            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
+        // Y Axis
         svg.append("g")
             .call(d3.axisLeft(y).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-w))
-            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0"))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").remove());
 
         svg.append("text").attr("transform", "rotate(-90)").attr("y", -50).attr("x", -h/2)
             .text("Energy Consumption (kWh)")
-            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "14px");
+            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
         // Titolo
         svg.append("text").attr("x", w/2).attr("y", -25)
             .text("Energy Consumption vs GDP")
             .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "18px");
 
-        // Bolle
+        // Disegno Bolle
         svg.selectAll("circle")
             .data(dataset).enter().append("circle")
-            .attr("cx", d => x(d.gdp / 1e9)) // Nota: Assicurati che questo calcolo sia coerente con i tuoi dati
+            .attr("cx", d => x(d.gdp / 1e9)) 
             .attr("cy", d => y(d.primary_energy_consumption))
             .attr("r", d => r(d.population || 0))
             .attr("fill", d => this.colors[this.getRegion(d.country)] || '#6b7280')
@@ -122,9 +135,9 @@ class GDPEnergyChart {
                 this.tooltip.style("opacity", 0);
             });
 
-        // Legenda (Ora ha molto spazio sotto)
+        // Legenda
         const keys = Object.keys(this.colors);
-        const itemW = 120; 
+        const itemW = 110; 
         const rowSize = Math.floor(w / itemW);
         
         keys.forEach((key, i) => {
@@ -133,10 +146,10 @@ class GDPEnergyChart {
             const rowWidth = Math.min(keys.length - row * rowSize, rowSize) * itemW;
             const xBase = (w - rowWidth) / 2;
             
-            // Spostiamo la legenda ben sotto l'asse X (h + 80)
-            const g = svg.append("g").attr("transform", `translate(${xBase + col * itemW}, ${h + 80 + row * 25})`);
-            g.append("circle").attr("r", 6).attr("fill", this.colors[key]);
-            g.append("text").attr("x", 12).attr("y", 5).text(key).style("font-size", "12px").attr("fill", "#64748b");
+            // Posizionamento molto più in basso per sicurezza
+            const g = svg.append("g").attr("transform", `translate(${xBase + col * itemW}, ${h + 70 + row * 25})`);
+            g.append("circle").attr("r", 5).attr("fill", this.colors[key]);
+            g.append("text").attr("x", 12).attr("y", 4).text(key).style("font-size", "12px").attr("fill", "#64748b");
         });
     }
 
