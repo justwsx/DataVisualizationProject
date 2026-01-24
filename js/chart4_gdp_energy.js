@@ -75,8 +75,8 @@ class GDPEnergyChart {
         // per tagliare lo spazio vuoto a sinistra e in basso.
         // GDP: da 300 a 150k (era 1 a 300k)
         // Energy: da 500 a 150k (era 1 a 150k)
-        const x = d3.scaleLog().domain([200, 50000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([500, 150000]).range([h, 0]).clamp(true);
+        const x = d3.scaleLog().domain([50, 50000]).range([0, w]).clamp(true);
+        const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
         
         // --- MODIFICA 2: BOLLE GIGANTI ---
         // Ho aumentato il range del raggio da [2, 30] a [6, 70].
