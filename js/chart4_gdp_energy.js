@@ -75,8 +75,8 @@ class GDPEnergyChart {
         // per tagliare lo spazio vuoto a sinistra e in basso.
         // GDP: da 300 a 150k (era 1 a 300k)
         // Energy: da 500 a 150k (era 1 a 150k)
-        const x = d3.scaleLog().domain([50, 50000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
+        const x = d3.scaleLog().domain([100, 50000]).range([0, w]).clamp(true);
+        const y = d3.scaleLog().domain([100, 150000]).range([h, 0]).clamp(true);
         
         // --- MODIFICA 2: BOLLE GIGANTI ---
         // Ho aumentato il range del raggio da [2, 30] a [6, 70].
@@ -90,7 +90,7 @@ class GDPEnergyChart {
         // Asse X
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x)
-                .tickValues([50, 500, 1000, 5000, 10000, 50000]) // Tick ottimizzati per il nuovo zoom
+                .tickValues([100, 500, 1000, 5000, 10000, 50000]) // Tick ottimizzati per il nuovo zoom
                 .tickFormat(formatAxis)
                 .tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -103,7 +103,7 @@ class GDPEnergyChart {
         // Asse Y
         svg.append("g")
             .call(d3.axisLeft(y)
-                .tickValues([50, 1000, 5000, 10000, 50000, 100000])
+                .tickValues([100, 1000, 5000, 10000, 50000, 100000])
                 .tickFormat(formatAxis)
                 .tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
