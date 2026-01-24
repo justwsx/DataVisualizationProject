@@ -90,7 +90,7 @@ class GDPEnergyChart {
         // Asse X
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x)
-                .tickValues([200, 500, 1000, 5000, 10000, 50000]) // Tick ottimizzati per il nuovo zoom
+                .tickValues([50, 500, 1000, 5000, 10000, 50000]) // Tick ottimizzati per il nuovo zoom
                 .tickFormat(formatAxis)
                 .tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -103,7 +103,7 @@ class GDPEnergyChart {
         // Asse Y
         svg.append("g")
             .call(d3.axisLeft(y)
-                .tickValues([500, 1000, 5000, 10000, 50000, 100000])
+                .tickValues([50, 1000, 5000, 10000, 50000, 100000])
                 .tickFormat(formatAxis)
                 .tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
