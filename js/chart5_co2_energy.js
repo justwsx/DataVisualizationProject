@@ -83,10 +83,9 @@ class CO2EnergyChart {
         .sort((a, b) => b.population - a.population);
 
         // 3. SCALE
-        // MODIFICA QUI: Domain parte da 10 invece che 100. 
-        // Nota: Le scale Log non possono partire da 0 esatto.
+        // MODIFICA QUI: Domain parte da 1 (che è il minimo matematico per Log per sembrare 0)
         const x = d3.scaleLog()
-            .domain([10, 150000]) 
+            .domain([1, 150000]) 
             .range([0, w])
             .clamp(true);
 
@@ -108,8 +107,8 @@ class CO2EnergyChart {
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
         // 5. GRIGLIA
-        // MODIFICA QUI: Aggiunto 10 ai ticks
-        const xTicks = [10, 100, 500, 1000, 5000, 10000, 50000, 100000];
+        // MODIFICA QUI: Aggiunto 1 ai ticks
+        const xTicks = [1, 10, 100, 500, 1000, 5000, 10000, 50000, 100000];
         const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
 
         // Griglia X
