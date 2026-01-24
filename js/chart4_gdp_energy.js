@@ -123,6 +123,11 @@ class GDPEnergyChart {
       .text("Primary Energy Consumption");
 
     this.bubblesG = this.g.append("g").attr("class", "bubbles");
+
+    this.legendG = this.svg.append("g").attr("class", "legend");
+    this.legendBg = this.legendG.append("rect");
+    this.legendBoxG = this.legendG.append("g").attr("class", "legend-box");
+
     this.annotationG = this.svg.append("g").attr("class", "annotation");
     this.annotationBg = this.annotationG.append("rect");
     this.annotationText = this.annotationG.append("text")
@@ -420,5 +425,3 @@ class GDPEnergyChart {
     this.root.selectAll("*").remove();
   }
 }
-
-
