@@ -198,7 +198,7 @@ class GDPEnergyChart {
     this.title
       .attr("x", width / 2)
       .attr("y", 30)
-      .text("Energy Consumption vs GDP per Capita");
+      .text("");
 
     this.xLabel
       .attr("x", this.margin.left + innerW / 2)
@@ -425,3 +425,4 @@ class GDPEnergyChart {
     this.root.selectAll("*").remove();
   }
 }
+
