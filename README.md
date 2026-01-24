@@ -1,14 +1,24 @@
-## The Green Shift: Energy Transition and Climate Policy in Europe 🌍⚡
+## 🌍 The Green Shift: Global Energy Transition & Climate Policy
 
-### 🔁 Reproducibility & Project Overview
+### 📊 Project Overview & Reproducibility
 
-> **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources.**
+> **An interactive data-driven storytelling project analyzing the critical shift from fossil fuels to renewable energy sources across 50 major economies.**
 
-This project explores the energy transition using **interactive web-based storytelling**.
+This project explores the complexities of the global energy transition through **interactive web-based storytelling**. By correlating consumption patterns with economic indicators and fossil fuel prices, it offers a deep dive into how nations are adapting to the climate challenge.
 
-✅ The codebase is open, and the data transformation steps are managed via a Python script to ensure transparency.
+### 🧩 Open Science & Transparency
 
-**🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
+We believe in open data. The entire analysis pipeline is transparent and reproducible:
+
+* ✅ **Open Source Codebase:** Fully accessible repository.
+* ✅ **Automated Pipeline:** Data cleaning and enrichment are managed via the Python script `process.py`.
+* ✅ **Verifiable Data:** Sources and transformation logic are documented to ensure integrity.
+
+### 🚀 Explore the Visualization
+
+Dive into the data and discover the trends shaping our future:
+
+**🌐 Live Website:** [**Launch The Green Shift Dashboard**](https://justwsx.github.io/DataVisualizationProject/)
 
 ---
 
