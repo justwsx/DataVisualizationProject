@@ -55,13 +55,15 @@ python process.py
 
 🧱 The website uses **D3.js** to fetch data asynchronously. To avoid CORS (Cross-Origin Resource Sharing) security blocks, you cannot simply open the `.html` files directly. You must use a local server.
 
-1. #**Clone this repository**
-  ```bash
-git clone https://github.com/justwsx/DataVisualizationProject.git
-cd DataVisualizationProject```
+1. **Clone this repository**
 
+   ```bash
+   git clone [https://github.com/justwsx/DataVisualizationProject.git](https://github.com/justwsx/DataVisualizationProject.git)
+   cd DataVisualizationProject
+   ```
 
 ### Option: 🐍 Python HTTP Server (Fastest)
+
 From the project root directory, run:
 
 ```bash
