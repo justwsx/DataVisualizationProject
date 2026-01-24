@@ -57,7 +57,7 @@ class FossilPrice {
             .attr('viewBox', `0 0 ${this.width} ${this.height}`)
             .attr('preserveAspectRatio', 'xMidYMid meet')
             .style('width', '100%')
-            .style('height', 'auto')
+            .style('height', '100%')
             .style('font-family', 'Inter, sans-serif');
 
         // Draw Axes
