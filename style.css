@@ -557,7 +557,7 @@ input[type="range"]::-webkit-slider-thumb {
 .text-mobile { display: none; }
 .text-desktop { display: inline; }
 
-.sidebar-instruction-btn {
+/*.sidebar-instruction-btn {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 10px 18px; background: var(--bg-card);
     border: 1px dashed var(--primary); border-radius: 50px;
@@ -566,6 +566,7 @@ input[type="range"]::-webkit-slider-thumb {
     transition: var(--transition);
 }
 body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: none; transform: translateX(-10px); }
+*/
 
 @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
