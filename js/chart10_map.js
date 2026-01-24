@@ -176,7 +176,7 @@ class EnergyMapChart {
         });
 
         // --- 8. Legend ---
-        this.drawLegend(svg, width, maxVal);
+        this.drawLegend(svg, width, height, maxVal);
 
         // --- 9. Title ---
         svg.append('text')
@@ -196,19 +196,28 @@ class EnergyMapChart {
             .attr('fill', '#64748b')
            
     }
+    drawLegend(svg, width, height, max) {
+        const legendWidth = 12;
+        const legendHeight = 150;
+        const legendMarginRight = 30;
+        
+        const legendX = width - legendWidth - legendMarginRight;
+        const legendY = (height - legendHeight) / 2;
 
-    drawLegend(svg, width, max) {
-        const legendWidth = 200;
-        const legendHeight = 12;
-        const legendX = width - legendWidth - 30;
-        const legendY = 40;
+        let defs = svg.select('defs');
+        if (defs.empty()) defs = svg.append('defs');
+        
+        // Rimuovi vecchi gradienti per evitare conflitti
+        defs.select('#map-legend-gradient').remove();
 
-        // Gradient Definition
-        const defs = svg.append('defs');
+        // Gradiente Verticale (y1=100% -> y2=0%)
         const linearGradient = defs.append('linearGradient')
-            .attr('id', 'map-legend-gradient');
+            .attr('id', 'map-legend-gradient')
+            .attr('x1', '0%')
+            .attr('y1', '100%')
+            .attr('x2', '0%')
+            .attr('y2', '0%');
 
-        // Create stops based on color range
         const stops = [0, 25, 50, 75, 100];
         this.colorRange.forEach((color, i) => {
             linearGradient.append('stop')
@@ -219,37 +228,41 @@ class EnergyMapChart {
         const legendGroup = svg.append('g')
             .attr('transform', `translate(${legendX}, ${legendY})`);
 
-        // Bar
+        // Barra
         legendGroup.append('rect')
             .attr('width', legendWidth)
             .attr('height', legendHeight)
             .style('fill', 'url(#map-legend-gradient)')
             .style('rx', 3);
 
-        // Label
+        // Titolo
         legendGroup.append('text')
-            .attr('x', 0)
-            .attr('y', -6)
-            .text('kWh per Capita')
+            .attr('x', legendWidth / 2)
+            .attr('y', -10)
+            .text('kWh/Capita')
+            .attr('text-anchor', 'middle')
             .attr('font-family', 'Inter, sans-serif')
             .attr('font-size', '11px')
             .attr('font-weight', '600')
             .attr('fill', '#64748b');
 
-        // Min Value
+        // Valore Min (Basso)
         legendGroup.append('text')
-            .attr('x', 0)
-            .attr('y', legendHeight + 14)
+            .attr('x', -6)
+            .attr('y', legendHeight)
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'middle')
             .text('0')
             .attr('font-family', 'Inter, sans-serif')
             .attr('font-size', '10px')
             .attr('fill', '#64748b');
 
-        // Max Value
+        // Valore Max (Alto)
         legendGroup.append('text')
-            .attr('x', legendWidth)
-            .attr('y', legendHeight + 14)
+            .attr('x', -6)
+            .attr('y', 0)
             .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'middle')
             .text(d3.format('.2s')(max))
             .attr('font-family', 'Inter, sans-serif')
             .attr('font-size', '10px')
