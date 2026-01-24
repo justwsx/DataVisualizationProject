@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Green Transition | Energy Insights</title>
 
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <meta name="view-transition" content="same-origin" />
@@ -67,11 +68,11 @@
         </aside>
 
         <main class="main-content">
-            <!--<div class="sidebar-instruction-btn">
+            <div class="sidebar-instruction-btn">
                 <span class="material-icons-outlined icon">info</span>
                 <span class="text-desktop">Hover your mouse on the left to show the dashboard</span>
                 <span class="text-mobile">Tap the left edge to show the dashboard</span>
-            </div>-->
+            </div>
 
             <div class="top-nav">
                 <div class="nav-left">
@@ -82,16 +83,15 @@
                 </div>
 
                 <div class="nav-right">
-                    <div class="control-item timeline-box">
-                        <span class="timeline-label">Timeline Explorer</span>
-                        
-                        <div class="year-badge">2020</div>
-                        
-                        <input type="range" min="1950" max="2024" value="2020" class="year-slider">
+                    <div class="control-item">
+                        <label>Timeline Explorer</label>
+                        <div class="year-control-compact">
+                            <span id="currentYearDisplay">2020</span>
+                            <input type="range" id="yearSlider" min="2000" max="2022" value="2020" step="1">
+                        </div>
                     </div>
-                </div>
 
-                    <!--<div class="control-item">
+                    <div class="control-item">
                         <label>Geographic Focus</label>
                         <select id="countrySelect" class="filter-select">
                             <option value="World">The Whole World</option>
@@ -103,7 +103,7 @@
                             <option value="United Kingdom">United Kingdom</option>
                             <option value="France">France</option>
                         </select>
-                    </div>-->
+                    </div>
 
                     <button class="play-btn" id="playBtn">
                         <span class="material-icons-outlined">play_circle</span>
