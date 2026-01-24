@@ -446,12 +446,33 @@ input[type="range"]::-webkit-slider-thumb {
 .stat-value { display: block; font-size: 1.4rem; font-weight: 800; }
 
 .source-btn {
-    display: flex; justify-content: center; align-items: center; gap: 10px;
-    background: #fff; border: 2px solid var(--primary); color: var(--primary);
-    padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 700;
-    transition: all 0.3s ease; margin-top: 25px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px;
+    
+    /* MODIFICHE QUI SOTTO */
+    background: #508d61;       /* Sfondo Verde */
+    color: #000000;            /* Testo NERO (massima leggibilità) */
+    border: 2px solid #508d61; /* Bordo dello stesso colore dello sfondo */
+    
+    padding: 14px; 
+    border-radius: 12px; 
+    text-decoration: none; 
+    font-weight: 700;
+    transition: all 0.3s ease; 
+    margin-top: 25px;
 }
-.source-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2); transform: translateY(-2px); }
+
+.source-btn:hover { 
+    /* Colore quando passi sopra col mouse */
+    background: #3a6b48;       /* Verde leggermente più scuro */
+    border-color: #3a6b48;     /* Anche il bordo diventa scuro */
+    color: #ffffff;            /* Il testo diventa bianco SOLO quando passi sopra (opzionale) */
+    
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
+    transform: translateY(-2px); 
+}
 
 /* ==========================================================================
    TEAM SECTION STYLES (Refactored)
