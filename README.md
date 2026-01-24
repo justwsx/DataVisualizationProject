@@ -24,7 +24,9 @@ Dive into the data and discover the trends shaping our future:
 
 ### 1. 🧹 Data Preprocessing Pipeline
 
-🗂️ The data processing logic is contained in the `process.py` script located in the root directory. Run this script to regenerate the cleaned datasets used by the visualization.
+🗂️ The data processing logic is contained in the `process.py` script located in the root directory.
+
+Run this script to regenerate the cleaned datasets used by the visualization.
 
 ### 🧼 Data Cleaning & Enrichment
 - **Script:** `process.py`
