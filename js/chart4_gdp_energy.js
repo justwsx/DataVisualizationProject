@@ -2,20 +2,16 @@ class GDPEnergyChart {
     constructor(data) {
         this.data = data;
         this.containerId = 'chart-gdp-energy';
+        this.year = 2020; // Default year
 
-        // Color mapping for regions
-        this.regionColors = {
-            "Africa": "#dc2626",
-            "Asia": "#0891b2",
-            "Europe": "#7c3aed",
-            "North America": "#ea580c",
-            "South America": "#16a34a",
-            "Oceania": "#eaa400",
-            "Other": "#6b7280"
+        this.colors = {
+            "Africa": "#dc2626", "Asia": "#0891b2", "Europe": "#7c3aed",
+            "North America": "#ea580c", "South America": "#16a34a",
+            "Oceania": "#eaa400", "Other": "#6b7280"
         };
 
-        // Mapping specific countries to regions
-        this.countryRegions = {
+        // Simplified Country mapping (Partial list for brevity, logic remains valid)
+        this.regions = {
             "United States": "North America", "Canada": "North America", "Mexico": "North America",
             "Brazil": "South America", "Argentina": "South America", "Chile": "South America",
             "United Kingdom": "Europe", "Germany": "Europe", "France": "Europe", "Italy": "Europe",
@@ -28,236 +24,118 @@ class GDPEnergyChart {
             "Nigeria": "Africa", "Kenya": "Africa", "Morocco": "Africa"
         };
 
-        // Create the tooltip element once (appended to body to avoid overflow issues)
+        // Create Tooltip once
         this.tooltip = d3.select("body").append("div")
             .attr("class", "d3-tooltip")
-            .style("opacity", 0)
-            .style("position", "absolute")
-            .style("background", "rgba(255, 255, 255, 0.95)")
-            .style("border", "1px solid #cbd5e1")
-            .style("padding", "8px")
-            .style("border-radius", "4px")
-            .style("pointer-events", "none")
-            .style("font-family", "Inter, sans-serif")
-            .style("font-size", "12px")
-            .style("box-shadow", "0 4px 6px -1px rgba(0, 0, 0, 0.1)");
+            .style("opacity", 0);
 
-        // Bind resize event
         window.addEventListener('resize', () => this.draw());
     }
 
-    /**
-     * Helper to get region from country name
-     */
     getRegion(country) {
-        return this.countryRegions[country] || 'Other';
+        // Check map, then fallback to "Other"
+        for (const [cntry, region] of Object.entries(this.regions)) {
+            if (country === cntry) return region;
+        }
+        // Basic heuristic: check if country is in the full map provided previously
+        // or just return 'Other' for unknown ones to prevent crashes
+        return this.regions[country] || 'Other'; 
+        // Note: In production, ensure this.regions contains all your countries
     }
 
-    /**
-     * Main update method called by external controller
-     */
-    update(selectedYear) {
-        this.currentYear = selectedYear;
+    update(year) {
+        this.year = year;
         this.draw();
     }
 
-    /**
-     * Renders the chart using D3
-     */
     draw() {
         const container = document.getElementById(this.containerId);
         if (!container) return;
 
-        // 1. Data Processing
-        // Filter by year and ensure positive values for Log Scale
-        let yearData = this.data.filter(d => d.year === this.currentYear);
-        
-        // Fallback if no data for selected year (use latest available)
-        if (yearData.length === 0) {
-            const availableYears = [...new Set(this.data.map(d => d.year))].sort((a, b) => b - a);
-            yearData = this.data.filter(d => d.year === availableYears[0]);
-        }
-
-        // Filter valid data (Log scale cannot handle <= 0)
-        let cleanData = yearData.filter(d => d.primary_energy_consumption > 0 && d.gdp > 0);
-
-        // Sort by population descending so small bubbles appear on top of large ones
-        cleanData.sort((a, b) => (b.population || 0) - (a.population || 0));
-
-        // 2. Setup Dimensions
-        container.innerHTML = ''; // Clear previous SVG
+        // 1. Setup Data & Dimensions
+        container.innerHTML = '';
         const { width: w, height: h } = container.getBoundingClientRect();
-        const height = h || 500; // Default height if container is collapsed
-        
-        // Margins (Bottom needs space for Legend and X Axis)
-        const margin = { top: 60, right: 40, bottom: 100, left: 60 };
+        const height = h || 500;
+        const margin = { top: 60, right: 40, bottom: 80, left: 60 };
         const width = w - margin.left - margin.right;
         const chartH = height - margin.top - margin.bottom;
 
-        // 3. Create SVG
+        // Filter Data (Year > Positive Values > Sort by Pop)
+        let dataset = this.data.filter(d => d.year === this.year);
+        if (!dataset.length) dataset = this.data.filter(d => d.year === 2020); // Fallback
+        
+        dataset = dataset
+            .filter(d => d.primary_energy_consumption > 0 && d.gdp > 0)
+            .sort((a, b) => b.population - a.population);
+
+        // 2. Create SVG & Scales
         const svg = d3.select(container).append("svg")
-            .attr("width", w)
-            .attr("height", height)
+            .attr("width", w).attr("height", height)
             .style("font-family", "Inter, sans-serif")
-            .append("g")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+            .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // 4. Scales (Logarithmic)
-        // X Axis: GDP per Capita (Range matches original: 1k to 300k)
-        const xScale = d3.scaleLog()
-            .domain([1000, 300000])
-            .range([0, width])
-            .clamp(true); // Prevent bubbles going off-chart
+        // Log Scales for X and Y
+        const x = d3.scaleLog().domain([1000, 300000]).range([0, width]).clamp(true);
+        const y = d3.scaleLog().domain([50, 100000]).range([chartH, 0]).clamp(true);
+        const r = d3.scaleSqrt().domain([0, 1e9]).range([3, 40]); // Bubble size
 
-        // Y Axis: Energy Consumption (Range matches original: 50 to 100k)
-        const yScale = d3.scaleLog()
-            .domain([50, 300000]) 
-            .range([chartH, 0])
-            .clamp(true);
+        // 3. Draw Axes (with custom tick formatting for 'k')
+        const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
+        
+        // X Axis
+        svg.append("g").attr("transform", `translate(0,${chartH})`)
+            .call(d3.axisBottom(x).tickValues([1000, 5000, 10000, 50000, 100000, 200000]).tickFormat(formatK).tickSize(-chartH))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0"))
+            .call(g => g.select(".domain").attr("stroke", "#cbd5e1"));
+        
+        svg.append("text").attr("x", width/2).attr("y", chartH + 40).text("GDP per Capita ($)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Bubble Size Scale (Sqrt scale for area representation)
-        const rScale = d3.scaleSqrt()
-            .domain([0, 1000000000]) // Max population assumption: 1B
-            .range([2, 40]); // Min/Max radius pixels
-
-        // 5. Draw Grid and Axes
-        // X Axis Grid & Ticks
-        const xTickValues = [1000, 5000, 10000, 50000, 100000, 200000];
-        const xAxis = d3.axisBottom(xScale)
-            .tickValues(xTickValues)
-            .tickFormat(d => d >= 1000 ? d / 1000 + 'k' : d)
-            .tickSize(-chartH); // Full vertical grid
-
+        // Y Axis
         svg.append("g")
-            .attr("transform", `translate(0,${chartH})`)
-            .call(xAxis)
-            .call(g => g.select(".domain").attr("stroke", "#cbd5e1"))
-            .call(g => g.selectAll("line").attr("stroke", "rgba(226, 232, 240, 0.4)"))
-            .call(g => g.selectAll("text").attr("fill", "#64748b"));
+            .call(d3.axisLeft(y).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-width))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0"))
+            .call(g => g.select(".domain").remove());
 
-        // X Axis Title
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", chartH + 40)
-            .attr("text-anchor", "middle")
-            .style("fill", "#475569")
-            .style("font-size", "13px")
-            .text("GDP per Capita ($)");
+        svg.append("text").attr("transform", "rotate(-90)").attr("y", -40).attr("x", -chartH/2).text("Energy Consumption (kWh)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Y Axis Grid & Ticks
-        const yTickValues = [100, 500, 1000, 5000, 10000, 50000, 100000];
-        const yAxis = d3.axisLeft(yScale)
-            .tickValues(yTickValues)
-            .tickFormat(d => d >= 1000 ? d / 1000 + 'k' : d)
-            .tickSize(-width); // Full horizontal grid
+        // Title
+        svg.append("text").attr("x", width/2).attr("y", -25).text("Energy Consumption vs GDP").attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b");
 
-        svg.append("g")
-            .call(yAxis)
-            .call(g => g.select(".domain").remove())
-            .call(g => g.selectAll("line").attr("stroke", "rgba(226, 232, 240, 0.4)"))
-            .call(g => g.selectAll("text").attr("fill", "#64748b"));
-
-        // Y Axis Title
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(chartH / 2))
-            .attr("y", -40)
-            .attr("text-anchor", "middle")
-            .style("fill", "#475569")
-            .style("font-size", "13px")
-            .text("Primary Energy Consumption (kWh)");
-
-        // Chart Title
-        svg.append("text")
-            .attr("x", width / 2)
-            .attr("y", -30)
-            .attr("text-anchor", "middle")
-            .style("font-size", "18px")
-            .style("font-weight", "bold")
-            .style("fill", "#1e293b")
-            .text("Energy Consumption vs GDP per Capita");
-
-        // 6. Draw Bubbles
-        const circles = svg.selectAll("circle")
-            .data(cleanData)
-            .enter()
-            .append("circle")
-            // Logic from original: x = gdp / 1e9 (Billions) - Assuming input fits scale
-            .attr("cx", d => xScale(d.gdp / 1000000000)) 
-            .attr("cy", d => yScale(d.primary_energy_consumption))
-            .attr("r", d => {
-                // Original logic: Math.sqrt(population) / 80 + 10
-                // We adapt slightly for D3 scale consistency, or use pure math
-                const size = Math.sqrt(d.population || 1000000) / 80 + 5; 
-                return Math.max(size, 3);
+        // 4. Draw Bubbles
+        svg.selectAll("circle")
+            .data(dataset).enter().append("circle")
+            .attr("cx", d => x(d.gdp / 1e9)) // Assuming GDP is total, convert to rough per capita proxy or usage as per original
+            .attr("cy", d => y(d.primary_energy_consumption))
+            .attr("r", d => r(d.population || 0))
+            .attr("fill", d => this.colors[this.getRegion(d.country)] || '#6b7280')
+            .attr("stroke", "white").attr("fill-opacity", 0.8)
+            .on("mouseover", (e, d) => {
+                d3.select(e.target).attr("stroke", "#333").attr("stroke-width", 2);
+                this.tooltip.style("opacity", 1).html(`<b>${d.country}</b><br>GDP: $${Math.round(d.gdp/1e9)}B<br>Energy: ${Math.round(d.primary_energy_consumption)}`)
+                    .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
             })
-            .attr("fill", d => this.regionColors[this.getRegion(d.country)] || '#6b7280')
-            .attr("opacity", 0.85)
-            .attr("stroke", "white")
-            .attr("stroke-width", 1.5)
-            // Interaction
-            .on("mouseover", (event, d) => {
-                d3.select(event.currentTarget).attr("stroke", "#1e293b").attr("stroke-width", 2);
-                
-                this.tooltip.transition().duration(200).style("opacity", 1);
-                this.tooltip.html(`
-                    <b>${d.country}</b><br/>
-                    GDP: $${d3.format(",.1f")(d.gdp / 1000000000)}B<br/>
-                    Energy: ${d3.format(",.0f")(d.primary_energy_consumption)} kWh<br/>
-                    Pop: ${d3.format(",.0f")(d.population)}
-                `)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", (event) => {
-                d3.select(event.currentTarget).attr("stroke", "white").attr("stroke-width", 1.5);
-                this.tooltip.transition().duration(500).style("opacity", 0);
+            .on("mouseout", (e) => {
+                d3.select(e.target).attr("stroke", "white").attr("stroke-width", 1);
+                this.tooltip.style("opacity", 0);
             });
 
-        // 7. Draw Legend (Bottom centered)
-        const regions = Object.keys(this.regionColors);
-        const legendItemWidth = 100;
-        const itemsPerRow = Math.floor(width / legendItemWidth);
+        // 5. Draw Legend (Simple Centered Grid)
+        const keys = Object.keys(this.colors);
+        const itemW = 110; 
+        const rowSize = Math.floor(width / itemW);
         
-        const legendGroup = svg.append("g")
-            .attr("transform", `translate(0, ${chartH + 70})`);
-
-        regions.forEach((region, i) => {
-            // Simple grid layout for legend
-            const row = Math.floor(i / itemsPerRow);
-            const col = i % itemsPerRow;
+        keys.forEach((key, i) => {
+            const row = Math.floor(i / rowSize);
+            const col = i % rowSize;
+            // Calculate offset to center the row
+            const rowWidth = Math.min(keys.length - row * rowSize, rowSize) * itemW;
+            const xBase = (width - rowWidth) / 2;
             
-            // Center the row
-            const itemsInThisRow = Math.min(regions.length - (row * itemsPerRow), itemsPerRow);
-            const rowWidth = itemsInThisRow * legendItemWidth;
-            const xOffset = (width - rowWidth) / 2;
-
-            const g = legendGroup.append("g")
-                .attr("transform", `translate(${xOffset + col * legendItemWidth}, ${row * 20})`);
-
-            g.append("circle")
-                .attr("r", 5)
-                .attr("fill", this.regionColors[region]);
-
-            g.append("text")
-                .attr("x", 10)
-                .attr("y", 4)
-                .text(region)
-                .style("font-size", "12px")
-                .style("fill", "#64748b");
+            const g = svg.append("g").attr("transform", `translate(${xBase + col * itemW}, ${chartH + 60 + row * 20})`);
+            g.append("circle").attr("r", 5).attr("fill", this.colors[key]);
+            g.append("text").attr("x", 10).attr("y", 4).text(key).style("font-size", "12px").attr("fill", "#64748b");
         });
-
-        // Annotation "Bubble size = Population"
-        svg.append("text")
-            .attr("x", 10)
-            .attr("y", 10)
-            .text("Bubble size = Population")
-            .style("font-size", "11px")
-            .style("fill", "#64748b")
-            .style("font-style", "italic");
     }
 
-    resize() {
-        this.draw();
-    }
+    resize() { this.draw(); }
 }
