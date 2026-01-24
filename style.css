@@ -131,8 +131,8 @@ body:has(.sidebar:hover) .nav-right {
     gap: 10px 30px;
     width: auto; margin-left: 20px;
 }
-body:has(.sidebar:hover) .nav-right .control-item:first-child { grid-column: span 2; justify-self: center; }
-body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) { justify-self: end; }
+/* body:has(.sidebar:hover) .nav-right .control-item:first-child { grid-column: span 2; justify-self: center; }*/
+/* body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) { justify-self: end; }*/
 body:has(.sidebar:hover) .play-btn { justify-self: start; }
 body:has(.sidebar:hover) .search-box { width: 280px; }
 
@@ -146,12 +146,12 @@ body:has(.sidebar:hover) .search-box { width: 280px; }
 }
 
 .nav-right { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; }
-.control-item { display: flex; align-items: center; gap: 15px; }
+/* .control-item { display: flex; align-items: center; gap: 15px; }*/
 
-.control-item label {
+/* .control-item label {
     font-weight: 700; text-transform: uppercase;
     font-size: 0.7rem; color: var(--text-l); white-space: nowrap;
-}
+}*/
 
 .search-box, .year-control-compact {
     background: var(--bg-card); border: 1px solid var(--border);
