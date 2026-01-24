@@ -131,7 +131,7 @@ const Dashboard = {
             });
         });
 
-        const countrySelect = document.getElementById('countrySelect');
+        /*const countrySelect = document.getElementById('countrySelect');
         if (countrySelect) {
             const countries = [...new Set(this.data.energy.map(d => d.country))].sort();
             countries.forEach(country => {
@@ -148,7 +148,7 @@ const Dashboard = {
                 this.updateAllCharts();
                 this.updateKPIs();
             });
-        }
+        }*/
 
         window.addEventListener('resize', () => {
             Object.values(this.charts).forEach(chart => {
