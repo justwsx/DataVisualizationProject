@@ -4,7 +4,7 @@ class CO2EnergyChart {
         this.elementId = 'chart-co2-energy';
         this.year = 2020;
 
-        // Scala colori personalizzata (Verde -> Giallo -> Rosso)
+        // Scala colori
         this.colorScale = d3.scaleLinear()
             .domain([0, 25, 50, 75, 90, 100])
             .range(['#22c55e', '#84cc16', '#eab308', '#f97316', '#dc2626', '#7f1d1d'])
@@ -15,7 +15,7 @@ class CO2EnergyChart {
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
-        // Observer per ridimensionamento
+        // Observer
         const container = document.getElementById(this.elementId);
         if (container) {
             this.observer = new ResizeObserver(entries => {
@@ -40,12 +40,13 @@ class CO2EnergyChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // 1. SETUP DIMENSIONI ROBUSTE
-        const fixedHeight = 650; // Aumentato per sicurezza
+        // 1. SETUP DIMENSIONI
+        const fixedHeight = 600; 
+        
         container.style.width = '100%';
         container.style.height = `${fixedHeight}px`;
         container.style.minHeight = `${fixedHeight}px`;
-        container.style.overflow = 'visible'; // CRITICO: Impedisce il taglio delle etichette
+        container.style.overflow = 'visible'; 
         container.style.position = 'relative';
         container.innerHTML = '';
 
@@ -53,8 +54,7 @@ class CO2EnergyChart {
         const width = rect.width > 0 ? rect.width : 800;
         const height = fixedHeight;
 
-        // Margini: Bottom molto ampio (140px) per l'asse X
-        const margin = { top: 40, right: 140, bottom: 140, left: 70 };
+        const margin = { top: 20, right: 130, bottom: 130, left: 60 };
         const w = width - margin.left - margin.right;
         const h = height - margin.top - margin.bottom;
 
@@ -83,8 +83,10 @@ class CO2EnergyChart {
         .sort((a, b) => b.population - a.population);
 
         // 3. SCALE
+        // MODIFICA QUI: Domain parte da 10 invece che 100. 
+        // Nota: Le scale Log non possono partire da 0 esatto.
         const x = d3.scaleLog()
-            .domain([100, 150000])
+            .domain([10, 150000]) 
             .range([0, w])
             .clamp(true);
 
@@ -94,26 +96,29 @@ class CO2EnergyChart {
 
         const r = d3.scaleSqrt()
             .domain([0, 1.4e9])
-            .range([4, 50]);
+            .range([3, 45]);
 
         // 4. SVG
         const svg = d3.select(container).append("svg")
             .attr("width", width)
             .attr("height", height)
+            .style("overflow", "visible")
             .style("display", "block")
-            .style("overflow", "visible") // Sicurezza extra per l'SVG
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // 5. GRIGLIA (Prima del contenuto)
-        const xTicks = [100, 500, 1000, 5000, 10000, 50000, 100000];
+        // 5. GRIGLIA
+        // MODIFICA QUI: Aggiunto 10 ai ticks
+        const xTicks = [10, 100, 500, 1000, 5000, 10000, 50000, 100000];
         const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
 
+        // Griglia X
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x).tickValues(xTicks).tickFormat("").tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
             .call(g => g.select(".domain").remove());
 
+        // Griglia Y
         svg.append("g")
             .call(d3.axisLeft(y).tickValues([0, 20, 40, 60, 80, 100]).tickFormat("").tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -142,42 +147,41 @@ class CO2EnergyChart {
                 this.tooltip.style("opacity", 0);
             });
 
-        // 7. ASSI (Disegnati ALLA FINE per stare sopra)
-        const xAxisG = svg.append("g").attr("transform", `translate(0,${h})`);
-        
-        xAxisG.call(d3.axisBottom(x).tickValues(xTicks).tickFormat(formatK))
-            .call(g => g.select(".domain").attr("stroke", "#cbd5e1").attr("stroke-width", 1))
-            .call(g => g.selectAll("text")
-                .attr("fill", "#64748b")
-                .style("font-size", "12px")
-                .style("font-weight", "500")
-                .attr("dy", "15px")); // Spinge le etichette un po' più giù
+        // 7. ASSI
+        const xAxis = svg.append("g")
+            .attr("transform", `translate(0,${h})`)
+            .call(d3.axisBottom(x)
+                .tickValues(xTicks)
+                .tickFormat(formatK)
+                .tickPadding(15));
 
-        // Etichetta Asse X
+        xAxis.select(".domain").attr("stroke", "#94a3b8");
+        xAxis.selectAll("text")
+            .attr("fill", "#1e293b")
+            .style("font-size", "11px")
+            .style("font-weight", "500");
+
         svg.append("text")
             .attr("x", w/2)
-            .attr("y", h + 50) // Posizione sicura sotto l'asse
+            .attr("y", h + 60)
             .text("Primary Energy Consumption (kWh per capita)")
             .attr("fill", "#64748b")
             .attr("text-anchor", "middle")
             .style("font-size", "13px");
 
-        // Asse Y Labels
-        svg.append("g")
-            .call(d3.axisLeft(y).tickValues([0, 20, 40, 60, 80, 100]).tickFormat(d => d + "%"))
-            .call(g => g.select(".domain").remove())
-            .call(g => g.selectAll("text").attr("fill", "#64748b").style("font-size", "11px"));
+        // ASSE Y
+        const yAxis = svg.append("g")
+            .call(d3.axisLeft(y).tickValues([0, 20, 40, 60, 80, 100]).tickFormat(d => d + "%"));
+            
+        yAxis.select(".domain").remove();
+        yAxis.selectAll("text").attr("fill", "#64748b").style("font-size", "11px");
 
         svg.append("text").attr("transform", "rotate(-90)").attr("y", -50).attr("x", -h/2)
             .text("Carbon Intensity (%)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // 8. ANNOTAZIONI (Con sfondo semi-trasparente per non coprire assi se sovrapposte)
-        svg.append("rect").attr("x", 10).attr("y", 10).attr("width", 140).attr("height", 24).attr("fill", "rgba(255,255,255,0.9)").attr("stroke", "#e2e8f0");
-        svg.append("text").attr("x", 20).attr("y", 26).text("Bubble size = Population").style("font-size", "11px").attr("fill", "#64748b");
-
-        // Annotazione "Cleaner Energy" spostata più in alto per non toccare l'asse
-        svg.append("rect").attr("x", w - 150).attr("y", h - 50).attr("width", 150).attr("height", 24).attr("fill", "rgba(255,255,255,0.9)").attr("stroke", "#e2e8f0");
-        svg.append("text").attr("x", w - 140).attr("y", h - 34).text("Lower % = Cleaner Energy").style("font-size", "11px").attr("fill", "#059669");
+        // 8. ANNOTAZIONI
+        svg.append("text").attr("x", 10).attr("y", 10).text("Bubble size = Population").style("font-size", "11px").attr("fill", "#64748b");
+        svg.append("text").attr("x", w - 140).attr("y", h - 20).text("Lower % = Cleaner Energy").style("font-size", "11px").attr("fill", "#059669");
 
         // 9. LEGENDA COLORBAR
         this.drawColorBar(svg, w, h);
@@ -195,14 +199,14 @@ class CO2EnergyChart {
             linearGradient.append("stop").attr("offset", `${s}%`).attr("stop-color", this.colorScale(s));
         });
 
-        const barWidth = 15;
-        const barHeight = h * 0.6;
+        const barWidth = 12;
+        const barHeight = h * 0.5;
         const barX = w + 40;
-        const barY = h * 0.2;
+        const barY = h * 0.25;
 
         const legendG = svg.append("g").attr("transform", `translate(${barX}, ${barY})`);
 
-        legendG.append("text").attr("x", 0).attr("y", -10).text("Intensity").style("font-size", "11px").attr("fill", "#475569").style("font-weight", "bold");
+        legendG.append("text").attr("x", 0).attr("y", -10).text("Intensity").style("font-size", "10px").attr("fill", "#475569").style("font-weight", "bold");
         legendG.append("rect").attr("width", barWidth).attr("height", barHeight).style("fill", "url(#intensity-gradient)").attr("stroke", "#e2e8f0");
 
         const legendScale = d3.scaleLinear().domain([0, 100]).range([barHeight, 0]);
@@ -210,7 +214,7 @@ class CO2EnergyChart {
 
         legendG.append("g").attr("transform", `translate(${barWidth}, 0)`)
             .call(legendAxis).call(g => g.select(".domain").remove())
-            .call(g => g.selectAll("text").style("font-size", "10px").attr("fill", "#64748b"));
+            .call(g => g.selectAll("text").style("font-size", "9px").attr("fill", "#64748b"));
     }
 
     resize() { this.draw(); }
