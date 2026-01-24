@@ -90,7 +90,7 @@ Our narrative is built upon a high-quality academic dataset to ensure methodolog
 ### 📊 Data Sources
 - **Dataset:** World Energy Consumption Dataset.
 - **Source:** Maintained by researchers at **Oxford University (Our World in Data)** and hosted on Kaggle.
-- **Scope:** Global data filtered for EU Member States, focusing on the **2010-2024** window.
+- **Scope:** Global data filtered for World Member States, focusing on the **1990-2022** window.
 
 ### 🎨 Visual Encoding & Design
 - **Visualizing the Transition:** We use **D3.js** to map the growth of solar, wind, and hydro relative to traditional fossil fuels.
