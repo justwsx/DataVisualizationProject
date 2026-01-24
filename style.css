@@ -635,10 +635,24 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
             display: block;
             margin-bottom: 5px;
 }
+
+/* Stile Tooltip D3 */
 .d3-tooltip {
-    z-index: 1000;
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: absolute;
+    text-align: left;
+    padding: 8px;
+    font: 12px 'Inter', sans-serif;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
     pointer-events: none;
-    font-size: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    color: #1e293b;
+}
+
+/* Stile Contenitore (Sovrascrive stili generici) */
+#chart-co2-energy {
+    width: 100%;
+    overflow: visible; /* Importante per far vedere la legenda a destra */
 }
