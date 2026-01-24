@@ -1,8 +1,9 @@
 class TopConsumersChart {
     constructor(data) {
         this.data = data;
-        this.container = 'chart-top-consumers';
-        
+        this.containerId = 'chart-top-consumers';
+        this.year = 2020; // Default
+
         this.regionColors = {
             "Asia": "#3b82f6",
             "North America": "#6366f1",
@@ -24,6 +25,26 @@ class TopConsumersChart {
             "Thailand": "Asia", "Vietnam": "Asia", "Pakistan": "Asia",
             "Argentina": "South America"
         };
+
+        // Tooltip
+        this.tooltip = d3.select("body").selectAll(".d3-tooltip").data([0]).join("div")
+            .attr("class", "d3-tooltip")
+            .style("opacity", 0);
+
+        // Observer per ridimensionamento
+        const container = document.getElementById(this.containerId);
+        if (container) {
+            this.observer = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    if (entry.contentRect.width > 0) {
+                        requestAnimationFrame(() => this.draw());
+                    }
+                }
+            });
+            this.observer.observe(container);
+        }
+
+        this.draw();
     }
 
     getRegion(country) {
@@ -39,158 +60,178 @@ class TopConsumersChart {
     }
 
     update(selectedYear) {
-        let yearData = this.data.filter(d => d.year === selectedYear);
+        this.year = selectedYear;
+        this.draw();
+    }
 
+    draw() {
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
+
+        // 1. SETUP DIMENSIONI FISSE
+        const fixedHeight = 600; // Spazio sufficiente per 15 barre
+        container.style.width = '100%';
+        container.style.height = `${fixedHeight}px`;
+        container.style.minHeight = `${fixedHeight}px`;
+        container.style.position = 'relative';
+        container.innerHTML = '';
+
+        const rect = container.getBoundingClientRect();
+        const width = rect.width > 0 ? rect.width : 800;
+        const height = fixedHeight;
+
+        // Margine destro ampio per la Legenda
+        const margin = { top: 40, right: 150, bottom: 50, left: 140 }; // Left ampio per nomi paesi lunghi
+        const w = width - margin.left - margin.right;
+        const h = height - margin.top - margin.bottom;
+
+        // 2. PREPARAZIONE DATI
+        let yearData = this.data.filter(d => d.year === this.year);
         if (yearData.length === 0) {
+            // Fallback all'anno più recente se vuoto
             const availableYears = [...new Set(this.data.map(d => d.year))].sort((a, b) => b - a);
             yearData = this.data.filter(d => d.year === availableYears[0]);
         }
 
-        const countryData = {};
+        // Aggregazione dati (simile al codice originale)
+        const countryMap = {};
         yearData.forEach(d => {
-            if (!countryData[d.country]) {
-                countryData[d.country] = {
+            if (!countryMap[d.country]) {
+                countryMap[d.country] = {
                     country: d.country,
                     energy: 0,
                     population: 0,
                     region: this.getRegion(d.country)
                 };
             }
-            countryData[d.country].energy += d.primary_energy_consumption || 0;
-            countryData[d.country].population += d.population || 0;
+            countryMap[d.country].energy += d.primary_energy_consumption || 0;
+            countryMap[d.country].population += d.population || 0;
         });
 
-        const sortedCountries = Object.values(countryData)
-            .filter(d => d.region !== null)  // Only countries with known regions
-            .sort((a, b) => b.energy - a.energy)
-            .slice(0, 15)
-            .reverse();
+        // Sort e Top 15
+        const sortedData = Object.values(countryMap)
+            .filter(d => d.region !== null)
+            .sort((a, b) => b.energy - a.energy) // Decrescente
+            .slice(0, 15);
 
-        const countries = sortedCountries.map(d => d.country);
-        const energyValues = sortedCountries.map(d => d.energy);
-        const regions = sortedCountries.map(d => d.region);
-        const populations = sortedCountries.map(d => d.population);
+        // 3. SCALE
+        const y = d3.scaleBand()
+            .domain(sortedData.map(d => d.country))
+            .range([0, h])
+            .padding(0.2);
 
-        // Group countries by region for separate traces
-        const regionGroups = {};
-        const allRegions = Object.keys(this.regionColors);
-        
-        allRegions.forEach(region => {
-            regionGroups[region] = {
-                countries: [],
-                energies: [],
-                populations: []
-            };
-        });
+        const xMax = d3.max(sortedData, d => d.energy) || 100;
+        const x = d3.scaleLinear()
+            .domain([0, xMax * 1.1]) // +10% spazio per le etichette
+            .range([0, w]);
 
-        sortedCountries.forEach((d, idx) => {
-            const region = d.region;
-            if (regionGroups[region]) {
-                regionGroups[region].countries.push(d.country);
-                regionGroups[region].energies.push(d.energy);
-                regionGroups[region].populations.push(d.population);
-            }
-        });
+        // 4. SVG
+        const svg = d3.select(container).append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("display", "block")
+            .style("font-family", "Inter, sans-serif")
+            .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // Create separate trace for each region
-        const traces = allRegions
-            .filter(region => regionGroups[region].countries.length > 0)
-            .map(region => {
-                const group = regionGroups[region];
-                
-                return {
-                    x: group.energies,
-                    y: group.countries,
-                    type: 'bar',
-                    orientation: 'h',
-                    name: region,
-                    marker: {
-                        color: this.regionColors[region],
-                        line: {
-                            color: 'rgba(255, 255, 255, 0.8)',
-                            width: 1.5
-                        },
-                        opacity: 0.9
-                    },
-                    text: group.energies.map(v => this.formatNumber(v)),
-                    textposition: 'outside',
-                    textfont: {
-                        family: 'Inter, sans-serif',
-                        size: 10,
-                        color: '#1e293b',
-                        weight: '600'
-                    },
-                    customdata: group.populations,
-                    hovertemplate:
-                        '<b>%{y}</b><br>' +
-                        'Per Capita: %{x:,.0f} kWh<br>' +
-                        'Population: %{customdata:,.0f}<extra></extra>'
-                };
+        // 5. GRIGLIA VERTICALE
+        svg.append("g")
+            .attr("transform", `translate(0,${h})`)
+            .call(d3.axisBottom(x).ticks(5).tickSize(-h).tickFormat(""))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
+            .call(g => g.select(".domain").remove());
+
+        // 6. BARRE
+        svg.selectAll(".bar")
+            .data(sortedData)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("y", d => y(d.country))
+            .attr("x", 0)
+            .attr("height", y.bandwidth())
+            .attr("width", d => x(d.energy))
+            .attr("fill", d => this.regionColors[d.region] || '#ccc')
+            .attr("rx", 3) // Angoli arrotondati
+            .attr("opacity", 0.9)
+            .on("mouseover", (e, d) => {
+                d3.select(e.target).attr("opacity", 1).attr("stroke", "#333").attr("stroke-width", 1);
+                this.tooltip.style("opacity", 1)
+                    .html(`<b>${d.country}</b><br>
+                           Region: ${d.region}<br>
+                           Per Capita: ${d3.format(",.0f")(d.energy)} kWh<br>
+                           Pop: ${this.formatNumber(d.population)}`)
+                    .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
+            })
+            .on("mouseout", (e) => {
+                d3.select(e.target).attr("opacity", 0.9).attr("stroke", "none");
+                this.tooltip.style("opacity", 0);
             });
 
-        const layout = {
-            title: {
-                text: '',
-                font: { family: 'Inter, sans-serif', size: 0 }
-            },
-            xaxis: {
-                title: 'kWh per capita',
-                gridcolor: 'rgba(226, 232, 240, 0.6)',
-                showgrid: true,
-                zeroline: false,
-                tickformat: ',.0f',
-                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#64748b' }
-            },
-            yaxis: {
-                title: '',
-                automargin: true,
-                tickfont: { family: 'Inter, sans-serif', size: 11, color: '#1e293b' }
-            },
-            margin: { l: 120, r: 100, t: 20, b: 60 },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            showlegend: true,
-            legend: {
-                orientation: 'v',
-                x: 1.02,
-                y: 0.5,
-                xanchor: 'left',
-                bgcolor: 'rgba(255,255,255,0.95)',
-                bordercolor: 'rgba(226, 232, 240, 0.8)',
-                borderwidth: 1,
-                font: { family: 'Inter, sans-serif', size: 11, color: '#64748b' },
-                title: {
-                    text: 'Region',
-                    font: { family: 'Inter, sans-serif', size: 12, color: '#1e293b' }
-                }
-            },
-            annotations: [
-                {
-                    x: 0.5,
-                    y: -0.15,
-                    xref: 'paper',
-                    yref: 'paper',
-                    text: 'Colors indicate geographic region | Labels show consumption (T/B/M)',
-                    showarrow: false,
-                    font: {
-                        family: 'Inter, sans-serif',
-                        size: 10,
-                        color: '#64748b'
-                    }
-                }
-            ]
-        };
+        // 7. ETICHETTE VALORI (Accanto alle barre)
+        svg.selectAll(".label")
+            .data(sortedData)
+            .enter().append("text")
+            .attr("y", d => y(d.country) + y.bandwidth() / 2 + 4)
+            .attr("x", d => x(d.energy) + 5)
+            .text(d => this.formatNumber(d.energy))
+            .attr("fill", "#1e293b")
+            .style("font-size", "11px")
+            .style("font-weight", "600");
 
-        const config = {
-            responsive: true,
-            displayModeBar: false
-        };
+        // 8. ASSI
+        // Asse Y (Nomi Paesi)
+        svg.append("g")
+            .call(d3.axisLeft(y).tickSize(0))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.selectAll("text")
+                .style("font-size", "11px")
+                .style("font-weight", "500")
+                .attr("fill", "#1e293b"));
 
-        Plotly.react(this.container, traces, layout, config);
-    }
+        // Asse X (Valori in basso)
+        svg.append("g")
+            .attr("transform", `translate(0,${h})`)
+            .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format(",.0f")))
+            .call(g => g.select(".domain").attr("stroke", "#cbd5e1"))
+            .call(g => g.selectAll("text").attr("fill", "#64748b"));
 
-    resize() {
-        Plotly.Plots.resize(document.getElementById(this.container));
+        svg.append("text")
+            .attr("x", w / 2)
+            .attr("y", h + 40)
+            .text("kWh per capita")
+            .attr("fill", "#64748b")
+            .attr("text-anchor", "middle")
+            .style("font-size", "13px");
+
+        // 9. LEGENDA (Manuale a destra)
+        const regions = Object.keys(this.regionColors);
+        const legendG = svg.append("g")
+            .attr("transform", `translate(${w + 30}, 0)`);
+
+        legendG.append("text")
+            .attr("x", 0).attr("y", -10)
+            .text("Region")
+            .style("font-weight", "bold").style("font-size", "12px").attr("fill", "#1e293b");
+
+        regions.forEach((region, i) => {
+            const g = legendG.append("g").attr("transform", `translate(0, ${i * 20})`);
+            
+            g.append("rect")
+                .attr("width", 12).attr("height", 12)
+                .attr("fill", this.regionColors[region])
+                .attr("rx", 2);
+
+            g.append("text")
+                .attr("x", 18).attr("y", 10)
+                .text(region)
+                .style("font-size", "11px").attr("fill", "#64748b");
+        });
+
+        // 10. ANNOTAZIONI
+        svg.append("text")
+            .attr("x", w / 2)
+            .attr("y", -10)
+            .text("Top 15 Countries by Energy Consumption")
+            .attr("text-anchor", "middle")
+            .style("font-size", "14px").style("font-weight", "bold").attr("fill", "#1e293b");
     }
 }
-
