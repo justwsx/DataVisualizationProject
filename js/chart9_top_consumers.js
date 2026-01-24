@@ -230,7 +230,7 @@ class TopConsumersChart {
         svg.append("text")
             .attr("x", w / 2)
             .attr("y", -10)
-            .text("Top 15 Countries by Energy Consumption")
+            .text("Top 13 Countries by Energy Consumption")
             .attr("text-anchor", "middle")
             .style("font-size", "14px").style("font-weight", "bold").attr("fill", "#1e293b");
     }
