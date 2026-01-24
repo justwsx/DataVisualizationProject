@@ -1,9 +1,10 @@
+
 import pandas as pd
 
 # --- CONFIGURATION ---
-INPUT_FILE = 'data/owid-energy-data.csv'
+INPUT_FILE = 'data/world_clean_dataset.csv'
 PRICE_FILE = 'data/fossil_price_table_1990_2022.csv'
-OUTPUT_FILE = 'world_energy_cleaned_final.csv'
+OUTPUT_FILE = 'data/world_energy_cleaned_final.csv'
 
 # Target country list for filtering
 COUNTRIES = [
@@ -31,7 +32,8 @@ def preprocess_energy_data():
     print(f"Reading {INPUT_FILE}...")
 
     # --- STEP 1: READ MAIN DATA ---
-    df = pd.read_csv(INPUT_FILE, sep=r',+', engine='python', low_memory=False)
+    df = pd.read_csv(INPUT_FILE, low_memory=False)
+
 
     # --- STEP 2: FILTER COUNTRIES ---
     df = df[df['country'].isin(COUNTRIES)].copy()
