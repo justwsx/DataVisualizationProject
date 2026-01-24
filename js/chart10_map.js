@@ -1,277 +1,288 @@
 class EnergyMapChart {
     constructor(data) {
         this.data = data;
-        this.container = 'chart-map';
-        this.geoData = null; // Stores the GeoJSON data after first load
-        
-        // Color palette matching the original design
-        this.colorRange = ['#22c55e', '#84cc16', '#fbbf24', '#f97316', '#dc2626'];
+        this.elementId = '#chart-map';
+        this.width = 0;
+        this.height = 0;
+        this.svg = null;
+        this.g = null;
+        this.currentYear = null;
+        this.countriesGeo = null;
 
-        // Inject necessary CSS for the tooltip
-        this.injectStyles();
-    }
-
-    injectStyles() {
-        const styleId = 'energy-map-styles';
-        if (!document.getElementById(styleId)) {
-            const style = document.createElement('style');
-            style.id = styleId;
-            style.textContent = `
-                .tooltip-map {
-                    position: absolute;
-                    background: rgba(255, 255, 255, 0.98);
-                    border: 1px solid #e2e8f0;
-                    border-radius: 6px;
-                    padding: 8px 12px;
-                    font-family: 'Inter', sans-serif;
-                    font-size: 12px;
-                    color: #1e293b;
-                    pointer-events: none;
-                    opacity: 0;
-                    transition: opacity 0.2s;
-                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                    z-index: 1000;
-                    min-width: 150px;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-
-    async update(year) {
-        const container = d3.select(`#${this.container}`);
-        const containerNode = document.getElementById(this.container);
-        
-        if (!containerNode) return;
-
-        // Clear previous chart
-        container.selectAll('*').remove();
-
-        const width = containerNode.clientWidth || 800;
-        const height = containerNode.clientHeight || 500;
-
-        // --- 1. Load GeoJSON (Singleton Pattern) ---
-        if (!this.geoData) {
-            try {
-                // Fetching world map topology
-                this.geoData = await d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson');
-            } catch (e) {
-                console.error("Failed to load map data", e);
-                container.append('div').text('Error loading map data. Please check internet connection.').style('color', 'red');
-                return;
-            }
-        }
-
-        const svg = container.append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .style('background', 'transparent');
-
-        // --- 2. Process Data ---
-        const yearData = this.data.filter(d => d.year === year);
-        
-        // Map: Country Name -> Energy Value
-        const dataMap = new Map();
-        yearData.forEach(d => {
-            let countryName = d.country;
-            
-            // Name Normalization (Map data vs Source data)
-            if (countryName === "United States") countryName = "USA";
-            if (countryName === "United Kingdom") countryName = "England";
-            // Add more mappings here if specific countries remain gray
-            
-            dataMap.set(countryName, d.primary_energy_consumption);
-        });
-
-        const maxVal = d3.max(yearData, d => d.primary_energy_consumption) || 100000;
-
-        // --- 3. Projection & Path ---
-        // 'fitSize' automatically scales the map to fit the container
-        const projection = d3.geoNaturalEarth1()
-            .fitSize([width, height], this.geoData);
-
-        const pathGenerator = d3.geoPath().projection(projection);
-
-        // --- 4. Color Scale ---
-        const colorScale = d3.scaleLinear()
-            .domain([0, maxVal * 0.3, maxVal * 0.5, maxVal * 0.7, maxVal])
-            .range(this.colorRange);
-
-        // --- 5. Tooltip Element ---
-        const tooltip = container.append('div')
-            .attr('class', 'tooltip-map');
-
-        // --- 6. Draw Map ---
-        const mapGroup = svg.append('g');
-
-        mapGroup.selectAll('path')
-            .data(this.geoData.features)
-            .join('path')
-            .attr('d', pathGenerator)
-            .attr('fill', d => {
-                const value = dataMap.get(d.properties.name);
-                return value ? colorScale(value) : '#f1f5f9'; // Gray for no data
-            })
-            .attr('stroke', '#ffffff')
-            .attr('stroke-width', 0.5)
-            .style('cursor', 'pointer')
-            // --- Hover Events ---
-            .on('mousemove', (event, d) => {
-                const countryName = d.properties.name;
-                const value = dataMap.get(countryName);
-
-                if (value !== undefined) {
-                    tooltip.html(`
-                        <div style="font-weight: 700; margin-bottom: 4px;">${countryName}</div>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <span style="width: 8px; height: 8px; background-color: ${colorScale(value)}; border-radius: 50%;"></span>
-                            <span>Energy: <b>${d3.format(',.0f')(value)}</b> kWh/person</span>
-                        </div>
-                    `)
-                    .style('opacity', 1)
-                    .style('left', `${event.pageX + 10}px`)
-                    .style('top', `${event.pageY - 20}px`);
-
-                    // Highlight border
-                    d3.select(event.currentTarget)
-                        .attr('stroke', '#334155')
-                        .attr('stroke-width', 1.5);
-                }
-            })
-            .on('mouseout', function() {
-                tooltip.style('opacity', 0);
-                d3.select(this)
-                    .attr('stroke', '#ffffff')
-                    .attr('stroke-width', 0.5);
-            });
-
-        // --- 7. Special Markers (US & China) ---
-        const markers = [
-            { long: -98.5, lat: 39.8, icon: '🔥', label: 'United States', sub: 'Natural Gas Dominant' },
-            { long: 104.2, lat: 35.9, icon: '⚫', label: 'China', sub: 'Coal Dominant' }
+        this.markersData = [
+            { text: '🔥', lon: -98.5, lat: 39.8, label: 'United States<br>Dominant Energy Structure: Natural Gas' },
+            { text: '⚫', lon: 104.2, lat: 35.9, label: 'China<br>Dominant Energy Structure: Coal' }
         ];
 
-        markers.forEach(m => {
-            const coords = projection([m.long, m.lat]);
-            if (coords) {
-                svg.append('text')
-                    .attr('x', coords[0])
-                    .attr('y', coords[1])
-                    .attr('text-anchor', 'middle')
-                    .attr('dominant-baseline', 'middle')
-                    .attr('font-size', '20px')
-                    .text(m.icon)
-                    .style('cursor', 'help')
-                    .on('mousemove', (event) => {
-                        tooltip.html(`
-                            <div style="font-weight: 700; margin-bottom: 4px;">${m.label}</div>
-                            <div style="font-size: 11px; color: #64748b;">${m.sub}</div>
-                        `)
-                        .style('opacity', 1)
-                        .style('left', `${event.pageX + 10}px`)
-                        .style('top', `${event.pageY - 20}px`);
-                    })
-                    .on('mouseout', () => tooltip.style('opacity', 0));
-            }
-        });
-
-        // --- 8. Legend ---
-        this.drawLegend(svg, width, height, maxVal);
-
-        // --- 9. Title ---
-        svg.append('text')
-            .attr('x', 20)
-            .attr('y', 30)
-            .attr('font-family', 'Inter, sans-serif')
-            .attr('font-size', '18px')
-            .attr('font-weight', 'bold')
-            .attr('fill', '#1e293b')
-            
-
-        svg.append('text')
-            .attr('x', 20)
-            .attr('y', 50)
-            .attr('font-family', 'Inter, sans-serif')
-            .attr('font-size', '12px')
-            .attr('fill', '#64748b')
-           
+        window.addEventListener('resize', () => this.resize());
+        
+        this.init();
     }
-    drawLegend(svg, width, height, max) {
-        const legendWidth = 12;
-        const legendHeight = 150;
-        const legendMarginRight = 30;
+
+    async init() {
+        const container = d3.select(this.elementId);
+        if (container.empty()) return;
+
+        const node = container.node();
+        this.width = node.getBoundingClientRect().width;
+        this.height = 600;
+
+        this.svg = container.append("svg")
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .attr("viewBox", [0, 0, this.width, this.height])
+            .style("max-width", "100%")
+            .style("height", "auto")
+            .style("font-family", "Inter, sans-serif");
+
+        const defs = this.svg.append("defs");
+        const linearGradient = defs.append("linearGradient")
+            .attr("id", "linear-gradient");
+
+        const colors = ['#22c55e', '#84cc16', '#fbbf24', '#f97316', '#dc2626'];
         
-        const legendX = width - legendWidth - legendMarginRight;
-        const legendY = (height - legendHeight) / 2;
+        linearGradient.selectAll("stop")
+            .data([
+                {offset: "0%", color: colors[0]},
+                {offset: "30%", color: colors[1]},
+                {offset: "50%", color: colors[2]},
+                {offset: "70%", color: colors[3]},
+                {offset: "100%", color: colors[4]}
+            ])
+            .enter().append("stop")
+            .attr("offset", d => d.offset)
+            .attr("stop-color", d => d.color);
 
-        let defs = svg.select('defs');
-        if (defs.empty()) defs = svg.append('defs');
+        this.g = this.svg.append("g");
+
+        // FIX: Append tooltip to body to avoid overflow issues
+        this.tooltip = d3.select("body").append("div")
+            .attr("class", "map-tooltip")
+            .style("position", "absolute")
+            .style("background", "rgba(255, 255, 255, 0.95)")
+            .style("padding", "8px 12px")
+            .style("border", "1px solid #e2e8f0")
+            .style("border-radius", "4px")
+            .style("pointer-events", "none")
+            .style("font-family", "Inter, sans-serif")
+            .style("font-size", "12px")
+            .style("box-shadow", "0 4px 6px -1px rgba(0, 0, 0, 0.1)")
+            .style("z-index", "9999")
+            .style("opacity", 0);
+
+        try {
+            const world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+            this.countriesGeo = topojson.feature(world, world.objects.countries);
+            
+            if (this.currentYear) {
+                this.update(this.currentYear);
+            }
+        } catch (error) {
+            console.error("Error loading map data:", error);
+        }
+    }
+
+    update(year) {
+        this.currentYear = year;
         
-        // Rimuovi vecchi gradienti per evitare conflitti
-        defs.select('#map-legend-gradient').remove();
+        if (!this.countriesGeo) {
+            setTimeout(() => this.update(year), 500);
+            return;
+        }
 
-        // Gradiente Verticale (y1=100% -> y2=0%)
-        const linearGradient = defs.append('linearGradient')
-            .attr('id', 'map-legend-gradient')
-            .attr('x1', '0%')
-            .attr('y1', '100%')
-            .attr('x2', '0%')
-            .attr('y2', '0%');
+        let yearData = this.data.filter(d => d.year === year);
 
-        const stops = [0, 25, 50, 75, 100];
-        this.colorRange.forEach((color, i) => {
-            linearGradient.append('stop')
-                .attr('offset', `${stops[i]}%`)
-                .attr('stop-color', color);
+        yearData.sort((a, b) => b.primary_energy_consumption - a.primary_energy_consumption);
+        const top50Data = yearData.slice(0, 50);
+
+        const dataMap = new Map();
+        top50Data.forEach(d => {
+            dataMap.set(d.country, d.primary_energy_consumption);
         });
 
-        const legendGroup = svg.append('g')
-            .attr('transform', `translate(${legendX}, ${legendY})`);
+        const projection = d3.geoNaturalEarth1()
+            .fitSize([this.width, this.height], this.countriesGeo);
+        
+        const path = d3.geoPath().projection(projection);
 
-        // Barra
-        legendGroup.append('rect')
-            .attr('width', legendWidth)
-            .attr('height', legendHeight)
-            .style('fill', 'url(#map-legend-gradient)')
-            .style('rx', 3);
+        const values = top50Data.map(d => d.primary_energy_consumption);
+        const minVal = d3.min(values) || 0;
+        const maxVal = d3.max(values) || 100000;
 
-        // Titolo
-        legendGroup.append('text')
-            .attr('x', legendWidth / 2)
-            .attr('y', -10)
-            .text('kWh/Capita')
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'Inter, sans-serif')
-            .attr('font-size', '11px')
-            .attr('font-weight', '600')
-            .attr('fill', '#64748b');
+        const colorScale = d3.scaleLinear()
+            .domain([
+                minVal,
+                minVal + 0.3 * (maxVal - minVal),
+                minVal + 0.5 * (maxVal - minVal),
+                minVal + 0.7 * (maxVal - minVal),
+                maxVal
+            ])
+            .range(['#22c55e', '#84cc16', '#fbbf24', '#f97316', '#dc2626'])
+            .clamp(true);
 
-        // Valore Min (Basso)
-        legendGroup.append('text')
-            .attr('x', -6)
-            .attr('y', legendHeight)
-            .attr('text-anchor', 'end')
-            .attr('dominant-baseline', 'middle')
-            .text('0')
-            .attr('font-family', 'Inter, sans-serif')
-            .attr('font-size', '10px')
-            .attr('fill', '#64748b');
+        this.g.selectAll("path.country")
+            .data(this.countriesGeo.features)
+            .join("path")
+            .attr("class", "country")
+            .attr("d", path)
+            .attr("fill", d => {
+                const countryName = d.properties.name;
+                let value = dataMap.get(countryName);
+                
+                if (value === undefined) {
+                     const fuzzyMatch = top50Data.find(row => row.country.includes(countryName) || countryName.includes(row.country));
+                     if(fuzzyMatch) value = fuzzyMatch.primary_energy_consumption;
+                }
 
-        // Valore Max (Alto)
-        legendGroup.append('text')
-            .attr('x', -6)
-            .attr('y', 0)
-            .attr('text-anchor', 'end')
-            .attr('dominant-baseline', 'middle')
-            .text(d3.format('.2s')(max))
-            .attr('font-family', 'Inter, sans-serif')
-            .attr('font-size', '10px')
-            .attr('fill', '#64748b');
+                return value ? colorScale(value) : "#f1f5f9";
+            })
+            .attr("stroke", "#ffffff")
+            .attr("stroke-width", 0.5)
+            .on("mouseover", (event, d) => {
+                const countryName = d.properties.name;
+                let val = dataMap.get(countryName);
+                
+                if (val === undefined) {
+                     const fuzzyMatch = top50Data.find(row => row.country.includes(countryName) || countryName.includes(row.country));
+                     if(fuzzyMatch) val = fuzzyMatch.primary_energy_consumption;
+                }
+
+                d3.select(event.currentTarget)
+                    .attr("stroke", "#333")
+                    .attr("stroke-width", 1);
+                
+                const valText = val ? `${d3.format(".2s")(val)} kWh/person` : "Not in Top 50";
+
+                this.tooltip.style("opacity", 1)
+                    .html(`<b>${countryName}</b><br>Energy: ${valText}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", (event) => {
+                d3.select(event.currentTarget)
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 0.5);
+                this.tooltip.style("opacity", 0);
+            });
+
+        this.g.selectAll("text.marker-icon")
+            .data(this.markersData)
+            .join("text")
+            .attr("class", "marker-icon")
+            .attr("x", d => projection([d.lon, d.lat])[0])
+            .attr("y", d => projection([d.lon, d.lat])[1])
+            .text(d => d.text)
+            .attr("font-size", "24px")
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .style("cursor", "pointer")
+            .on("mouseover", (event, d) => {
+                this.tooltip.style("opacity", 1)
+                    .html(d.label)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => this.tooltip.style("opacity", 0));
+
+        this.addTitle(year);
+        this.updateLegends(minVal, maxVal);
+    }
+
+    updateLegends(min, max) {
+        this.svg.selectAll(".legend-group").remove();
+
+        const legendWidth = 200;
+        const legendHeight = 15;
+        
+        const legendX = this.width - legendWidth - 30;
+        const legendY = this.height - 100; 
+
+        const legendGroup = this.svg.append("g")
+            .attr("class", "legend-group")
+            .attr("transform", `translate(${legendX}, ${legendY})`);
+
+        legendGroup.append("rect")
+            .attr("width", legendWidth)
+            .attr("height", legendHeight)
+            .style("fill", "url(#linear-gradient)");
+
+        legendGroup.append("text")
+            .attr("x", 0)
+            .attr("y", -10)
+            .text("kWh per Capita")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("fill", "#333");
+
+        const legendScale = d3.scaleLinear()
+            .domain([min, max])
+            .range([0, legendWidth]);
+
+        const legendAxis = d3.axisBottom(legendScale)
+            .ticks(4)
+            .tickFormat(d3.format(".2s"))
+            .tickSize(6);
+
+        legendGroup.append("g")
+            .attr("transform", `translate(0, ${legendHeight})`)
+            .call(legendAxis)
+            .select(".domain").remove();
+
+        const symbolGroup = this.svg.append("g")
+            .attr("class", "legend-group")
+            .attr("transform", `translate(20, ${this.height - 140})`);
+            
+        symbolGroup.append("rect")
+            .attr("width", 220)
+            .attr("height", 85)
+            .attr("fill", "rgba(255,255,255,0.85)")
+            .attr("rx", 5)
+            .style("stroke", "#e2e8f0")
+            .style("stroke-width", "1px");
+
+        symbolGroup.append("text")
+            .attr("x", 10)
+            .attr("y", 25)
+            .text("Symbol Legend")
+            .style("font-weight", "bold")
+            .style("font-size", "13px")
+            .style("fill", "#1e293b");
+
+        symbolGroup.append("text").attr("x", 15).attr("y", 50).text("🔥").style("font-size", "16px");
+        symbolGroup.append("text").attr("x", 40).attr("y", 50).text("Natural Gas Dominant")
+            .style("font-size", "12px").style("alignment-baseline", "middle").style("fill", "#334155");
+
+        symbolGroup.append("text").attr("x", 15).attr("y", 75).text("⚫").style("font-size", "16px");
+        symbolGroup.append("text").attr("x", 40).attr("y", 75).text("Coal Dominant")
+            .style("font-size", "12px").style("alignment-baseline", "middle").style("fill", "#334155");
+    }
+
+    addTitle(year) {
+        this.svg.selectAll(".chart-title").remove();
+        this.svg.append("text")
+            .attr("class", "chart-title")
+            .attr("x", this.width / 2)
+            .attr("y", 30)
+            .attr("text-anchor", "middle")
+            .style("font-size", "18px")
+            .style("fill", "#b8cff3")
+            .style("font-weight", "bold")
+            .text(` (${year})`);
     }
 
     resize() {
-        // Redraw with current data if window resizes
-      
+        const container = d3.select(this.elementId);
+        if (container.empty()) return;
+
+        const node = container.node();
+        this.width = node.getBoundingClientRect().width;
+        
+        this.svg
+            .attr("width", this.width)
+            .attr("viewBox", [0, 0, this.width, this.height]);
+
+        if (this.currentYear) {
+            this.update(this.currentYear);
+        }
     }
 }
-
