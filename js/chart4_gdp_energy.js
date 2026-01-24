@@ -4,6 +4,7 @@ class GDPEnergyChart {
     this.container = "chart-gdp-energy";
 
     this.useGdpBillions = true;
+    this.transitionMs = 450;
 
     this.regionColors = {
       "Africa": "#dc2626",
@@ -54,10 +55,16 @@ class GDPEnergyChart {
       "Morocco": "Africa"
     };
 
+    this.allRegionsOrder = [
+      "Africa", "Asia", "Europe",
+      "North America", "South America",
+      "Oceania", "Other"
+    ];
 
     this.margin = { left: 80, right: 30, top: 100, bottom: 190 };
-    
+
     this._init();
+    this._computeGlobalDomains();
   }
 
   _init() {
@@ -77,13 +84,13 @@ class GDPEnergyChart {
       .style("font-size", "12px")
       .style("color", "#0f172a")
       .style("box-shadow", "0 6px 18px rgba(15,23,42,0.12)")
-      .style("z-index", "10"); // اطمینان از اینکه تولتیپ رو قرار میگیرد
+      .style("z-index", "10");
 
     this.svg = this.root.append("svg")
       .attr("role", "img")
       .style("width", "100%")
       .style("height", "100%")
-      .style("overflow", "visible") // اجازه میدهد اگر چیزی کمی بیرون زد دیده شود
+      .style("overflow", "visible")
       .style("background", "transparent");
 
     this.g = this.svg.append("g");
@@ -105,8 +112,7 @@ class GDPEnergyChart {
       .style("font-family", "Inter, system-ui, sans-serif")
       .style("font-size", "13px")
       .style("font-weight", "600")
-      .style("fill", "#475569")
-      .text("GDP per Capita");
+      .style("fill", "#475569");
 
     this.yLabel = this.svg.append("text")
       .attr("text-anchor", "middle")
@@ -117,8 +123,18 @@ class GDPEnergyChart {
       .text("Primary Energy Consumption");
 
     this.bubblesG = this.g.append("g").attr("class", "bubbles");
+
     this.legendG = this.svg.append("g").attr("class", "legend");
+    this.legendBg = this.legendG.append("rect");
+    this.legendBoxG = this.legendG.append("g").attr("class", "legend-box");
+
     this.annotationG = this.svg.append("g").attr("class", "annotation");
+    this.annotationBg = this.annotationG.append("rect");
+    this.annotationText = this.annotationG.append("text")
+      .style("font-family", "Inter, system-ui, sans-serif")
+      .style("font-size", "11px")
+      .style("fill", "#64748b")
+      .text("Bubble size = Population");
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     const node = document.getElementById(this.container);
@@ -129,8 +145,28 @@ class GDPEnergyChart {
     return this.countryRegions[country] || "Other";
   }
 
-  update(selectedYear) {
+  _computeGlobalDomains() {
+    const xVal = d => this.useGdpBillions ? (d.gdp / 1e9) : d.gdp;
+    const yVal = d => d.primary_energy_consumption;
+
+    const xs = this.data.map(xVal).filter(v => v > 0 && Number.isFinite(v));
+    const ys = this.data.map(yVal).filter(v => v > 0 && Number.isFinite(v));
+    const ps = this.data.map(d => d.population).filter(v => v > 0 && Number.isFinite(v));
+
+    const padLogDomain = ([mn, mx]) => {
+      const a = Math.pow(10, Math.floor(Math.log10(mn)));
+      const b = Math.pow(10, Math.ceil(Math.log10(mx)));
+      return [a, b];
+    };
+
+    this.xDomain = xs.length ? padLogDomain(d3.extent(xs)) : [1, 10];
+    this.yDomain = ys.length ? padLogDomain(d3.extent(ys)) : [1, 10];
+    this.popDomain = ps.length ? d3.extent(ps) : [1e6, 1e6];
+  }
+
+  update(selectedYear, opts = {}) {
     this.currentYear = selectedYear;
+    this.transitionMs = Number.isFinite(opts.duration) ? opts.duration : this.transitionMs;
 
     let yearData = this.data.filter(d => d.year === selectedYear);
 
@@ -150,78 +186,80 @@ class GDPEnergyChart {
     const containerNode = document.getElementById(this.container);
     if (!containerNode) return;
 
-    // دریافت ابعاد کانتینر
     const width = containerNode.clientWidth || 900;
     const height = containerNode.clientHeight || 550;
 
-    // محاسبه فضای داخلی نمودار
     const innerW = width - this.margin.left - this.margin.right;
     const innerH = height - this.margin.top - this.margin.bottom;
 
-    // تنظیم ViewBox
     this.svg.attr("viewBox", `0 0 ${width} ${height}`);
     this.g.attr("transform", `translate(${this.margin.left},${this.margin.top})`);
 
-    // موقعیت تایتل (بالای همه چیز)
-    this.title.attr("x", width / 2).attr("y", 30);
+    this.title
+      .attr("x", width / 2)
+      .attr("y", 30)
+      .text("Energy Consumption vs GDP per Capita");
 
-    // --- تنظیم موقعیت لیبل محور X ---
-    // این لیبل حالا پایین‌تر از نمودار و دقیقاً در فضای مارجین پایین قرار می‌گیرد
     this.xLabel
       .attr("x", this.margin.left + innerW / 2)
-      .attr("y", this.margin.top + innerH + 50); // فاصله ۵۰ پیکسلی از خط محور
+      .attr("y", this.margin.top + innerH + 50)
+      .text(this.useGdpBillions ? "GDP (Billions USD)" : "GDP");
 
-    // تنظیم موقعیت لیبل محور Y
-    this.yLabel
-      .attr("transform", `translate(20,${this.margin.top + innerH / 2}) rotate(-90)`);
+    this.yLabel.attr("transform", `translate(20,${this.margin.top + innerH / 2}) rotate(-90)`);
 
     const xVal = d => this.useGdpBillions ? (d.gdp / 1e9) : d.gdp;
     const yVal = d => d.primary_energy_consumption;
 
-    const xVals = yearData.map(xVal).filter(v => v > 0 && Number.isFinite(v));
-    const yVals = yearData.map(yVal).filter(v => v > 0 && Number.isFinite(v));
+    this.svg.interrupt();
+    this.g.interrupt();
+    this.bubblesG.selectAll("circle").interrupt();
+    this.xAxisG.interrupt();
+    this.yAxisG.interrupt();
+    this.xGridG.interrupt();
+    this.yGridG.interrupt();
 
-    if (xVals.length === 0 || yVals.length === 0) {
+    if (!yearData.length) {
       this.bubblesG.selectAll("circle").remove();
-      this.legendG.selectAll("*").remove();
-      this.annotationG.selectAll("*").remove();
       return;
     }
 
-    const padLogDomain = ([mn, mx]) => {
-      const a = Math.pow(10, Math.floor(Math.log10(mn)));
-      const b = Math.pow(10, Math.ceil(Math.log10(mx)));
-      return [a, b];
-    };
+    this.xScale = d3.scaleLog().domain(this.xDomain).range([0, innerW]).clamp(true);
+    this.yScale = d3.scaleLog().domain(this.yDomain).range([innerH, 0]).clamp(true);
 
-    const [xMin, xMax] = padLogDomain(d3.extent(xVals));
-    const [yMin, yMax] = padLogDomain(d3.extent(yVals));
+    const rScale = d3.scaleSqrt().domain(this.popDomain).range([6, 45]);
+    const r = d => rScale((d.population && d.population > 0) ? d.population : this.popDomain[0]);
 
-    this.xScale = d3.scaleLog().domain([xMin, xMax]).range([0, innerW]);
-    this.yScale = d3.scaleLog().domain([yMin, yMax]).range([innerH, 0]);
+    const t = this.svg.transition().duration(this.transitionMs);
 
-    // Grid Lines
     const xGrid = d3.axisBottom(this.xScale).ticks(6).tickSize(-innerH).tickFormat("");
     const yGrid = d3.axisLeft(this.yScale).ticks(6).tickSize(-innerW).tickFormat("");
 
-    // خطوط گرید باید دقیقاً به اندازه ارتفاع داخلی پایین بیایند
-    this.xGridG.attr("transform", `translate(0,${innerH})`).call(xGrid);
-    this.yGridG.call(yGrid);
+    this.xGridG
+      .attr("transform", `translate(0,${innerH})`)
+      .transition(t)
+      .call(xGrid);
+
+    this.yGridG
+      .transition(t)
+      .call(yGrid);
 
     this.xGridG.selectAll("line").attr("stroke", "rgba(226, 232, 240, 0.4)");
     this.yGridG.selectAll("line").attr("stroke", "rgba(226, 232, 240, 0.4)");
     this.xGridG.selectAll("path").attr("stroke", "none");
     this.yGridG.selectAll("path").attr("stroke", "none");
 
-    // Axes
     const xAxis = d3.axisBottom(this.xScale).ticks(6, "~s");
     const yAxis = d3.axisLeft(this.yScale).ticks(6, "~s");
 
-    // --- نکته مهم: انتقال محور X به پایین ---
-    this.xAxisG.attr("transform", `translate(0,${innerH})`).call(xAxis);
-    this.yAxisG.call(yAxis);
+    this.xAxisG
+      .attr("transform", `translate(0,${innerH})`)
+      .transition(t)
+      .call(xAxis);
 
-    // استایل‌دهی به متن محورها
+    this.yAxisG
+      .transition(t)
+      .call(yAxis);
+
     this.g.selectAll(".x-axis text, .y-axis text")
       .style("font-family", "Inter, system-ui, sans-serif")
       .style("font-size", "11px")
@@ -229,17 +267,9 @@ class GDPEnergyChart {
 
     this.g.selectAll(".x-axis path, .y-axis path")
       .attr("stroke", "rgba(226, 232, 240, 0.9)");
-    
+
     this.g.selectAll(".x-axis line, .y-axis line")
       .attr("stroke", "rgba(226, 232, 240, 0.9)");
-
-    // Bubbles logic
-    const popVals = yearData
-      .map(d => d.population)
-      .filter(v => v > 0 && Number.isFinite(v));
-    const popExt = popVals.length ? d3.extent(popVals) : [1e6, 1e6];
-    const rScale = d3.scaleSqrt().domain(popExt).range([6, 45]);
-    const r = d => rScale((d.population && d.population > 0) ? d.population : popExt[0]);
 
     const circles = this.bubblesG
       .selectAll("circle")
@@ -257,102 +287,105 @@ class GDPEnergyChart {
         .on("mouseenter", (event, d) => this._showTooltip(event, d, xVal(d), yVal(d)))
         .on("mousemove", (event) => this._moveTooltip(event))
         .on("mouseleave", () => this._hideTooltip())
-        .call(sel => sel.transition().duration(500).attr("r", d => r(d))),
+        .transition(t)
+        .attr("r", d => r(d)),
       update => update
         .on("mouseenter", (event, d) => this._showTooltip(event, d, xVal(d), yVal(d)))
         .on("mousemove", (event) => this._moveTooltip(event))
         .on("mouseleave", () => this._hideTooltip())
-        .call(sel => sel.transition().duration(500)
-          .attr("cx", d => this.xScale(xVal(d)))
-          .attr("cy", d => this.yScale(yVal(d)))
-          .attr("r", d => r(d))
-          .attr("fill", d => this.regionColors[d.region] || "#6b7280")
-        ),
-      exit => exit.call(sel => sel.transition().duration(250).attr("r", 0).remove())
+        .transition(t)
+        .attr("cx", d => this.xScale(xVal(d)))
+        .attr("cy", d => this.yScale(yVal(d)))
+        .attr("r", d => r(d))
+        .attr("fill", d => this.regionColors[d.region] || "#6b7280"),
+      exit => exit.transition(t).attr("r", 0).remove()
     );
 
-    // Annotation (Bubble size explanation)
-    this.annotationG.selectAll("*").remove();
     const annX = this.margin.left + 10;
     const annY = this.margin.top + 10;
-    const annText = "Bubble size = Population";
     const padX = 10, padY = 6;
 
-    const txt = this.annotationG.append("text")
+    this.annotationText
       .attr("x", annX + padX)
-      .attr("y", annY + padY + 10)
-      .style("font-family", "Inter, system-ui, sans-serif")
-      .style("font-size", "11px")
-      .style("fill", "#64748b")
-      .text(annText);
+      .attr("y", annY + padY + 10);
 
-    const bbox = txt.node().getBBox();
-    this.annotationG.insert("rect", "text")
-      .attr("x", bbox.x - padX)
-      .attr("y", bbox.y - padY)
-      .attr("width", bbox.width + padX * 2)
-      .attr("height", bbox.height + padY * 2)
+    const annBBox = this.annotationText.node().getBBox();
+    this.annotationBg
+      .attr("x", annBBox.x - padX)
+      .attr("y", annBBox.y - padY)
+      .attr("width", annBBox.width + padX * 2)
+      .attr("height", annBBox.height + padY * 2)
       .attr("rx", 8).attr("ry", 8)
       .attr("fill", "rgba(255,255,255,0.9)")
       .attr("stroke", "rgba(226, 232, 240, 0.8)");
 
-    // Legend Logic (Top center)
-    this.legendG.selectAll("*").remove();
-    
-    // لجند را در بالای نمودار (در فضای margin.top) قرار می‌دهیم
-    const legendY = 60; 
-    const legendXCenter = width / 2;
+    this._renderLegend(width);
+  }
+
+  _renderLegend(width) {
+    const legendY = 60;
     const legendWrapW = width - 40;
     const rowH = 18;
     const gap = 16;
-    const regions = [...new Set(yearData.map(d => d.region).filter(Boolean))];
 
-    const legendBoxG = this.legendG.append("g")
-      .attr("transform", `translate(${legendXCenter},${legendY})`);
+    const regions = this.allRegionsOrder;
+
+    const items = this.legendBoxG.selectAll("g.item")
+      .data(regions, d => d);
+
+    const itemsEnter = items.enter().append("g").attr("class", "item");
+
+    itemsEnter.append("rect")
+      .attr("x", 0).attr("y", -10)
+      .attr("width", 10).attr("height", 10)
+      .attr("rx", 3);
+
+    itemsEnter.append("text")
+      .attr("x", 14).attr("y", -2)
+      .style("font-family", "Inter, system-ui, sans-serif")
+      .style("font-size", "12px")
+      .style("fill", "#0f172a");
+
+    const itemsAll = itemsEnter.merge(items);
+
+    itemsAll.select("rect")
+      .attr("fill", d => this.regionColors[d] || "#6b7280");
+
+    itemsAll.select("text")
+      .text(d => d);
 
     let xCursor = 0;
     let yCursor = 0;
-    
-    // یک چیدمان خطی ساده برای محاسبه عرض کل
-    const items = legendBoxG.selectAll("g.item")
-      .data(regions)
-      .enter()
-      .append("g")
-      .attr("class", "item");
 
-    items.each((region, i, nodes) => {
+    itemsAll.each((region, i, nodes) => {
       const g = d3.select(nodes[i]);
-      g.append("rect")
-        .attr("x", 0).attr("y", -10).attr("width", 10).attr("height", 10).attr("rx", 3)
-        .attr("fill", this.regionColors[region] || "#6b7280");
-      
-      const t = g.append("text")
-        .attr("x", 14).attr("y", -2)
-        .style("font-family", "Inter, system-ui, sans-serif")
-        .style("font-size", "12px")
-        .style("fill", "#0f172a")
-        .text(region);
-      
-      const w = t.node().getBBox().width + 24;
-      
+      const t = g.select("text").node();
+      const w = (t ? t.getBBox().width : 0) + 24;
+
       if (xCursor + w > legendWrapW) {
         xCursor = 0;
         yCursor += rowH;
       }
-      
-      // چیدن آیتم‌ها
-      // برای وسط‌چین کردن دقیق، اینجا یک افست تقریبی می‌زنیم
-      // (در کدهای واقعی‌تر عرض کل سطر محاسبه و سپس وسط‌چین می‌شود)
-      g.attr("transform", `translate(${xCursor - 300},${yCursor})`);
+
+      g.attr("transform", `translate(${xCursor},${yCursor})`);
       xCursor += w + gap;
     });
 
-    const legendBBox = legendBoxG.node().getBBox();
-    this.legendG.insert("rect", "g")
-      .attr("x", legendXCenter + legendBBox.x - 14)
-      .attr("y", legendY + legendBBox.y - 10)
-      .attr("width", legendBBox.width + 28)
-      .attr("height", legendBBox.height + 20)
+    items.exit().remove();
+
+    const bbox = this.legendBoxG.node().getBBox();
+    const boxX = (width / 2) - (bbox.width / 2);
+    const boxY = legendY;
+
+    this.legendBoxG.attr("transform", `translate(${boxX - bbox.x},${boxY - bbox.y})`);
+
+    const bbox2 = this.legendBoxG.node().getBBox();
+
+    this.legendBg
+      .attr("x", bbox2.x - 14)
+      .attr("y", bbox2.y - 10)
+      .attr("width", bbox2.width + 28)
+      .attr("height", bbox2.height + 20)
       .attr("rx", 12).attr("ry", 12)
       .attr("fill", "rgba(255,255,255,0.95)")
       .attr("stroke", "rgba(226, 232, 240, 0.8)");
@@ -370,6 +403,7 @@ class GDPEnergyChart {
         `<div>Energy: <b>${energyText}</b></div>` +
         `<div>Population: <b>${popText}</b></div>`
       );
+
     this._moveTooltip(event);
   }
 
@@ -383,7 +417,7 @@ class GDPEnergyChart {
   }
 
   resize() {
-    if (this.currentYear != null) this.update(this.currentYear);
+    if (this.currentYear != null) this.update(this.currentYear, { duration: 0 });
   }
 
   destroy() {
