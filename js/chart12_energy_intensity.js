@@ -16,117 +16,156 @@ class EnergyIntensityChart {
             'Germany': '#22c55e',
             'India': '#ffa200'
         };
+
+        // Initialize Tooltip
+        this.tooltip = d3.select("body").selectAll(".d3-tooltip").data([0]).join("div")
+            .attr("class", "d3-tooltip")
+            .style("opacity", 0);
+
+        window.addEventListener('resize', () => this.draw());
     }
 
     update() {
+        this.draw();
+    }
+
+    draw() {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        const traces = [];
+        // --- Container Setup (Force Height) ---
+        container.style.height = '500px'; 
+        container.style.minHeight = '500px';
+        container.style.width = '100%';
+        container.style.overflow = 'hidden';
+        container.innerHTML = '';
 
-        this.countries.forEach(country => {
-            const countryData = this.data
-                .filter(d =>
-                    d.country === country &&
-                    d.gdp > 0 &&
-                    d.population > 0 &&
-                    d.primary_energy_consumption > 0
+        const width = container.offsetWidth || 800;
+        const height = 500;
+        
+        // Right margin is larger (120px) to fit country labels
+        const margin = { top: 50, right: 120, bottom: 50, left: 60 };
+        const w = width - margin.left - margin.right;
+        const h = height - margin.top - margin.bottom;
+
+        // --- Data Processing ---
+        // We prepare a dataset grouped by country
+        const processedData = this.countries.map(country => {
+            const values = this.data
+                .filter(d => 
+                    d.country === country && 
+                    d.gdp > 0 && d.population > 0 && d.primary_energy_consumption > 0
                 )
-                .sort((a, b) => a.year - b.year);
+                .sort((a, b) => a.year - b.year)
+                .map(d => ({
+                    year: d.year,
+                    // Replicating your formula: Energy / (GDP / Pop)
+                    value: d.primary_energy_consumption / (d.gdp / d.population),
+                    original: d // keep ref for tooltip
+                }));
+            
+            return { country, values };
+        }).filter(group => group.values.length > 0);
 
-            if (countryData.length === 0) return;
+        // --- Scales ---
+        // X Domain: Extent of all years
+        const allYears = processedData.flatMap(d => d.values.map(v => v.year));
+        const x = d3.scaleLinear()
+            .domain(d3.extent(allYears))
+            .range([0, w]);
 
-            const years = countryData.map(d => d.year);
-            const intensity = countryData.map(d =>
-                d.primary_energy_consumption / (d.gdp / d.population)
-            );
+        // Y Domain: 0 to Max Value + 10% padding
+        const allValues = processedData.flatMap(d => d.values.map(v => v.value));
+        const yMax = d3.max(allValues) || 1;
+        const y = d3.scaleLinear()
+            .domain([0, yMax * 1.1])
+            .range([h, 0]);
 
-            // --- main line ---
-            traces.push({
-                x: years,
-                y: intensity,
-                type: 'scatter',
-                mode: 'lines',
-                line: {
-                    width: 3,
-                    color: this.colors[country]
-                },
-                hovertemplate:
-                    `<b>${country}</b><br>` +
-                    `Year: %{x}<br>` +
-                    `Energy Intensity: %{y:.4f}<extra></extra>`,
-                showlegend: false
-            });
+        // --- SVG ---
+        const svg = d3.select(container).append("svg")
+            .attr("viewBox", `0 0 ${width} ${height}`)
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .style("width", "100%")
+            .style("height", "auto")
+            .style("font-family", "Inter, sans-serif")
+            .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-            // --- country label at last point ---
-            const lastIndex = years.length - 1;
+        // --- Axes ---
+        // X Axis
+        svg.append("g").attr("transform", `translate(0,${h})`)
+            .call(d3.axisBottom(x).tickFormat(d3.format("d")).tickSize(-h))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
+            .call(g => g.select(".domain").attr("stroke", "#cbd5e1"))
+            .call(g => g.selectAll("text").attr("fill", "#64748b"));
 
-            traces.push({
-                x: [years[lastIndex]],
-                y: [intensity[lastIndex]],
-                type: 'scatter',
-                mode: 'markers+text',
-                marker: {
-                    size: 8,
-                    color: this.colors[country]
-                },
-                text: [country],
-                textposition: 'right',
-                textfont: {
-                    size: 12,
-                    color: this.colors[country],
-                    family: 'Inter, sans-serif'
-                },
-                hoverinfo: 'skip',
-                showlegend: false
-            });
-        });
+        svg.append("text").attr("x", w/2).attr("y", h + 40)
+            .text("Year")
+            .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        const layout = {
+        // Y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y).tickSize(-w))
+            .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.selectAll("text").attr("fill", "#64748b"));
 
-            title: {
-                text: 'Energy Intensity over Time',
-                font: {
-                    size: 13,
-                    family: 'Inter, sans-serif',
-                    color: '#475569'
-                }
-            },
-            xaxis: {
-                title: 'Year',
-                showgrid: true,
-                zeroline: false
-            },
-            yaxis: {
-                title: {
-                    text: 'Energy Intensity (Efficiency Indicator)',
-                    font: {
-                        family: 'Inter, sans-serif',
-                        size: 11,
-                        color: '#1e293b'
-                    }
-                },
-                showgrid: true,
-                zeroline: false
-            },
-            margin: {
-                t: 50,
-                l: 60,
-                r: 150,
-                b: 60
-            },
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)'
-        };
+        svg.append("text").attr("transform", "rotate(-90)").attr("y", -45).attr("x", -h/2)
+            .text("Energy Intensity (Indicator)")
+            .attr("fill", "#1e293b").attr("text-anchor", "middle").style("font-size", "12px");
 
-        Plotly.newPlot(this.elementId, traces, layout, {
-            responsive: true,
-            displayModeBar: false
+        // Title
+        svg.append("text").attr("x", w/2).attr("y", -20)
+            .text("Energy Intensity over Time")
+            .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#475569").style("font-size", "16px");
+
+        // --- Draw Lines & Labels ---
+        const line = d3.line()
+            .x(d => x(d.year))
+            .y(d => y(d.value));
+
+        processedData.forEach(group => {
+            const color = this.colors[group.country];
+            const lastPoint = group.values[group.values.length - 1];
+
+            // 1. The Line
+            svg.append("path")
+                .datum(group.values)
+                .attr("fill", "none")
+                .attr("stroke", color)
+                .attr("stroke-width", 3)
+                .attr("d", line);
+
+            // 2. Invisible overlay for easier hovering on the line
+            svg.append("path")
+                .datum(group.values)
+                .attr("fill", "none")
+                .attr("stroke", "transparent")
+                .attr("stroke-width", 15) // Fat invisible line
+                .attr("d", line)
+                .on("mouseover", (e) => {
+                    this.tooltip.style("opacity", 1)
+                        .html(`<b>${group.country}</b>`)
+                        .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
+                })
+                .on("mouseout", () => this.tooltip.style("opacity", 0));
+
+            // 3. Dot at the end
+            svg.append("circle")
+                .attr("cx", x(lastPoint.year))
+                .attr("cy", y(lastPoint.value))
+                .attr("r", 5)
+                .attr("fill", color);
+
+            // 4. Label at the end
+            svg.append("text")
+                .attr("x", x(lastPoint.year) + 10) // Shift right
+                .attr("y", y(lastPoint.value) + 4) // Center vertically
+                .text(group.country)
+                .attr("fill", color)
+                .style("font-size", "12px")
+                .style("font-weight", "bold");
         });
     }
 
-    resize() {
-        const el = document.getElementById(this.elementId);
-        if (el) Plotly.Plots.resize(el);
-    }
+    resize() { this.draw(); }
 }
