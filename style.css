@@ -190,14 +190,34 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .play-btn {
-    padding: 12px 28px;
-    background: var(--gradient-vibrant); color: #fff;
-    border: none; border-radius: 50px; font-weight: 700;
-    cursor: pointer; display: flex; gap: 10px; align-items: center;
+    /* 1. CENTRATURA */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto;    /* 'auto' ai lati centra il bottone orizzontalmente */
+    width: fit-content;   /* Impedisce al bottone di occupare tutta la larghezza */
+
+    /* 2. DIMENSIONI MAGGIORI */
+    padding: 20px 50px;   /* Aumentato: Più "cicciotto" (sopra/sotto 20px, lati 50px) */
+    font-size: 1.4rem;    /* Aumentato: Scritta più grande (circa 22px) */
+    
+    /* STILE ESTETICO (Invariato o adattato) */
+    gap: 15px;            /* Più spazio tra icona e testo */
+    border-radius: 50px;
+    background: var(--gradient-vibrant); 
+    color: #fff;
+    border: none; 
+    font-weight: 700;
+    cursor: pointer; 
     box-shadow: var(--shadow-glow);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.play-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); }
+
+/* Effetto Hover (leggermente aggiustato per le nuove dimensioni) */
+.play-btn:hover { 
+    transform: translateY(-4px) scale(1.05); /* Movimento più evidente */
+    box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6); 
+}
 
 /* ==========================================================================
    HOME PAGE & NARRATIVE STYLES
