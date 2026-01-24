@@ -131,8 +131,8 @@ body:has(.sidebar:hover) .nav-right {
     gap: 10px 30px;
     width: auto; margin-left: 20px;
 }
-body:has(.sidebar:hover) .nav-right .control-item:first-child { grid-column: span 2; justify-self: center; }
-body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) { justify-self: end; }*/
+/*body:has(.sidebar:hover) .nav-right .control-item:first-child { grid-column: span 2; justify-self: center; }/*
+/*body:has(.sidebar:hover) .nav-right .control-item:nth-child(2) { justify-self: end; }*/
 
 body:has(.sidebar:hover) .play-btn { justify-self: start; }
 body:has(.sidebar:hover) .search-box { width: 280px; }
@@ -147,9 +147,9 @@ body:has(.sidebar:hover) .search-box { width: 280px; }
 }
 
 .nav-right { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; }
-.control-item { display: flex; align-items: center; gap: 15px; }
+/*.control-item { display: flex; align-items: center; gap: 15px; }/*
 
-.control-item label {
+/*.control-item label {
     font-weight: 700; text-transform: uppercase;
     font-size: 0.7rem; color: var(--text-l); white-space: nowrap;
 }*/
@@ -190,34 +190,14 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .play-btn {
-    /* 1. CENTRATURA (Resta invariata) */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;    /* Ho ridotto un po' il margine verticale (era 30px) */
-    width: fit-content;
-
-    /* 2. DIMENSIONI RIDOTTE */
-    padding: 10px 24px;   /* Molto più compatto (era 20px 50px) */
-    font-size: 1rem;      /* Grandezza testo standard (era 1.4rem) */
-    gap: 8px;             /* Meno spazio tra icona e testo (era 15px) */
-    
-    /* STILE ESTETICO */
-    border-radius: 50px;
-    background: var(--gradient-vibrant); 
-    color: #fff;
-    border: none; 
-    font-weight: 600;     /* Leggermente meno "grassetto" */
-    cursor: pointer; 
+    padding: 12px 28px;
+    background: var(--gradient-vibrant); color: #fff;
+    border: none; border-radius: 50px; font-weight: 700;
+    cursor: pointer; display: flex; gap: 10px; align-items: center;
     box-shadow: var(--shadow-glow);
     transition: transform 0.2s, box-shadow 0.2s;
 }
-
-/* Effetto Hover (Proporzionato al nuovo bottone) */
-.play-btn:hover { 
-    transform: translateY(-2px) scale(1.02); /* Movimento più delicato */
-    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.5); 
-}
+.play-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5); }
 
 /* ==========================================================================
    HOME PAGE & NARRATIVE STYLES
