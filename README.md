@@ -92,6 +92,7 @@ DataVisualizationProject/
 
 ### 📌 Where does the data for visualizations live?
 ✅ **All data used by the website's visualizations is in the `data/` folder.**
+
 The HTML pages (e.g., `economics.html`, `mix.html`) load specific subsets of data processed by `process.py` and render them using the scripts found in `js/` and `main.js`.
 
 ## 4. 📦 Dependencies
