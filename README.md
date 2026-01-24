@@ -50,7 +50,7 @@ If you need to update the data or reproduce the cleaning steps:
 2. 🧪 Run the script from the root folder:
 
 ```bash
-python process.py
+python3 process.py
 ```
 
 ### 2. 🚀 Serving the Website Locally
