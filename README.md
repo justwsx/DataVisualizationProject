@@ -18,13 +18,18 @@ This project explores the energy transition using **interactive web-based storyt
 
 ### 🧼 Data Cleaning & Enrichment
 - **Script:** `process.py`
-- **Input:** Raw data located in the `data/` folder (including Fossil Fuel Prices).
+- **Input:** Raw data located in the `data/` folder:
+  - `owid-energy-data.csv` (Energy consumption metrics).
+  - `fossil_price_table_1990_2022.csv` (Global fossil fuel prices).
 - **Operations:**
-  - Imports raw CSV data (World Energy Consumption / Our World in Data).
-  - Filters specifically for **EU Member States**.
-  - Handles missing values via linear interpolation.
-  - Normalizes metrics (per capita / percentages) for fair comparison.
-- **Output:** Processed JSON/CSV files saved into `data/`, optimized for D3.js.
+  - **Country Filtering:** Filters the dataset for a selected list of **50 major countries** (covering diverse economies across all continents) to focus the analysis.
+  - **Timeframe Restriction:** Limits the data range to **1990–2022** for consistent historical comparison.
+  - **Data Cleaning:**
+    - Extracts only relevant columns (GDP, population, energy per capita).
+    - Converts all metrics to numeric types, handling non-numeric errors via coercion.
+    - Removes incomplete records (rows with missing country or year).
+  - **Price Enrichment:** Merges the energy data with global **fossil fuel prices** (Oil, Gas, Coal) by year to correlate consumption with market costs.
+- **Output:** A clean `world_energy_cleaned_final.csv` file saved into `data/`.
 
 #### ▶️ To run preprocessing
 If you need to update the data or reproduce the cleaning steps:
