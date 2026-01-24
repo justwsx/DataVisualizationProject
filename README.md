@@ -57,9 +57,9 @@ python process.py
 
 1. **Clone this repository**
   ```bash
-    git clone [https://github.com/justwsx/DataVisualizationProject.git](https://github.com/justwsx/DataVisualizationProject.git)
-    cd DataVisualizationProject
-    ```
+   git clone https://github.com/justwsx/DataVisualizationProject.git
+   cd DataVisualizationProject
+   ```
 
 ### Option: 🐍 Python HTTP Server (Fastest)
 From the project root directory, run:
