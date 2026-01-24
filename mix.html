@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Energy Mix | Energy Insights</title>
     
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <meta name="view-transition" content="same-origin" />
@@ -33,7 +34,9 @@
                 <a href="index.html" class="nav-item"><span class="material-icons-outlined">dashboard</span><span>Overview</span></a>
                 <a href="demand.html" class="nav-item"><span class="material-icons-outlined">timeline</span><span>Global Demand</span></a>
                 <a href="mix.html" class="nav-item active"><span class="material-icons-outlined">pie_chart</span><span>Energy Mix</span></a>
-                <div style="height:20px;"></div>  
+
+                <div style="height: 20px;"></div>
+                
                 <span class="nav-section-title">Analysis & Future</span>
                 <a href="transition.html" class="nav-item"><span class="material-icons-outlined">eco</span><span>Green Transition</span></a>
                 <a href="economics.html" class="nav-item"><span class="material-icons-outlined">monetization_on</span><span>Economics</span></a>
@@ -57,17 +60,17 @@
         </aside>
 
         <main class="main-content">
-            <!--<div class="sidebar-instruction-btn">
+            <div class="sidebar-instruction-btn">
                 <span class="material-icons-outlined icon">info</span>
                 <span class="text-desktop">Hover your mouse on the left to show the dashboard</span>
                 <span class="text-mobile">Tap the left edge to show the dashboard</span>
-            </div>-->
+            </div>
             
             <div class="top-nav">
                 <div class="nav-left">
                     <div class="search-box">
                         <span class="material-icons-outlined">search</span>
-                        <input type="text" placeholder="Search countries, regions or specific data..." id="searchInput">
+                        <input disabled type="text" placeholder="Search countries, regions or specific data..." id="searchInput">
                     </div>
                 </div>
                 
@@ -76,9 +79,24 @@
                         <label>Timeline Explorer</label>
                         <div class="year-control-compact">
                             <span id="currentYearDisplay">2020</span>
-                            <input type="range" id="yearSlider" min="1991" max="2022" value="2020" step="1">
+                            <input type="range" id="yearSlider" min="2000" max="2022" value="2020" step="1">
                         </div>
                     </div>
+                    
+                    <div class="control-item">
+                        <label>Geographic Focus</label>
+                        <select id="countrySelect" class="filter-select">
+                            <option value="World">The Whole World</option>
+                            <option value="United States">United States</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Germany">Germany</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+
                     <button class="play-btn" id="playBtn">
                         <span class="material-icons-outlined">play_circle</span>
                         <span>Visualize Progress</span>
