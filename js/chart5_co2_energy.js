@@ -89,10 +89,9 @@ class CO2EnergyChart {
             .domain([100, 150000])
             .range([0, w])
             .clamp(true);
-
         const y = d3.scaleLinear()
-            .domain([-5, 105])
-            .range([h, 0]);
+                  .domain([0, 100])
+                  .range([h, 0]);
 
         const r = d3.scaleSqrt()
             .domain([0, 1.4e9])
@@ -222,4 +221,5 @@ class CO2EnergyChart {
     }
 
     resize() { this.draw(); }
+
 }
