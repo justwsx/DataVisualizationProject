@@ -5,6 +5,7 @@
 > **An interactive data-driven storytelling project analyzing the shift from fossil fuels to renewable sources.**
 
 This project explores the energy transition using **interactive web-based storytelling**.
+
 ✅ The codebase is open, and the data transformation steps are managed via a Python script to ensure transparency.
 
 **🌐 Live Website:** [https://justwsx.github.io/DataVisualizationProject/](https://justwsx.github.io/DataVisualizationProject/)
