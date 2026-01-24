@@ -452,8 +452,8 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 10px;
     
     /* MODIFICHE QUI SOTTO */
-    background: #508d61;       /* Sfondo Verde */
-    color: #a09898dd;            /* Testo NERO (massima leggibilità) */
+    background: #3ad366;       /* Sfondo Verde */
+    color: #000000;            /* Testo NERO (massima leggibilità) */
     border: 2px solid #508d61; /* Bordo dello stesso colore dello sfondo */
     
     padding: 14px; 
