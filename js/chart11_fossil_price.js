@@ -3,214 +3,117 @@ class FossilPrice {
         this.data = data;
         this.containerId = containerId;
         this.currentYear = 2020;
-        
-        // Save the bound resize function so we can remove it later if needed
-        this._resizeHandler = this.resize.bind(this);
-        window.addEventListener('resize', this._resizeHandler);
+        this.colors = { oil: '#7c2d12', gas: '#facc15', coal: '#000000' };
+        this.labels = { oil: 'Oil', gas: 'Natural Gas', coal: 'Coal' };
 
-        // Color palette
-        this.colors = {
-            oil: '#7c2d12',
-            gas: '#facc15',
-            coal: '#000000'
-        };
-
-        // Initialize immediately
-        this.init();
-    }
-
-    /**
-     * Calculates dimensions based on the container's current size
-     * and renders the chart.
-     */
-    init() {
-        const container = document.getElementById(this.containerId);
-        if (!container) return;
-
-        // 1. Measure the container
-        // If the container has no height (0), we fallback to 400px to prevent errors
-        const rect = container.getBoundingClientRect();
-        const containerWidth = rect.width || 800; 
-        const containerHeight = rect.height > 0 ? rect.height : 400;
-
-        // 2. Clear previous content (crucial for resize)
-        container.innerHTML = '';
-
-        // 3. Define dynamic margins based on available space
-        this.margin = { top: 60, right: 40, bottom: 40, left: 50 };
-        this.width = containerWidth - this.margin.left - this.margin.right;
-        this.height = containerHeight - this.margin.top - this.margin.bottom;
-
-        // Process data
-        this.processedData = this.data
-            .map(d => ({
-                year: d.year,
-                oil: d.oil_price_global ?? null,
-                gas: d.gas_price_global ?? null,
-                coal: d.coal_price_global ?? null
-            }))
+        // Prepara i dati una volta sola
+        this.chartData = this.data
+            .map(d => ({ year: d.year, oil: d.oil_price_global, gas: d.gas_price_global, coal: d.coal_price_global }))
             .filter(d => d.year >= 1990 && d.year <= 2022)
             .sort((a, b) => a.year - b.year);
 
-        // Define Scales based on the measured dimensions
-        this.xScale = d3.scaleLinear()
-            .domain(d3.extent(this.processedData, d => d.year))
-            .range([0, this.width]);
+        // Ascolta il resize della finestra
+        window.addEventListener('resize', () => this.draw());
+        
+        // Primo disegno
+        this.draw();
+    }
 
-        const maxPrice = d3.max(this.processedData, d => Math.max(d.oil || 0, d.gas || 0, d.coal || 0));
-        this.yScale = d3.scaleLinear()
-            .domain([0, maxPrice * 1.1])
-            .range([this.height, 0]); // SVG Y is inverted
+    draw() {
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
 
-        // Create SVG
-        // We use absolute pixel values here to match the container exactly
-        this.svg = d3.select(container)
-            .append('svg')
-            .attr('width', containerWidth)
-            .attr('height', containerHeight)
+        // 1. Pulisci e Calcola Dimensioni Reali
+        container.innerHTML = ''; 
+        const { width: w, height: h } = container.getBoundingClientRect();
+        // Se il div è nascosto o alto 0, usiamo un default per non rompere tutto
+        const height = h || 400; 
+        const margin = { top: 60, right: 40, bottom: 40, left: 50 };
+        const width = w - margin.left - margin.right;
+        const chartH = height - margin.top - margin.bottom;
+
+        // 2. Crea SVG e Scale
+        this.svg = d3.select(container).append('svg')
+            .attr('width', w).attr('height', height)
             .style('font-family', 'Inter, sans-serif')
-            .append('g')
-            .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+            .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-        this.drawAxes();
-        this.drawLegend(containerWidth); // Pass width to center legend
+        this.xScale = d3.scaleLinear()
+            .domain(d3.extent(this.chartData, d => d.year))
+            .range([0, width]);
 
-        // Vertical indicator line
-        this.indicatorLine = this.svg.append('line')
-            .attr('stroke', '#64748b')
-            .attr('stroke-width', 2)
-            .attr('stroke-dasharray', '4,4')
-            .attr('y1', 0)
-            .attr('y2', this.height);
+        const maxPrice = d3.max(this.chartData, d => Math.max(d.oil||0, d.gas||0, d.coal||0));
+        this.yScale = d3.scaleLinear().domain([0, maxPrice * 1.1]).range([chartH, 0]);
 
-        this.drawSeries();
-        this.update();
-    }
-
-    drawAxes() {
-        // X Axis
-        const xAxis = d3.axisBottom(this.xScale)
-            .tickFormat(d3.format('d'))
-            .ticks(Math.max(this.width / 80, 2)); // Dynamic tick count based on width
+        // 3. Disegna Assi (X e Y)
+        this.svg.append('g').attr('transform', `translate(0,${chartH})`)
+            .call(d3.axisBottom(this.xScale).tickFormat(d3.format('d')).ticks(width / 80))
+            .call(g => g.selectAll('.domain, line').attr('stroke', '#cbd5e1'))
+            .call(g => g.selectAll('text').attr('fill', '#64748b'));
 
         this.svg.append('g')
-            .attr('transform', `translate(0,${this.height})`)
-            .call(xAxis)
-            .call(g => g.select('.domain').attr('stroke', 'rgba(226,232,240,0.6)'))
-            .call(g => g.selectAll('.tick line').attr('stroke', 'rgba(226,232,240,0.6)'))
-            .call(g => g.selectAll('text').attr('fill', '#64748b').style('font-size', '11px'));
-
-        // Y Axis
-        const yAxis = d3.axisLeft(this.yScale)
-            .tickSize(-this.width); // Full width grid lines
-
-        this.svg.append('g')
-            .call(yAxis)
+            .call(d3.axisLeft(this.yScale).tickSize(-width)) // Griglia orizzontale
             .call(g => g.select('.domain').remove())
-            .call(g => g.selectAll('.tick line').attr('stroke', 'rgba(226,232,240,0.6)'))
-            .call(g => g.selectAll('text').attr('fill', '#64748b').style('font-size', '11px'));
+            .call(g => g.selectAll('line').attr('stroke', '#e2e8f0'))
+            .call(g => g.selectAll('text').attr('fill', '#64748b'));
 
-        // Y Axis Label
-        this.svg.append('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('x', -(this.height / 2))
-            .attr('y', -35)
-            .attr('text-anchor', 'middle')
-            .attr('fill', '#64748b')
-            .style('font-size', '11px')
-            .text('Price (USD)');
-    }
+        // 4. Linea Tratteggiata (Indicatore Anno)
+        this.indicator = this.svg.append('line')
+            .attr('y1', 0).attr('y2', chartH)
+            .attr('stroke', '#64748b').attr('stroke-width', 2).attr('stroke-dasharray', '4,4');
 
-    drawLegend(totalWidth) {
-        const legendData = [
-            { label: 'Oil', color: this.colors.oil },
-            { label: 'Natural Gas', color: this.colors.gas },
-            { label: 'Coal', color: this.colors.coal }
-        ];
+        // 5. Ciclo Unico: Disegna Linee, Punti e Legenda per Oil, Gas, Coal
+        const keys = ['oil', 'gas', 'coal'];
+        const legendStart = (width / 2) - ((keys.length * 100) / 2); // Centra legenda
 
-        // Position legend above the chart area (negative Y relative to margins)
-        const legendGroup = this.svg.append('g')
-            .attr('transform', `translate(0, -30)`);
+        keys.forEach((key, i) => {
+            const color = this.colors[key];
+            const cleanData = this.chartData.filter(d => d[key] != null);
 
-        const itemSpacing = 100;
-        const totalLegendWidth = (legendData.length - 1) * itemSpacing;
-        
-        // Center visually relative to the chart width
-        const startX = (this.width / 2) - (totalLegendWidth / 2);
+            // Linea Grafico
+            this.svg.append('path').datum(cleanData)
+                .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 3)
+                .attr('d', d3.line().x(d => this.xScale(d.year)).y(d => this.yScale(d[key])));
 
-        legendData.forEach((item, i) => {
-            const g = legendGroup.append('g')
-                .attr('transform', `translate(${startX + i * itemSpacing}, 0)`);
-
-            g.append('line')
-                .attr('x1', 0).attr('x2', 20).attr('y1', 0).attr('y2', 0)
-                .attr('stroke', item.color).attr('stroke-width', 3);
-
-            g.append('circle')
-                .attr('cx', 10).attr('cy', 0).attr('r', 4).attr('fill', item.color);
-
-            g.append('text')
-                .attr('x', 25).attr('y', 4)
-                .text(item.label)
-                .attr('fill', '#1e293b')
-                .style('font-size', '12px');
-        });
-    }
-
-    drawSeries() {
-        const categories = ['oil', 'gas', 'coal'];
-        
-        const lineGenerator = (key) => d3.line()
-            .defined(d => d[key] !== null)
-            .x(d => this.xScale(d.year))
-            .y(d => this.yScale(d[key]));
-
-        categories.forEach(key => {
-            this.svg.append('path')
-                .datum(this.processedData)
-                .attr('fill', 'none')
-                .attr('stroke', this.colors[key])
-                .attr('stroke-width', 3)
-                .attr('d', lineGenerator(key));
-
+            // Pallini (assegniamo una classe 'dot-oil', 'dot-gas' per selezionarli dopo)
             this.svg.selectAll(`.dot-${key}`)
-                .data(this.processedData.filter(d => d[key] !== null))
-                .enter()
-                .append('circle')
+                .data(cleanData).enter().append('circle')
                 .attr('class', `dot-${key}`)
-                .attr('cx', d => this.xScale(d.year))
-                .attr('cy', d => this.yScale(d[key]))
-                .attr('r', 4)
-                .attr('fill', this.colors[key]);
+                .attr('cx', d => this.xScale(d.year)).attr('cy', d => this.yScale(d[key]))
+                .attr('r', 4).attr('fill', color);
+
+            // Legenda (in alto)
+            const leg = this.svg.append('g').attr('transform', `translate(${legendStart + i * 100}, -30)`);
+            leg.append('line').attr('x2', 20).attr('stroke', color).attr('stroke-width', 3);
+            leg.append('circle').attr('cx', 10).attr('r', 4).attr('fill', color);
+            leg.append('text').attr('x', 25).attr('y', 4).text(this.labels[key]).style('font-size', '12px').attr('fill', '#1e293b');
         });
+
+        // Aggiorna posizione iniziale
+        this.updateVisuals();
     }
 
     setYear(year) {
         this.currentYear = year;
-        this.update();
+        this.updateVisuals();
     }
 
-    update() {
-        if (!this.xScale || !this.svg) return;
-
-        const xPos = this.xScale(this.currentYear);
+    // Metodo leggero che aggiorna solo ciò che cambia (posizione linea e dimensione punti)
+    updateVisuals() {
+        if (!this.xScale) return;
         
-        this.indicatorLine
-            .attr('x1', xPos).attr('x2', xPos)
-            .style('opacity', 1);
+        // Muovi la linea verticale
+        const x = this.xScale(this.currentYear);
+        this.indicator.attr('x1', x).attr('x2', x);
 
+        // Ingrandisci pallini dell'anno corrente
         ['oil', 'gas', 'coal'].forEach(key => {
             this.svg.selectAll(`.dot-${key}`)
                 .transition().duration(200)
                 .attr('r', d => d.year === this.currentYear ? 10 : 4);
         });
     }
-
-    /**
-     * Re-calculates dimensions and re-draws the entire chart.
-     * This ensures it fits perfectly in the container on window resize.
-     */
-    resize() {
-        this.init();
-    }
+    
+    // Resize ora chiama semplicemente draw()
+    resize() { this.draw(); }
 }
