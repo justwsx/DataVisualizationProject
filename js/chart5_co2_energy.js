@@ -40,13 +40,14 @@ class CO2EnergyChart {
         const container = document.getElementById(this.elementId);
         if (!container) return;
 
-        // 1. SETUP DIMENSIONI
-        const fixedHeight = 600; 
+        // 1. SETUP DIMENSIONI PIÙ COMPATTE
+        // Riduco a 500px per sicurezza. Se è troppo alto viene tagliato dal div padre.
+        const fixedHeight = 500; 
         
         container.style.width = '100%';
         container.style.height = `${fixedHeight}px`;
         container.style.minHeight = `${fixedHeight}px`;
-        container.style.overflow = 'visible'; 
+        container.style.overflow = 'visible'; // Importante!
         container.style.position = 'relative';
         container.innerHTML = '';
 
@@ -54,7 +55,8 @@ class CO2EnergyChart {
         const width = rect.width > 0 ? rect.width : 800;
         const height = fixedHeight;
 
-        const margin = { top: 20, right: 130, bottom: 130, left: 60 };
+        // Margini: Bottom 80 è sufficiente se l'altezza totale non eccede il container padre
+        const margin = { top: 30, right: 130, bottom: 80, left: 60 };
         const w = width - margin.left - margin.right;
         const h = height - margin.top - margin.bottom;
 
@@ -83,10 +85,8 @@ class CO2EnergyChart {
         .sort((a, b) => b.population - a.population);
 
         // 3. SCALE
-        // MODIFICA QUI: Domain parte da 10 invece che 100. 
-        // Nota: Le scale Log non possono partire da 0 esatto.
         const x = d3.scaleLog()
-            .domain([10, 150000]) 
+            .domain([100, 150000])
             .range([0, w])
             .clamp(true);
 
@@ -102,14 +102,13 @@ class CO2EnergyChart {
         const svg = d3.select(container).append("svg")
             .attr("width", width)
             .attr("height", height)
-            .style("overflow", "visible")
+            .style("overflow", "visible") // Permette alle etichette di uscire dal box svg se serve
             .style("display", "block")
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
         // 5. GRIGLIA
-        // MODIFICA QUI: Aggiunto 10 ai ticks
-        const xTicks = [10, 100, 500, 1000, 5000, 10000, 50000, 100000];
+        const xTicks = [100, 500, 1000, 5000, 10000, 50000, 100000];
         const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
 
         // Griglia X
@@ -147,23 +146,27 @@ class CO2EnergyChart {
                 this.tooltip.style("opacity", 0);
             });
 
-        // 7. ASSI
+        // 7. ASSI (DISEGNATI PER ULTIMI PER ESSERE SOPRA A TUTTO)
+        
+        // ASSE X - Etichette e linea
         const xAxis = svg.append("g")
-            .attr("transform", `translate(0,${h})`)
+            .attr("transform", `translate(0,${h})`) // Posizionato esattamente al fondo del grafico
             .call(d3.axisBottom(x)
                 .tickValues(xTicks)
                 .tickFormat(formatK)
-                .tickPadding(15));
+                .tickPadding(10)); // Spinge il testo sotto la linea
 
-        xAxis.select(".domain").attr("stroke", "#94a3b8");
+        // Stilizzazione forzata Asse X
+        xAxis.select(".domain").attr("stroke", "#94a3b8").attr("stroke-width", 1); // Linea asse grigia scura
         xAxis.selectAll("text")
-            .attr("fill", "#1e293b")
+            .attr("fill", "#1e293b") // Colore scuro per il testo
             .style("font-size", "11px")
             .style("font-weight", "500");
 
+        // Titolo Asse X
         svg.append("text")
             .attr("x", w/2)
-            .attr("y", h + 60)
+            .attr("y", h + 50) // 50px sotto la fine del grafico
             .text("Primary Energy Consumption (kWh per capita)")
             .attr("fill", "#64748b")
             .attr("text-anchor", "middle")
@@ -176,14 +179,15 @@ class CO2EnergyChart {
         yAxis.select(".domain").remove();
         yAxis.selectAll("text").attr("fill", "#64748b").style("font-size", "11px");
 
+        // Titolo Asse Y
         svg.append("text").attr("transform", "rotate(-90)").attr("y", -50).attr("x", -h/2)
             .text("Carbon Intensity (%)").attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
         // 8. ANNOTAZIONI
-        svg.append("text").attr("x", 10).attr("y", 10).text("Bubble size = Population").style("font-size", "11px").attr("fill", "#64748b");
+        svg.append("text").attr("x", 20).attr("y", 20).text("Bubble size = Population").style("font-size", "11px").attr("fill", "#64748b");
         svg.append("text").attr("x", w - 140).attr("y", h - 20).text("Lower % = Cleaner Energy").style("font-size", "11px").attr("fill", "#059669");
 
-        // 9. LEGENDA COLORBAR
+        // 9. LEGENDA
         this.drawColorBar(svg, w, h);
     }
 
