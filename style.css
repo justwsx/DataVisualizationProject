@@ -652,9 +652,8 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
     color: #1e293b;
 }
 
-#chart-gdp-energy, #chart-fossil {
+#chart-gdp-energy {
     width: 100%;
-    height: auto;
-    min-height: 500px; /* Importante per dare spazio */
-    overflow: visible; /* Lascia che le etichette escano se serve */
+    height: auto; 
+    min-height: 400px; 
 }
