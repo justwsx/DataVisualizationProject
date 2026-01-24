@@ -23,11 +23,12 @@ class GDPEnergyChart {
             "Nigeria": "Africa", "Kenya": "Africa", "Morocco": "Africa"
         };
 
-        // Tooltip setup
+        // Tooltip
         this.tooltip = d3.select("body").selectAll(".d3-tooltip").data([0]).join("div")
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
 
+        // Resize: ridisegna tutto al cambio finestra
         window.addEventListener('resize', () => this.draw());
     }
 
@@ -44,24 +45,24 @@ class GDPEnergyChart {
         const container = document.getElementById(this.containerId);
         if (!container) return;
 
-        // --- FIX CRUCIALE: Forziamo lo stile del contenitore via JS ---
-        // Questo sovrascrive eventuali CSS esterni che bloccano l'altezza
+        // --- MANIERE FORTI: Forziamo l'altezza a 600px fissi ---
+        // Questo impedisce al grafico di essere schiacciato
+        container.style.height = '600px'; 
+        container.style.minHeight = '600px';
         container.style.width = '100%';
-        container.style.height = 'auto';     // Lascia che si allunghi quanto serve
-        container.style.minHeight = '500px'; // Altezza minima garantita
-        container.style.overflow = 'visible'; // Impedisce il taglio del contenuto
+        container.style.overflow = 'hidden'; // Niente scrollbar
         container.innerHTML = '';
 
-        // Dimensioni Logiche (Tela Virtuale)
-        // Usiamo 800x520 per un aspetto più "wide" che sta meglio negli schermi
-        const logicalWidth = 800;
-        const logicalHeight = 520; 
-        const margin = { top: 60, right: 40, bottom: 130, left: 70 };
+        // Dimensioni fisse interne (Canvas)
+        const width = container.offsetWidth || 800;
+        const height = 600; // Deve corrispondere allo style.height sopra
         
-        const w = logicalWidth - margin.left - margin.right;
-        const h = logicalHeight - margin.top - margin.bottom;
+        // Margini molto ampi per sicurezza
+        const margin = { top: 50, right: 30, bottom: 150, left: 70 };
+        const w = width - margin.left - margin.right;
+        const h = height - margin.top - margin.bottom;
 
-        // Filtro Dati
+        // Filtro dati
         let dataset = this.data.filter(d => d.year === this.year);
         if (!dataset.length) dataset = this.data.filter(d => d.year === 2020);
         
@@ -69,29 +70,23 @@ class GDPEnergyChart {
             .filter(d => d.primary_energy_consumption > 0 && d.gdp > 0)
             .sort((a, b) => (b.population||0) - (a.population||0));
 
-        // SVG Responsivo
+        // SVG
         const svg = d3.select(container).append("svg")
-            .attr("viewBox", `0 0 ${logicalWidth} ${logicalHeight}`)
-            .attr("preserveAspectRatio", "xMidYMid meet")
-            .style("width", "100%")
-            .style("height", "auto")
+            .attr("width", width)
+            .attr("height", height)
             .style("font-family", "Inter, sans-serif")
-            .style("overflow", "visible") // Sicurezza extra
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // Scale
-        const x = d3.scaleLog().domain([500, 200000]).range([0, w]).clamp(true); // Range GDP aggiustato
+        // Scale (Ho allargato i range per distanziare le bolle)
+        const x = d3.scaleLog().domain([500, 200000]).range([0, w]).clamp(true);
         const y = d3.scaleLog().domain([50, 150000]).range([h, 0]).clamp(true);
-        const r = d3.scaleSqrt().domain([0, 1e9]).range([3, 45]); // Bolle leggermente più piccole
+        
+        // Ho ridotto drasticamente il raggio massimo (da 50 a 30) perché erano giganti
+        const r = d3.scaleSqrt().domain([0, 1e9]).range([2, 30]); 
 
-        // Formato numeri assi
-        const formatK = d => {
-            if (d >= 1000) return d/1000 + 'k';
-            return d;
-        };
+        const formatK = d => d >= 1000 ? d/1000 + 'k' : d;
 
-        // Griglia e Assi
-        // X Axis
+        // Asse X
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x).tickValues([1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -101,7 +96,7 @@ class GDPEnergyChart {
             .text("GDP per Capita ($)")
             .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Y Axis
+        // Asse Y
         svg.append("g")
             .call(d3.axisLeft(y).tickValues([100, 500, 1000, 5000, 10000, 50000, 100000]).tickFormat(formatK).tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -112,11 +107,11 @@ class GDPEnergyChart {
             .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
         // Titolo
-        svg.append("text").attr("x", w/2).attr("y", -25)
+        svg.append("text").attr("x", w/2).attr("y", -20)
             .text("Energy Consumption vs GDP")
-            .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "18px");
+            .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "16px");
 
-        // Disegno Bolle
+        // Bolle
         svg.selectAll("circle")
             .data(dataset).enter().append("circle")
             .attr("cx", d => x(d.gdp / 1e9)) 
@@ -140,14 +135,17 @@ class GDPEnergyChart {
         const itemW = 110; 
         const rowSize = Math.floor(w / itemW);
         
+        // Spostiamo la legenda ben sotto l'area del grafico
+        const legendContainer = svg.append("g").attr("transform", `translate(0, ${h + 60})`);
+
         keys.forEach((key, i) => {
             const row = Math.floor(i / rowSize);
             const col = i % rowSize;
-            const rowWidth = Math.min(keys.length - row * rowSize, rowSize) * itemW;
-            const xBase = (w - rowWidth) / 2;
+            const xOffset = (w - (Math.min(keys.length - row * rowSize, rowSize) * itemW)) / 2;
             
-            // Posizionamento molto più in basso per sicurezza
-            const g = svg.append("g").attr("transform", `translate(${xBase + col * itemW}, ${h + 70 + row * 25})`);
+            const g = legendContainer.append("g")
+                .attr("transform", `translate(${xOffset + col * itemW}, ${row * 25})`);
+
             g.append("circle").attr("r", 5).attr("fill", this.colors[key]);
             g.append("text").attr("x", 12).attr("y", 4).text(key).style("font-size", "12px").attr("fill", "#64748b");
         });
