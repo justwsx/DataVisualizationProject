@@ -19,8 +19,8 @@ This project explores the energy transition using **interactive web-based storyt
 ### 🧼 Data Cleaning & Enrichment
 - **Script:** `process.py`
 - **Input:** Raw data located in the `data/` folder:
-  - `owid-energy-data.csv` (Energy consumption metrics).
-  - `fossil_price_table_1990_2022.csv` (Global fossil fuel prices).
+  - `world_clean_dataset.csv` (Energy consumption metrics).
+  - `world_energy_cleaned_final.csv ` (Global fossil fuel prices).
 - **Operations:**
   - **Country Filtering:** Filters the dataset for a selected list of **50 major countries** (covering diverse economies across all continents) to focus the analysis.
   - **Timeframe Restriction:** Limits the data range to **1990–2022** for consistent historical comparison.
