@@ -638,12 +638,23 @@ body:has(.sidebar:hover) .sidebar-instruction-btn { opacity: 0; pointer-events: 
 /* Tooltip style needed for D3 hover effects */
 .d3-tooltip {
     position: absolute;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid #ccc;
+    text-align: left;
+    width: auto;
+    height: auto;
     padding: 8px;
+    font: 12px 'Inter', sans-serif;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #cbd5e1;
     border-radius: 4px;
     pointer-events: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 100;
+    color: #1e293b;
+}
+
+#chart-gdp-energy, #chart-fossil {
+    width: 100%;
+    height: auto;
+    min-height: 500px; /* Importante per dare spazio */
+    overflow: visible; /* Lascia che le etichette escano se serve */
 }
