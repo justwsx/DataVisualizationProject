@@ -186,7 +186,7 @@ class EnergyMapChart {
             .attr('font-size', '18px')
             .attr('font-weight', 'bold')
             .attr('fill', '#1e293b')
-            .text('The Energy Inequality Map');
+            
 
         svg.append('text')
             .attr('x', 20)
@@ -261,3 +261,4 @@ class EnergyMapChart {
       
     }
 }
+
