@@ -1,22 +1,39 @@
+/**
+ * MAIN DASHBOARD CONTROLLER
+ * --------------------------------------------------------------------------
+ * Acts as the central orchestrator for the application.
+ * Responsibilities:
+ * 1. Data Loading & Parsing (D3.js).
+ * 2. Global State Management (Year, Data, UI State).
+ * 3. Component Initialization (Charts).
+ * 4. Event Handling (Interactions, Resize, Animation).
+ */
+
 const Dashboard = {
-    // --- STATE VARIABLES ---
+    // ----------------------------------------------------------------------
+    // 1. STATE VARIABLES
+    // ----------------------------------------------------------------------
     currentYear: 2020,
-    data: {},
-    charts: {},
-    isPlaying: false,
-    animationTimer: null,
-    viewMode: 'lines',
-    selectedCountry: 'World',
+    data: {},            // Holds the raw and processed datasets
+    charts: {},          // Registry of initialized chart instances
+    isPlaying: false,    // Animation state toggle
+    animationTimer: null,// Reference to the animation interval
+    viewMode: 'lines',   // Default view for Consumption Chart
+    selectedCountry: 'World', // Global filter
     minYear: 1990,
     maxYear: 2022,
 
-    // --- CONFIGURATION ---
+    // ----------------------------------------------------------------------
+    // 2. CONFIGURATION
+    // ----------------------------------------------------------------------
+    // Major economies to focus on for specific charts
     majorCountries: [
         "United States", "China", "India", "Japan",
         "Germany", "Russia", "Brazil", "Canada",
         "United Kingdom", "France", "Australia", "South Korea"
     ],
 
+    // Consistent color mapping across all charts
     countryColors: {
         "United States": "#6366f1",
         "China": "#ec4899",
@@ -32,18 +49,28 @@ const Dashboard = {
         "South Korea": "#a855f7"
     },
 
+    /**
+     * Application Entry Point.
+     * Loads data first, then initializes UI components.
+     */
     async init() {
         await this.loadData();
+        
+        // Ensure data is loaded before rendering
         if (this.data.energy && this.data.energy.length > 0) {
             this.initializeCharts();
             this.setupEventListeners();
             this.updateKPIs();
             console.log("Dashboard initialized successfully");
         } else {
-            console.error("No data loaded. Please check the CSV file.");
+            console.error("No data loaded. Please check the CSV file path.");
         }
     },
 
+    /**
+     * Fetches and parses the CSV dataset using D3.js.
+     * Converts string values to numbers and filters invalid entries.
+     */
     async loadData() {
         try {
             console.log("Loading energy dataset...");
@@ -54,6 +81,7 @@ const Dashboard = {
                 return;
             }
 
+            // Data Cleaning & Type Conversion
             this.data.energy = rawData.map(d => ({
                 country: d.country,
                 year: +d.year,
@@ -73,6 +101,7 @@ const Dashboard = {
                 coal_price_global: +d.coal_price_global
             })).filter(d => d.country && !isNaN(d.year) && !isNaN(d.primary_energy_consumption));
 
+            // Dynamic Date Range Detection
             const years = [...new Set(this.data.energy.map(d => d.year))].sort((a, b) => a - b);
             this.minYear = years[0];
             this.maxYear = years[years.length - 1];
@@ -84,8 +113,14 @@ const Dashboard = {
         }
     },
 
+    /**
+     * Instantiates all Chart classes if they are defined in the global scope.
+     * Passes necessary data and configuration to each instance.
+     */
     initializeCharts() {
         console.log("Initializing charts...");
+        
+        // Defensive checks to ensure classes exist before instantiation
         if (typeof ConsumptionChart !== 'undefined') this.charts.consumption = new ConsumptionChart(this.data.energy, this.majorCountries, this.countryColors);
         if (typeof MixChart !== 'undefined') this.charts.mix = new MixChart(this.data.energy);
         if (typeof RenewablesChart !== 'undefined') this.charts.renewables = new RenewablesChart(this.data.energy, this.majorCountries, this.countryColors);
@@ -97,11 +132,17 @@ const Dashboard = {
         if (typeof TopConsumersChart !== 'undefined') this.charts.topConsumers = new TopConsumersChart(this.data.energy);
         if (typeof EnergyMapChart !== 'undefined') this.charts.map = new EnergyMapChart(this.data.energy);
         if (typeof FossilPrice !== 'undefined') this.charts.fossilPrice = new FossilPrice(this.data.energy, 'chart-fossilPrice');
-        if (typeof EnergyIntensityChart !== 'undefined') { this.charts.energyIntensity = new EnergyIntensityChart(this.data.energy); }
+        if (typeof EnergyIntensityChart !== 'undefined') this.charts.energyIntensity = new EnergyIntensityChart(this.data.energy);
+        
         this.updateAllCharts();
     },
 
+    /**
+     * Sets up DOM Event Listeners for UI interactivity.
+     * Handles: Slider, Play Button, View Toggles, Resize.
+     */
     setupEventListeners() {
+        // 1. Time Slider
         const slider = document.getElementById('yearSlider');
         const yearDisplay = document.getElementById('currentYearDisplay');
 
@@ -118,9 +159,11 @@ const Dashboard = {
             });
         }
 
+        // 2. Play/Pause Animation Button
         const playBtn = document.getElementById('playBtn');
         if (playBtn) playBtn.addEventListener('click', () => this.toggleAnimation());
 
+        // 3. View Mode Toggles (e.g., Line vs Area)
         const viewBtns = document.querySelectorAll('.chart-btn[data-view]');
         viewBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -131,25 +174,7 @@ const Dashboard = {
             });
         });
 
-        /*const countrySelect = document.getElementById('countrySelect');
-        if (countrySelect) {
-            const countries = [...new Set(this.data.energy.map(d => d.country))].sort();
-            countries.forEach(country => {
-                const option = document.createElement('option');
-                option.value = country;
-                option.textContent = country;
-                if (country === "World" || this.majorCountries.includes(country)) {
-                    countrySelect.appendChild(option);
-                }
-            });
-
-            countrySelect.addEventListener('change', (e) => {
-                this.selectedCountry = e.target.value;
-                this.updateAllCharts();
-                this.updateKPIs();
-            });
-        }*/
-
+        // 4. Global Window Resize (Responsive Charts)
         window.addEventListener('resize', () => {
             Object.values(this.charts).forEach(chart => {
                 if (chart && typeof chart.resize === 'function') chart.resize();
@@ -157,6 +182,9 @@ const Dashboard = {
         });
     },
 
+    /**
+     * Specific update logic for the Consumption Chart view toggle.
+     */
     updateChart1View() {
         if (this.charts.consumption && typeof this.charts.consumption.setViewMode === 'function') {
             this.charts.consumption.setViewMode(this.viewMode);
@@ -164,6 +192,9 @@ const Dashboard = {
         }
     },
 
+    /**
+     * Handles the Play/Pause logic for the time-lapse animation.
+     */
     toggleAnimation() {
         this.isPlaying = !this.isPlaying;
         const playBtn = document.getElementById('playBtn');
@@ -178,23 +209,32 @@ const Dashboard = {
         }
     },
 
+    /**
+     * Recursive function to advance the year automatically.
+     */
     animateYear() {
         if (!this.isPlaying) return;
 
         this.currentYear++;
-        if (this.currentYear > this.maxYear) this.currentYear = this.minYear;
+        if (this.currentYear > this.maxYear) this.currentYear = this.minYear; // Loop back to start
 
+        // Update UI Controls
         const slider = document.getElementById('yearSlider');
         const display = document.getElementById('currentYearDisplay');
         if (slider) slider.value = this.currentYear;
         if (display) display.textContent = this.currentYear;
 
+        // Render Updates
         this.updateAllCharts();
         this.updateKPIs();
 
+        // Recursion loop (1 second interval)
         this.animationTimer = setTimeout(() => this.animateYear(), 1000);
     },
 
+    /**
+     * Triggers the .update() method on all registered chart instances.
+     */
     updateAllCharts() {
         Object.values(this.charts).forEach(chart => {
             if (chart && typeof chart.update === 'function') {
@@ -203,28 +243,30 @@ const Dashboard = {
         });
     },
 
-
+    /**
+     * Calculates and updates the Key Performance Indicators (KPIs) 
+     * displayed at the top of the dashboard.
+     */
     updateKPIs() {
-
         let yearData = this.data.energy.filter(d => d.year === this.currentYear);
 
+        // Apply country filter if selected (currently defaults to 'World')
         if (this.selectedCountry !== 'World') {
             yearData = yearData.filter(d => d.country === this.selectedCountry);
         }
 
         if (yearData.length > 0) {
-
+            // Aggregate values
             const totalEnergy = yearData.reduce((sum, d) => sum + (d.primary_energy_consumption || 0), 0);
             const totalFossil = yearData.reduce((sum, d) => sum + (d.fossil_fuel_consumption || 0), 0);
             const totalRenewables = yearData.reduce((sum, d) => sum + (d.renewables_consumption || 0), 0);
-
-
             const totalGDP = yearData.reduce((sum, d) => sum + (d.gdp || 0), 0);
             const totalPop = yearData.reduce((sum, d) => sum + (d.population || 0), 0);
 
+            // Derived metrics
             const gdpPerCapita = totalPop > 0 ? (totalGDP / totalPop) : 0;
 
-
+            // DOM Updates
             const kpiTotal = document.getElementById('kpiTotalEnergy');
             if (kpiTotal) kpiTotal.textContent = (totalEnergy / 1000).toFixed(1) + 'k';
 
@@ -236,11 +278,10 @@ const Dashboard = {
 
             const kpiGDP = document.getElementById('kpiGDP');
             if (kpiGDP) {
-
                 kpiGDP.textContent = '$' + (gdpPerCapita / 1000).toFixed(1) + 'k';
             }
         } else {
-
+            // Fallback for missing data
             ['kpiTotalEnergy', 'kpiFossil', 'kpiRenewables', 'kpiGDP'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = '-';
@@ -249,23 +290,35 @@ const Dashboard = {
     }
 };
 
+// --------------------------------------------------------------------------
+// 3. INITIALIZATION
+// --------------------------------------------------------------------------
+
+// Initialize Dashboard when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     Dashboard.init();
 });
 
+// --------------------------------------------------------------------------
+// 4. MOBILE SIDEBAR LOGIC
+// --------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const toggleBtn = document.getElementById('sidebarToggle');
 
     if (toggleBtn) {
+        // Toggle Sidebar visibility on mobile
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             sidebar.classList.toggle('mobile-active');
+            
+            // Switch Icon (Menu <-> Close)
             const icon = toggleBtn.querySelector('span');
             icon.textContent = sidebar.classList.contains('mobile-active') ? 'close' : 'menu';
         });
     }
 
+    // Close sidebar when clicking outside
     document.addEventListener('click', (e) => {
         if (sidebar.classList.contains('mobile-active') && !sidebar.contains(e.target)) {
             sidebar.classList.remove('mobile-active');
@@ -273,4 +326,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-

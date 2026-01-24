@@ -1,18 +1,35 @@
+/**
+ * class FossilPrice
+ * --------------------------------------------------------------------------
+ * Renders a Multi-Line Chart tracking the global prices of Oil, Gas, and Coal.
+ * * Visualization Logic:
+ * - X-Axis: Time (Years 1990-2022).
+ * - Y-Axis: Price in USD (Linear Scale).
+ * - UX Design: Uses "Direct Labeling" (labels at the end of lines) instead of a legend.
+ * - Interaction: Shared tooltip using d3.bisector for nearest-point lookup.
+ */
 class FossilPrice {
+    
+    /**
+     * Initializes the chart instance.
+     * @param {Array} data - The complete dataset.
+     * @param {string} containerId - The ID of the DOM element to render into.
+     */
     constructor(data, containerId) {
         this.data = data;
         this.containerId = containerId; 
         this.currentYear = 2020;
         
-        // 1. Increased right margin to fit labels
+        // Margins: Increased 'right' margin (100px) to accommodate Direct Labels
         this.margin = { top: 40, right: 100, bottom: 50, left: 60 };
         this.width = 0;
         this.height = 0;
 
+        // Color mapping for fossil fuels
         this.colors = {
-            oil: '#7c2d12',
-            gas: '#facc15',
-            coal: '#000000'
+            oil: '#7c2d12',    // Brown/Red
+            gas: '#facc15',    // Yellow/Gold
+            coal: '#000000'    // Black
         };
 
         this.labels = {
@@ -23,9 +40,13 @@ class FossilPrice {
 
         this.init();
         
+        // Native window resize listener
         window.addEventListener('resize', () => this.resize());
     }
 
+    /**
+     * Sets up the static SVG structure and groups.
+     */
     init() {
         const container = d3.select(`#${this.containerId}`);
         if (container.empty()) return;
@@ -38,17 +59,20 @@ class FossilPrice {
         this.g = this.svg.append("g")
             .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
 
+        // Layer Groups (Order determines Z-index)
         this.gridGroup = this.g.append("g").attr("class", "grid-group");
         this.linesGroup = this.g.append("g").attr("class", "lines-group");
         this.markersGroup = this.g.append("g").attr("class", "markers-group");
-        this.labelsGroup = this.g.append("g").attr("class", "labels-group"); // Group for end labels
+        this.labelsGroup = this.g.append("g").attr("class", "labels-group"); // Specifically for end-of-line text
         this.axesGroup = this.g.append("g").attr("class", "axes-group");
         this.overlayGroup = this.g.append("g").attr("class", "overlay-group");
 
+        // Tooltip Container
         this.tooltip = container.append("div")
             .attr("class", "fossil-tooltip")
             .style("opacity", 0);
             
+        // Vertical indicator line for hover
         this.hoverLine = this.overlayGroup.append("line")
             .attr("class", "hover-line")
             .attr("stroke", "#64748b")
@@ -59,21 +83,30 @@ class FossilPrice {
         this.update();
     }
 
+    /**
+     * Updates the highlighted year marker.
+     */
     setYear(year) {
         this.currentYear = year;
         this.update();
     }
 
+    /**
+     * Main rendering loop.
+     */
     update() {
         const container = d3.select(`#${this.containerId}`);
         if (container.empty()) return;
 
+        // 1. DIMENSIONS
         const rect = container.node().getBoundingClientRect();
         this.width = rect.width - this.margin.left - this.margin.right;
         this.height = 400 - this.margin.top - this.margin.bottom;
 
         this.svg.attr("height", 400);
 
+        // 2. DATA PROCESSING
+        // Filter range 1990-2022 and map structure
         const parsedData = this.data
             .filter(d => d.year >= 1990 && d.year <= 2022)
             .map(d => ({
@@ -84,18 +117,21 @@ class FossilPrice {
             }))
             .sort((a, b) => a.year - b.year);
 
+        // 3. SCALES
         const x = d3.scaleLinear()
             .domain(d3.extent(parsedData, d => d.year))
             .range([0, this.width]);
 
+        // Find max value across all three metrics for Y domain
         const maxPrice = d3.max(parsedData, d => Math.max(d.oil || 0, d.gas || 0, d.coal || 0)) || 100;
         const y = d3.scaleLinear()
             .domain([0, maxPrice * 1.1]) 
             .range([this.height, 0]);
 
-        // Draw Axes
+        // 4. DRAW AXES
         this.axesGroup.selectAll("*").remove();
         
+        // X-Axis
         this.axesGroup.append("g")
             .attr("transform", `translate(0,${this.height})`)
             .call(d3.axisBottom(x).ticks(5).tickFormat(d3.format("d")))
@@ -104,6 +140,7 @@ class FossilPrice {
             .attr("color", "#64748b")
             .select(".domain").attr("stroke", "#e2e8f0");
 
+        // Y-Axis
         this.axesGroup.append("g")
             .call(d3.axisLeft(y).ticks(5))
             .attr("font-family", "Inter, sans-serif")
@@ -111,6 +148,7 @@ class FossilPrice {
             .attr("color", "#64748b")
             .select(".domain").remove();
 
+        // Y-Axis Label
         this.axesGroup.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", -45)
@@ -120,16 +158,16 @@ class FossilPrice {
             .style("font-size", "12px")
             .text("Price (USD)");
 
-        // Draw Grid
+        // 5. DRAW GRID
         this.gridGroup.selectAll("*").remove();
         this.gridGroup.append("g")
             .call(d3.axisLeft(y).tickSize(-this.width).tickFormat(""))
             .attr("color", "rgba(226,232,240,0.6)")
             .select(".domain").remove();
 
-        // Draw Lines & End Labels
+        // 6. DRAW LINES & DIRECT LABELS
         const createLine = (key) => d3.line()
-            .defined(d => d[key] !== null)
+            .defined(d => d[key] !== null) // Handle missing data gaps
             .x(d => x(d.year))
             .y(d => y(d[key]));
 
@@ -137,7 +175,7 @@ class FossilPrice {
         this.labelsGroup.selectAll("*").remove(); // Clear old labels
         
         ['oil', 'gas', 'coal'].forEach(key => {
-            // 1. Draw Path
+            // A. Draw Line Path
             this.linesGroup.append("path")
                 .datum(parsedData)
                 .attr("fill", "none")
@@ -145,17 +183,17 @@ class FossilPrice {
                 .attr("stroke-width", 3)
                 .attr("d", createLine(key));
 
-            // 2. Add Label at the end of the line
+            // B. Direct Labeling Logic
             // Find the last valid data point for this series
             const validData = parsedData.filter(d => d[key] !== null);
             const lastPoint = validData[validData.length - 1];
 
             if (lastPoint) {
                 this.labelsGroup.append("text")
-                    .attr("x", x(lastPoint.year) + 8) // Offset to right
-                    .attr("y", y(lastPoint[key]))     // Y position of last point
-                    .text(this.labels[key])           // Text: Oil, Gas, Coal
-                    .attr("fill", this.colors[key])   // Match line color
+                    .attr("x", x(lastPoint.year) + 8) // Offset to the right (into the margin)
+                    .attr("y", y(lastPoint[key]))     // Align Y with the line end
+                    .text(this.labels[key])           
+                    .attr("fill", this.colors[key])   
                     .attr("alignment-baseline", "middle")
                     .style("font-family", "Inter, sans-serif")
                     .style("font-size", "12px")
@@ -163,7 +201,7 @@ class FossilPrice {
             }
         });
 
-        // Draw Markers
+        // 7. MARKERS (Dots)
         this.markersGroup.selectAll("*").remove();
         ['oil', 'gas', 'coal'].forEach(key => {
             this.markersGroup.selectAll(`.dot-${key}`)
@@ -172,13 +210,14 @@ class FossilPrice {
                 .attr("class", `dot-${key}`)
                 .attr("cx", d => x(d.year))
                 .attr("cy", d => y(d[key]))
+                // Larger dot for current year
                 .attr("r", d => d.year === this.currentYear ? 6 : 3)
                 .attr("fill", this.colors[key])
                 .attr("stroke", "white")
                 .attr("stroke-width", 1);
         });
 
-        // Current Year Vertical Line
+        // Current Year Vertical Line Indicator
         this.linesGroup.append("line")
             .attr("x1", x(this.currentYear))
             .attr("x2", x(this.currentYear))
@@ -188,9 +227,9 @@ class FossilPrice {
             .attr("stroke-width", 2)
             .attr("stroke-dasharray", "4 4");
 
-        // NOTE: drawLegend() is removed
+        // NOTE: Legend is removed intentionally in favor of Direct Labeling
 
-        // Hover Interaction
+        // 8. INTERACTION (Overlay & Bisector)
         const bisect = d3.bisector(d => d.year).center;
         
         this.overlayGroup.selectAll(".overlay-rect").remove();
@@ -210,6 +249,8 @@ class FossilPrice {
             })
             .on("mousemove", (event) => {
                 const [mouseX, mouseY] = d3.pointer(event, this.g.node());
+                
+                // Find nearest data point to mouse X
                 const x0 = x.invert(mouseX);
                 const i = bisect(parsedData, x0, 1);
                 const d0 = parsedData[i - 1];
@@ -224,12 +265,14 @@ class FossilPrice {
 
                 if (!d) return;
 
+                // Move hover line
                 this.hoverLine
                     .attr("x1", x(d.year))
                     .attr("x2", x(d.year))
                     .attr("y1", 0)
                     .attr("y2", this.height);
 
+                // Build Tooltip HTML
                 let htmlContent = `<div style="font-weight:bold; margin-bottom:5px; border-bottom:1px solid #eee; padding-bottom:5px;">Year: ${d.year}</div>`;
                 
                 const items = [
@@ -248,6 +291,7 @@ class FossilPrice {
                     }
                 });
 
+                // Calculate Tooltip position (prevent overflow on right edge)
                 let tooltipX = x(d.year) + this.margin.left + 15;
                 let tooltipY = mouseY + this.margin.top;
 
@@ -262,6 +306,9 @@ class FossilPrice {
             });
     }
 
+    /**
+     * Resizes the chart.
+     */
     resize() {
         this.update();
     }
