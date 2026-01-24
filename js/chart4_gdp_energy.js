@@ -23,7 +23,6 @@ class GDPEnergyChart {
             "Nigeria": "Africa", "Kenya": "Africa", "Morocco": "Africa"
         };
 
-        // Tooltip
         this.tooltip = d3.select("body").selectAll(".d3-tooltip").data([0]).join("div")
             .attr("class", "d3-tooltip")
             .style("opacity", 0);
@@ -44,7 +43,7 @@ class GDPEnergyChart {
         const container = document.getElementById(this.containerId);
         if (!container) return;
 
-        // --- FIX ALTEZZA (Maniere forti) ---
+        // Container Style
         container.style.height = '600px'; 
         container.style.minHeight = '600px';
         container.style.width = '100%';
@@ -71,24 +70,27 @@ class GDPEnergyChart {
             .style("font-family", "Inter, sans-serif")
             .append("g").attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // --- FIX CLUSTERING (Scale Logaritmiche) ---
-        // Ho abbassato drasticamente i minimi dei domini (da 500/50 a 1)
-        // per dare spazio ai valori piccoli invece di schiacciarli sugli assi.
-        // Ho anche aumentato leggermente i massimi per sicurezza.
-        const x = d3.scaleLog().domain([1, 300000]).range([0, w]).clamp(true);
-        const y = d3.scaleLog().domain([1, 150000]).range([h, 0]).clamp(true);
-        const r = d3.scaleSqrt().domain([0, 1e9]).range([2, 30]); 
+        // --- MODIFICA 1: ZOOM (DOMINI) ---
+        // Ho stretto i domini. Invece di partire da 1, partiamo da valori più alti (300/500)
+        // per tagliare lo spazio vuoto a sinistra e in basso.
+        // GDP: da 300 a 150k (era 1 a 300k)
+        // Energy: da 500 a 150k (era 1 a 150k)
+        const x = d3.scaleLog().domain([300, 150000]).range([0, w]).clamp(true);
+        const y = d3.scaleLog().domain([500, 150000]).range([h, 0]).clamp(true);
+        
+        // --- MODIFICA 2: BOLLE GIGANTI ---
+        // Ho aumentato il range del raggio da [2, 30] a [6, 70].
+        const r = d3.scaleSqrt().domain([0, 1.4e9]).range([6, 70]); 
 
-        // Formattatore per le etichette degli assi
         const formatAxis = d => {
             if (d >= 1000) return d/1000 + 'k';
-            return d; // Mostra il numero normale per valori < 1000 (es. 1, 10, 100)
+            return d; 
         };
 
-        // Asse X (Aggiunti tick per 1, 10, 100)
+        // Asse X
         svg.append("g").attr("transform", `translate(0,${h})`)
             .call(d3.axisBottom(x)
-                .tickValues([1, 10, 100, 1000, 10000, 100000]) // Nuovi valori tick
+                .tickValues([500, 1000, 5000, 10000, 50000, 100000]) // Tick ottimizzati per il nuovo zoom
                 .tickFormat(formatAxis)
                 .tickSize(-h))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -98,10 +100,10 @@ class GDPEnergyChart {
             .text("GDP per Capita ($)")
             .attr("fill", "#64748b").attr("text-anchor", "middle").style("font-size", "13px");
 
-        // Asse Y (Aggiunti tick per 1, 10)
+        // Asse Y
         svg.append("g")
             .call(d3.axisLeft(y)
-                .tickValues([1, 10, 100, 1000, 5000, 10000, 50000, 100000])
+                .tickValues([500, 1000, 5000, 10000, 50000, 100000])
                 .tickFormat(formatAxis)
                 .tickSize(-w))
             .call(g => g.selectAll("line").attr("stroke", "#e2e8f0").attr("stroke-dasharray", "2,2"))
@@ -114,7 +116,7 @@ class GDPEnergyChart {
         // Titolo
         svg.append("text").attr("x", w/2).attr("y", -20)
             .text("Energy Consumption vs GDP")
-            .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "16px");
+            .attr("font-weight", "bold").attr("text-anchor", "middle").attr("fill", "#1e293b").style("font-size", "18px");
 
         // Bolle
         svg.selectAll("circle")
@@ -123,15 +125,17 @@ class GDPEnergyChart {
             .attr("cy", d => y(d.primary_energy_consumption))
             .attr("r", d => r(d.population || 0))
             .attr("fill", d => this.colors[this.getRegion(d.country)] || '#6b7280')
-            .attr("stroke", "white").attr("fill-opacity", 0.85)
+            // Bordo sottile e opacità per gestire le sovrapposizioni delle bolle grandi
+            .attr("stroke", "white").attr("stroke-width", 0.5) 
+            .attr("fill-opacity", 0.75) 
             .on("mouseover", (e, d) => {
-                d3.select(e.target).attr("stroke", "#333").attr("stroke-width", 2);
+                d3.select(e.target).attr("stroke", "#333").attr("stroke-width", 2).attr("fill-opacity", 1);
                 this.tooltip.style("opacity", 1)
                     .html(`<b>${d.country}</b><br>GDP: $${d3.format(",.1f")(d.gdp/1e9)}B<br>Energy: ${d3.format(",.0f")(d.primary_energy_consumption)}`)
                     .style("left", (e.pageX + 10) + "px").style("top", (e.pageY - 20) + "px");
             })
             .on("mouseout", (e) => {
-                d3.select(e.target).attr("stroke", "white").attr("stroke-width", 1);
+                d3.select(e.target).attr("stroke", "white").attr("stroke-width", 0.5).attr("fill-opacity", 0.75);
                 this.tooltip.style("opacity", 0);
             });
 
@@ -149,7 +153,7 @@ class GDPEnergyChart {
             const g = legendContainer.append("g")
                 .attr("transform", `translate(${xOffset + col * itemW}, ${row * 25})`);
 
-            g.append("circle").attr("r", 5).attr("fill", this.colors[key]);
+            g.append("circle").attr("r", 6).attr("fill", this.colors[key]);
             g.append("text").attr("x", 12).attr("y", 4).text(key).style("font-size", "12px").attr("fill", "#64748b");
         });
     }
