@@ -116,7 +116,8 @@ Our narrative is built upon a high-quality academic dataset to ensure methodolog
 
 ### 📊 Data Sources
 - **Dataset:** World Energy Consumption Dataset.
-- **Source:** Maintained by researchers at **Oxford University (Our World in Data)** and hosted on Kaggle: (https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption)
+- **Source:** Maintained by researchers at **Oxford University (Our World in Data)** and hosted on Kaggle:
+[**Our World in Data**](https://www.kaggle.com/datasets/pralabhpoudel/world-energy-consumption)
 - **Scope:** Global data filtered for World Member States, focusing on the **1990-2022** window.
 
 ### 🎨 Visual Encoding & Design
